@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>West Hollywood Care Team — Program Dashboard FY 2025–26</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, Helvetica, sans-serif; background: #f4f6f9; color: #1a1a2e; font-size: 14px; }
+
+  /* ── HEADER ── */
+  .header { background: #003087; padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .header-logo { width: 44px; height: 44px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .header-logo svg { width: 28px; height: 28px; }
+  .header-title { color: #fff; font-size: 19px; font-weight: 700; letter-spacing: 0.2px; }
+  .header-subtitle { color: rgba(255,255,255,0.72); font-size: 12px; margin-top: 2px; }
+  .header-right { text-align: right; }
+  .header-period { color: rgba(255,255,255,0.6); font-size: 11px; }
+  .header-fy { color: #fff; font-size: 13px; font-weight: 700; margin-top: 2px; }
+
+  /* ── PERIOD FILTER ── */
+  .period-bar { background: #fff; border-bottom: 1px solid #dce3ef; padding: 10px 28px; display: flex; align-items: center; gap: 8px; }
+  .period-label { font-size: 11px; color: #6b7a99; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px; }
+  .period-btn { padding: 5px 16px; border-radius: 20px; border: 1.5px solid #c8d3e8; background: #fff; color: #4a5568; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: Arial, Helvetica, sans-serif; }
+  .period-btn:hover { border-color: #003087; color: #003087; }
+  .period-btn.active { background: #003087; color: #fff; border-color: #003087; }
+  .period-note { margin-left: auto; font-size: 11px; color: #9aa5be; font-style: italic; }
+
+  /* ── PAGE NAV ── */
+  .page-nav { background: #fff; border-bottom: 1px solid #dce3ef; padding: 0 28px; display: flex; gap: 0; }
+  .page-tab { padding: 12px 20px; font-size: 13px; font-weight: 700; color: #6b7a99; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
+  .page-tab:hover { color: #003087; }
+  .page-tab.active { color: #003087; border-bottom-color: #003087; }
+
+  /* ── LAYOUT ── */
+  .content { padding: 22px 28px; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── KPI CARDS ── */
+  .kpi-row { display: grid; gap: 12px; margin-bottom: 18px; }
+  .kpi-4 { grid-template-columns: repeat(4, 1fr); }
+  .kpi-3 { grid-template-columns: repeat(3, 1fr); }
+  .kpi-2 { grid-template-columns: repeat(2, 1fr); }
+  .kpi { background: #fff; border-radius: 8px; padding: 16px 18px; border-top: 3px solid #003087; box-shadow: 0 1px 4px rgba(0,0,135,0.06); }
+  .kpi-label { font-size: 10px; color: #6b7a99; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+  .kpi-value { font-size: 28px; font-weight: 700; color: #003087; line-height: 1; }
+  .kpi-sub { font-size: 11px; color: #9aa5be; margin-top: 5px; }
+  .kpi-sm .kpi-value { font-size: 22px; }
+
+  /* ── CHART GRID ── */
+  .chart-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 18px; }
+  .chart-card { background: #fff; border-radius: 8px; padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,135,0.06); }
+  .chart-card.full { grid-column: span 2; }
+  .chart-title { font-size: 12px; font-weight: 700; color: #1a1a2e; margin-bottom: 2px; }
+  .chart-note { font-size: 10px; color: #9aa5be; font-style: italic; margin-bottom: 10px; }
+  .chart-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; font-size: 11px; color: #6b7a99; align-items: center; }
+  .legend-swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; vertical-align: middle; }
+  canvas { display: block; }
+
+  /* ── BAR ROWS ── */
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+  .bar-label { font-size: 11px; color: #6b7a99; width: 148px; flex-shrink: 0; text-align: right; line-height: 1.3; }
+  .bar-track { flex: 1; background: #eef1f8; border-radius: 3px; height: 19px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding: 0 7px; font-size: 11px; color: #fff; font-weight: 700; transition: width 0.35s ease; min-width: 30px; }
+  .bar-val { font-size: 11px; color: #4a5568; font-weight: 700; width: 36px; }
+
+  /* ── STAT TABLE ── */
+  .stat-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .stat-table td { padding: 7px 8px; border-bottom: 1px solid #eef1f8; color: #1a1a2e; }
+  .stat-table td:first-child { color: #6b7a99; }
+  .stat-table td:last-child { text-align: right; font-weight: 700; color: #003087; }
+  .stat-table tr:last-child td { border-bottom: none; }
+
+  /* ── MISC ── */
+  .section-note { font-size: 11px; color: #9aa5be; font-style: italic; margin: -12px 0 14px; }
+  .half-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-bottom: 18px; }
+
+  @media (max-width: 900px) {
+    .kpi-4, .kpi-3 { grid-template-columns: repeat(2,1fr); }
+    .chart-grid, .half-grid { grid-template-columns: 1fr; }
+    .chart-card.full { grid-column: span 1; }
+    .header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .header-right { text-align: left; }
+    .period-bar { flex-wrap: wrap; }
+    .period-note { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="13" fill="#003087"/>
+        <path d="M14 5 L14 23 M5 14 L23 14" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="14" cy="14" r="4" fill="#fff"/>
+      </svg>
+    </div>
+    <div>
+      <div class="header-title">West Hollywood Care Team</div>
+      <div class="header-subtitle">Program Performance Dashboard</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-period">Fiscal Year</div>
+    <div class="header-fy">2025–26</div>
+  </div>
+</div>
+
+<!-- PERIOD FILTER -->
+<div class="period-bar">
+  <span class="period-label">Period</span>
+  <button class="period-btn active" onclick="setPeriod('ytd',this)">YTD</button>
+  <button class="period-btn" onclick="setPeriod('q1',this)">Q1 (Jul–Sep 2025)</button>
+  <button class="period-btn" onclick="setPeriod('q2',this)">Q2 (Oct–Dec 2025)</button>
+  <button class="period-btn" onclick="setPeriod('q3',this)">Q3 (Jan–Feb 2026)</button>
+  <span class="period-note" id="period-note">July 2025 – February 2026 &nbsp;|&nbsp; Q3 is partial (2 of 3 months)</span>
+</div>
+
+<!-- PAGE NAV -->
+<div class="page-nav">
+  <div class="page-tab active" onclick="showPage('overview',this)">Overview</div>
+  <div class="page-tab" onclick="showPage('demographics',this)">Demographics</div>
+  <div class="page-tab" onclick="showPage('calls',this)">Call Analysis</div>
+  <div class="page-tab" onclick="showPage('outcomes',this)">Outcomes</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: OVERVIEW
+═══════════════════════════════════════════ -->
+<div class="content">
+<div class="page active" id="page-overview">
+
+  <div class="kpi-row kpi-4" id="kpi-overview-top"></div>
+  <div class="kpi-row kpi-4" id="kpi-overview-bot"></div>
+
+  <div class="chart-card full" style="margin-bottom:18px;">
+    <div class="chart-title">Monthly engagement volume</div>
+    <div class="chart-note">Engagements vs. follow-up engagements by month</div>
+    <div class="chart-legend">
+      <span><span class="legend-swatch" style="background:#003087;"></span>Engagements</span>
+      <span><span class="legend-swatch" style="background:#5B9BD5;"></span>Follow-ups</span>
+    </div>
+    <canvas id="c-trend" height="200"></canvas>
+  </div>
+
+  <div class="half-grid">
+    <div class="chart-card">
+      <div class="chart-title">Presenting issues (% of engagements)</div>
+      <div class="chart-note" style="margin-bottom:14px;">Multiple issues may be recorded per call</div>
+      <div id="bars-presenting"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Referral sources (% of engagements)</div>
+      <div class="chart-note" style="margin-bottom:14px;">Multiple referral sources may apply per call</div>
+      <div id="bars-referral"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: DEMOGRAPHICS
+═══════════════════════════════════════════ -->
+<div class="page" id="page-demographics">
+
+  <div class="kpi-row kpi-3" id="kpi-demo-top"></div>
+  <p class="section-note">Demographic counts reflect the sum of monthly unduplicated figures. Individuals seen across multiple months are counted more than once.</p>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">Age distribution</div>
+      <div class="chart-note">Sum of monthly unduplicated counts</div>
+      <canvas id="c-age" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Race / ethnicity</div>
+      <div class="chart-note">Sum of monthly unduplicated counts</div>
+      <canvas id="c-race" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Gender identity</div>
+      <div class="chart-note">Sum of monthly unduplicated counts</div>
+      <canvas id="c-gender" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Housing status — monthly trend</div>
+      <div class="chart-note">Count of individuals per month by housing status</div>
+      <div class="chart-legend">
+        <span><span class="legend-swatch" style="background:#003087;"></span>Unhoused</span>
+        <span><span class="legend-swatch" style="background:#5B9BD5; border:1px dashed #5B9BD5;"></span>Housed</span>
+      </div>
+      <canvas id="c-housing" height="180"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: CALL ANALYSIS
+═══════════════════════════════════════════ -->
+<div class="page" id="page-calls">
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">Engagements by day of week</div>
+      <div class="chart-note">Total engagement count per day</div>
+      <canvas id="c-dow" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Engagements by time of day</div>
+      <div class="chart-note">Total engagement count per 2-hour block</div>
+      <canvas id="c-tod" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Location of service</div>
+      <div class="chart-note">Distribution of engagement locations</div>
+      <canvas id="c-loc" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Response &amp; call time metrics</div>
+      <div class="chart-note">FYTD averages — does not change by period filter</div>
+      <table class="stat-table">
+        <tr><td>Dispatch to arrival — average</td><td>19 min</td></tr>
+        <tr><td>Dispatch to arrival — median</td><td>14 min</td></tr>
+        <tr><td>Call duration — average</td><td>29 min</td></tr>
+        <tr><td>Call duration — median</td><td>13 min</td></tr>
+        <tr><td>Queue wait (when unavailable) — avg</td><td>7 min</td></tr>
+        <tr><td>Queue wait (when unavailable) — median</td><td>4 min</td></tr>
+        <tr><td>Initial engagement time — avg</td><td>17 min</td></tr>
+        <tr><td>Follow-up engagement time — avg</td><td>18 min</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: OUTCOMES
+═══════════════════════════════════════════ -->
+<div class="page" id="page-outcomes">
+
+  <div class="kpi-row kpi-4" id="kpi-outcomes-top"></div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">On-scene referrals by type</div>
+      <div class="chart-note">Count of referrals provided during initial engagement</div>
+      <div id="bars-onscene"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Follow-up referrals by type</div>
+      <div class="chart-note">Count of referrals provided during follow-up engagements</div>
+      <div id="bars-followup"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">First responder involvement</div>
+      <div class="chart-note">Care Team-initiated requests for law enforcement and fire/EMS</div>
+      <table class="stat-table" id="tbl-fr"></table>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Individuals with repeat engagements — monthly</div>
+      <div class="chart-note">Count of individuals engaged more than once per month</div>
+      <canvas id="c-repeat" height="200"></canvas>
+    </div>
+  </div>
+
+</div>
+</div><!-- /content -->
+
+<script>
+// ══════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════
+const MONTHS = ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
+const MONTH_LABELS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26'];
+
+// Quarter index ranges
+const QIDX = { ytd:[0,1,2,3,4,5,6,7], q1:[0,1,2], q2:[3,4,5], q3:[6,7] };
+const QLABELS = { ytd:'Jul 2025 – Feb 2026', q1:'Q1: Jul – Sep 2025', q2:'Q2: Oct – Dec 2025', q3:'Q3 (partial): Jan – Feb 2026' };
+
+// All monthly series [Jul,Aug,Sep,Oct,Nov,Dec,Jan,Feb]
+const D = {
+  engagements:       [140,86,73,115,170,200,198,266],
+  followups:         [234,180,205,211,170,132,135,171],
+  unique:            [113,83,60,94,132,143,131,171],
+  repeats:           [14,5,7,15,14,20,19,26],
+  transports:        [16,20,16,15,25,9,17,23],
+
+  ageU17:            [2,2,0,1,0,1,0,3],
+  age1834:           [21,15,16,19,28,25,29,43],
+  age3549:           [32,22,18,29,34,43,38,36],
+  age5064:           [26,16,13,21,30,30,25,36],
+  age6579:           [7,12,6,12,13,12,20,14],
+  age80p:            [3,0,0,1,0,0,2,3],
+  ageDTS:            [22,16,7,9,27,32,17,36],
+
+  genderMale:        [82,61,43,60,102,98,98,137],
+  genderFemale:      [30,22,17,31,29,45,31,32],
+  genderDTS:         [1,0,0,1,1,0,2,2],
+
+  raceAsian:         [1,3,1,1,1,5,1,5],
+  raceBlack:         [36,18,15,13,29,36,28,54],
+  raceHispanic:      [16,18,17,25,25,23,18,25],
+  raceWhite:         [47,40,21,44,59,54,60,64],
+  raceOther:         [4,1,2,3,7,13,14,10],
+  raceDTS:           [9,3,4,6,11,12,10,13],
+
+  housingHoused:     [10,8,7,11,13,17,29,25],
+  housingUnhoused:   [95,69,49,77,110,114,89,133],
+  housingDTS:        [8,6,4,4,9,12,13,13],
+
+  refAmbassadors:    [33,27,14,14,53,45,30,16],
+  refSycamores:      [47,19,21,23,25,32,14,25],
+  refSelf:           [8,8,9,11,24,40,42,59],
+  refHCL:            [11,6,2,5,12,25,40,97],
+  refLawEnf:         [18,12,9,13,17,21,37,22],
+  refOther:          [18,10,14,27,14,14,13,15],
+  refWeHoAgency:     [0,1,0,11,10,12,7,10],
+  refWeHoStaff:      [3,2,1,8,7,6,5,8],
+  refFriendFam:      [0,0,0,0,5,2,4,10],
+  refFireEMS:        [2,0,3,1,1,2,4,2],
+
+  presBasicNeeds:    [83,59,38,73,100,95,99,143],
+  presHousing:       [87,37,35,64,98,100,100,138],
+  presWelfare:       [26,19,22,24,32,46,42,61],
+  presHealth:        [11,7,8,7,21,16,21,24],
+  presSubUse:        [9,4,9,7,10,12,8,21],
+  presCrisis:        [5,4,3,4,7,10,10,16],
+
+  locPublic:         [104,61,52,85,113,135,108,173],
+  locTelephone:      [6,3,7,11,33,41,33,64],
+  locSheriff:        [10,3,3,10,12,7,22,5],
+  locPrivRes:        [10,7,6,5,3,10,18,13],
+  locBusiness:       [8,11,5,3,3,1,6,5],
+  locOther:          [2,6,1,7,6,6,11,6],
+
+  dowSun: [19,13,11,6,31,27,18,25],
+  dowMon: [25,13,7,6,9,25,23,32],
+  dowTue: [21,13,14,15,16,21,13,21],
+  dowWed: [16,10,10,27,26,47,31,63],
+  dowThu: [25,13,12,30,32,33,36,57],
+  dowFri: [24,13,13,25,31,24,48,39],
+  dowSat: [11,17,7,12,25,23,29,30],
+
+  tod: [[13,10,4,5,8,13,12,22],[6,3,2,6,9,3,17,17],[5,3,1,3,1,1,8,8],
+        [3,8,3,1,14,16,9,19],[10,7,6,9,24,35,19,27],[6,3,3,5,19,18,22,37],
+        [7,5,2,12,14,22,14,25],[32,14,13,22,22,32,29,25],[17,5,13,27,16,18,22,23],
+        [12,14,9,11,9,14,19,22],[10,11,9,11,16,11,11,10],[20,9,9,9,18,17,16,31]],
+
+  onSceneSupplies:   [74,48,34,54,65,66,70,76],
+  onSceneShelter:    [62,19,20,47,47,46,47,66],
+  onSceneFood:       [6,5,4,13,26,12,22,30],
+  onSceneHealth:     [9,3,6,10,13,19,17,21],
+  onSceneTransCoord: [9,8,7,9,12,9,18,20],
+  onSceneSUD:        [3,0,7,7,5,6,8,17],
+  onSceneMH:         [3,1,1,4,3,3,10,9],
+
+  fuShelter:         [63,56,64,87,54,53,25,47],
+  fuDeclined:        [69,43,39,48,36,31,35,55],
+  fuFood:            [44,41,28,22,33,11,8,19],
+  fuHealth:          [34,19,34,30,13,17,16,21],
+  fuMH:              [18,14,14,11,13,9,13,14],
+  fuSUD:             [13,11,15,8,18,7,5,11],
+
+  frLASD:            [2,2,1,0,3,6,2,4],
+  frLASDHoused:      [1,0,0,0,0,2,0,2],
+  frLASDUnhoused:    [1,2,1,0,3,4,1,1],
+  frLACFD:           [1,1,2,0,0,1,6,3],
+  frLACFDHoused:     [1,0,1,0,0,0,0,1],
+  frLACFDUnhoused:   [0,1,1,0,0,0,5,1],
+  frHoldsApplied:    [1,0,0,1,0,1,0,0],
+  frHoldsVoided:     [0,0,0,0,0,1,0,0],
+
+  onSceneUnique:     [98,71,55,77,102,100,107,125],
+  fuUnique:          [131,100,102,116,108,96,85,110],
+};
+
+// ── HELPERS ──
+let currentPeriod = 'ytd';
+let currentPage = 'overview';
+
+function sum(arr, idxs) {
+  return idxs.reduce((t,i) => t + (arr[i] || 0), 0);
+}
+
+function pct(val, total) {
+  if (!total) return '0%';
+  return Math.round(val/total*100) + '%';
+}
+
+function pctNum(val, total) {
+  if (!total) return 0;
+  return Math.round(val/total*100);
+}
+
+function monthsInPeriod() { return QIDX[currentPeriod]; }
+
+function periodSum(key) { return sum(D[key], monthsInPeriod()); }
+
+function periodMonthData(key) { return monthsInPeriod().map(i => D[key][i]); }
+
+function periodMonthLabels() { return monthsInPeriod().map(i => MONTH_LABELS[i]); }
+
+// ══════════════════════════════════════════════
+// PERIOD SWITCHER
+// ══════════════════════════════════════════════
+function setPeriod(p, btn) {
+  currentPeriod = p;
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const notes = { ytd:'July 2025 – February 2026 &nbsp;|&nbsp; Q3 is partial (2 of 3 months)',
+    q1:'Q1: July – September 2025 (3 months)', q2:'Q2: October – December 2025 (3 months)',
+    q3:'Q3: January – February 2026 (partial — 2 of 3 months)' };
+  document.getElementById('period-note').innerHTML = notes[p];
+  destroyCharts();
+  renderCurrentPage();
+}
+
+// ══════════════════════════════════════════════
+// PAGE SWITCHER
+// ══════════════════════════════════════════════
+function showPage(id, el) {
+  currentPage = id;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.page-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active');
+  destroyCharts();
+  renderCurrentPage();
+}
+
+function renderCurrentPage() {
+  if (currentPage==='overview') renderOverview();
+  else if (currentPage==='demographics') renderDemographics();
+  else if (currentPage==='calls') renderCalls();
+  else if (currentPage==='outcomes') renderOutcomes();
+}
+
+// ══════════════════════════════════════════════
+// CHART ENGINE (pure Canvas 2D — no dependencies)
+// ══════════════════════════════════════════════
+const chartInstances = {};
+
+function destroyCharts() {
+  Object.keys(chartInstances).forEach(id => {
+    const c = document.getElementById(id);
+    if (c) {
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, c.width, c.height);
+      c.removeAttribute('style');
+    }
+    delete chartInstances[id];
+  });
+}
+
+const B1='#003087', B2='#5B9BD5', B3='#8FBBDB', B4='#B8D4EA', B5='#D4E8F4';
+const PALETTE = [B1,B2,B3,B4,B5,'#cfe0f0','#e6f0f8','#f0f6fb'];
+
+function setupCanvas(canvas) {
+  const W = canvas.parentElement.offsetWidth || 400;
+  const H = parseInt(canvas.getAttribute('height')) || 220;
+  canvas.width = W;
+  canvas.height = H;
+  canvas.style.width = '100%';
+  canvas.style.height = H + 'px';
+  return { ctx: canvas.getContext('2d'), W, H };
+}
+
+function drawBar(canvasId, labels, values, colors, opts={}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const { ctx, W, H } = setupCanvas(canvas);
+  const pad = { top:10, right:16, bottom: opts.rotateLabels?52:28, left: opts.leftPad||40 };
+  const chartW = W - pad.left - pad.right;
+  const chartH = H - pad.top - pad.bottom;
+  const max = opts.axisMax || Math.max(...values, 1);
+  const n = labels.length;
+  const groupW = chartW / n;
+  const barW = Math.min(groupW * 0.6, opts.maxBarW||50);
+
+  // Y gridlines
+  ctx.strokeStyle = '#eef1f8';
+  ctx.lineWidth = 1;
+  const ticks = 4;
+  for (let t=0; t<=ticks; t++) {
+    const y = pad.top + chartH - (t/ticks)*chartH;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left+chartW, y); ctx.stroke();
+    ctx.fillStyle='#9aa5be'; ctx.font='10px Arial'; ctx.textAlign='right';
+    ctx.fillText(Math.round((t/ticks)*max), pad.left-4, y+3);
+  }
+
+  // Bars
+  values.forEach((v,i) => {
+    const bh = (v/max)*chartH;
+    const x = pad.left + i*groupW + (groupW-barW)/2;
+    const y = pad.top + chartH - bh;
+    ctx.fillStyle = Array.isArray(colors) ? (colors[i]||B1) : colors;
+    roundRect(ctx, x, y, barW, bh, 3);
+    ctx.fill();
+    // value label on bar if room
+    if (bh>18) {
+      ctx.fillStyle='#fff'; ctx.font='bold 10px Arial'; ctx.textAlign='center';
+      ctx.fillText(v, x+barW/2, y+13);
+    }
+  });
+
+  // X labels
+  ctx.fillStyle='#6b7a99'; ctx.font='10px Arial'; ctx.textAlign='center';
+  labels.forEach((lbl,i) => {
+    const x = pad.left + i*groupW + groupW/2;
+    if (opts.rotateLabels) {
+      ctx.save(); ctx.translate(x, pad.top+chartH+6);
+      ctx.rotate(-Math.PI/4); ctx.textAlign='right';
+      ctx.fillText(lbl, 0, 0); ctx.restore();
+    } else {
+      const lines = lbl.split('\n');
+      lines.forEach((l,li) => ctx.fillText(l, x, pad.top+chartH+14+li*11));
+    }
+  });
+
+  chartInstances[canvasId] = true;
+}
+
+function drawGroupedBar(canvasId, labels, datasets, opts={}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const { ctx, W, H } = setupCanvas(canvas);
+  const pad = {top:10,right:16,bottom:28,left:40};
+  const chartW=W-pad.left-pad.right, chartH=H-pad.top-pad.bottom;
+  const allVals = datasets.flatMap(d=>d.data);
+  const max = opts.axisMax || Math.max(...allVals,1);
+  const n=labels.length, nd=datasets.length;
+  const groupW=chartW/n, barW=Math.min((groupW-4)/nd, 32);
+
+  ctx.strokeStyle='#eef1f8'; ctx.lineWidth=1;
+  for(let t=0;t<=4;t++){
+    const y=pad.top+chartH-(t/4)*chartH;
+    ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(pad.left+chartW,y); ctx.stroke();
+    ctx.fillStyle='#9aa5be'; ctx.font='10px Arial'; ctx.textAlign='right';
+    ctx.fillText(Math.round((t/4)*max),pad.left-4,y+3);
+  }
+
+  datasets.forEach((ds,di) => {
+    ds.data.forEach((v,i) => {
+      const bh=(v/max)*chartH;
+      const x=pad.left+i*groupW+di*barW+(groupW-nd*barW)/2;
+      const y=pad.top+chartH-bh;
+      ctx.fillStyle=ds.color||PALETTE[di];
+      roundRect(ctx,x,y,barW-2,bh,2); ctx.fill();
+    });
+  });
+
+  ctx.fillStyle='#6b7a99'; ctx.font='10px Arial'; ctx.textAlign='center';
+  labels.forEach((lbl,i) => {
+    ctx.fillText(lbl, pad.left+i*groupW+groupW/2, pad.top+chartH+14);
+  });
+  chartInstances[canvasId]=true;
+}
+
+function drawLine(canvasId, labels, datasets, opts={}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const { ctx, W, H } = setupCanvas(canvas);
+  const pad={top:10,right:16,bottom:28,left:40};
+  const chartW=W-pad.left-pad.right, chartH=H-pad.top-pad.bottom;
+  const allVals=datasets.flatMap(d=>d.data);
+  const max=opts.axisMax || Math.max(...allVals,1);
+  const n=labels.length;
+
+  ctx.strokeStyle='#eef1f8'; ctx.lineWidth=1;
+  for(let t=0;t<=4;t++){
+    const y=pad.top+chartH-(t/4)*chartH;
+    ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(pad.left+chartW,y); ctx.stroke();
+    ctx.fillStyle='#9aa5be'; ctx.font='10px Arial'; ctx.textAlign='right';
+    ctx.fillText(Math.round((t/4)*max),pad.left-4,y+3);
+  }
+
+  datasets.forEach(ds => {
+    const pts=ds.data.map((v,i)=>({
+      x: n===1 ? pad.left+chartW/2 : pad.left+i*(chartW/(n-1)),
+      y: pad.top+chartH-(v/max)*chartH
+    }));
+    // fill
+    if(ds.fill) {
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pad.top+chartH);
+      pts.forEach(p=>ctx.lineTo(p.x,p.y));
+      ctx.lineTo(pts[pts.length-1].x, pad.top+chartH);
+      ctx.closePath();
+      ctx.fillStyle=ds.fill; ctx.fill();
+    }
+    // line
+    ctx.beginPath(); ctx.strokeStyle=ds.color; ctx.lineWidth=2.5;
+    if(ds.dashed) ctx.setLineDash([5,3]); else ctx.setLineDash([]);
+    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.stroke(); ctx.setLineDash([]);
+    // dots
+    pts.forEach(p=>{
+      ctx.beginPath(); ctx.arc(p.x,p.y,3.5,0,Math.PI*2);
+      ctx.fillStyle=ds.color; ctx.fill();
+    });
+  });
+
+  ctx.fillStyle='#6b7a99'; ctx.font='10px Arial'; ctx.textAlign='center';
+  labels.forEach((lbl,i) => {
+    const x = n===1 ? pad.left+chartW/2 : pad.left+i*(chartW/(n-1));
+    ctx.fillText(lbl, x, pad.top+chartH+14);
+  });
+  chartInstances[canvasId]=true;
+}
+
+function drawDonut(canvasId, labels, values, colors) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const { ctx, W, H } = setupCanvas(canvas);
+  const cx=W/2, cy=H/2-16, r=Math.min(W,H)/2-20, ir=r*0.55;
+  const total=values.reduce((a,b)=>a+b,0);
+  let angle=-Math.PI/2;
+
+  values.forEach((v,i) => {
+    const slice=(v/total)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle,angle+slice);
+    ctx.closePath(); ctx.fillStyle=colors[i]; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,ir,0,Math.PI*2);
+    ctx.fillStyle='#fff'; ctx.fill();
+    angle+=slice;
+  });
+
+  // legend
+  const lh=14, startY=cy+r+16;
+  const cols=Math.ceil(labels.length/2);
+  labels.forEach((lbl,i) => {
+    const col=i%2, row=Math.floor(i/2);
+    const lx=col===0?(W/2-80):(W/2+4), ly=startY+row*lh;
+    ctx.fillStyle=colors[i]; ctx.fillRect(lx,ly-9,10,10);
+    ctx.fillStyle='#6b7a99'; ctx.font='10px Arial'; ctx.textAlign='left';
+    ctx.fillText(lbl+' '+pct(values[i],total), lx+13, ly);
+  });
+  chartInstances[canvasId]=true;
+}
+
+function roundRect(ctx,x,y,w,h,r) {
+  if(h<1) { ctx.rect(x,y+h,w,Math.max(1,Math.abs(h))); return; }
+  r=Math.min(r,h/2,w/2);
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.arcTo(x+w,y,x+w,y+r,r); ctx.lineTo(x+w,y+h);
+  ctx.lineTo(x,y+h); ctx.lineTo(x,y+r);
+  ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
+}
+
+// ══════════════════════════════════════════════
+// KPI HELPERS
+// ══════════════════════════════════════════════
+function kpiCard(label, value, sub) {
+  return `<div class="kpi kpi-sm"><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div><div class="kpi-sub">${sub||''}</div></div>`;
+}
+
+function setKPI(id, html) { document.getElementById(id).innerHTML = html; }
+
+function fmt(n) { return n.toLocaleString(); }
+
+// ══════════════════════════════════════════════
+// BAR ROW BUILDER
+// ══════════════════════════════════════════════
+function buildBars(containerId, items, total, fixedMax) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const maxVal = fixedMax || Math.max(...items.map(i=>i.val));
+  el.innerHTML = items.map(item => {
+    const widthPct = Math.round((item.val/maxVal)*90);
+    const labelPct = total ? Math.round(item.val/total*100)+'%' : fmt(item.val);
+    return `<div class="bar-row">
+      <span class="bar-label">${item.label}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${widthPct}%;background:${item.color||B1};">${item.val>0?labelPct:''}</div></div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// PAGE RENDERS
+// ══════════════════════════════════════════════
+function renderOverview() {
+  const idx = monthsInPeriod();
+  const eng = periodSum('engagements');
+  const fu = periodSum('followups');
+  const trans = periodSum('transports');
+  const uniq = periodSum('unique');
+  const days = idx.length * 30.4;
+
+  setKPI('kpi-overview-top',
+    kpiCard('Total engagements', fmt(eng), '~'+Math.round(eng/days*10)/10+' per day') +
+    kpiCard('Unique individuals served', fmt(uniq), 'Sum of monthly unduplicated counts') +
+    kpiCard('Follow-up engagements', fmt(fu), '~'+Math.round(fu/days*10)/10+' per day') +
+    kpiCard('Transports completed', fmt(trans), '~'+Math.round(trans/idx.length)+' per month')
+  );
+  setKPI('kpi-overview-bot',
+    kpiCard('Avg response time', '19 min', 'Dispatch to arrival (FYTD)') +
+    kpiCard('Avg call duration', '29 min', 'Arrival to close (FYTD)') +
+    kpiCard('Avg follow-up time', '18 min', 'Per engagement (FYTD)') +
+    kpiCard('Avg transport time', '37 min', 'Per transport (FYTD)')
+  );
+
+  // Trend chart
+  const mLabels = periodMonthLabels();
+  const mEng = periodMonthData('engagements');
+  const mFU = periodMonthData('followups');
+
+  // Fixed YTD axis ceilings — keep scale consistent across all period filters
+  const AX = {
+    trend: 300, age: 260, race: 400, housing: 140,
+    dow: 260, tod: 200, onscene: 500, furef: 460, repeats: 30,
+    presenting: 700, referral: 250
+  };
+
+  if (mLabels.length === 1) {
+    drawGroupedBar('c-trend', mLabels,
+      [{label:'Engagements',data:mEng,color:B1},{label:'Follow-ups',data:mFU,color:B2}],
+      {axisMax: AX.trend});
+  } else {
+    drawLine('c-trend', mLabels, [
+      {data:mEng, color:B1, fill:'rgba(0,48,135,0.07)'},
+      {data:mFU, color:B2, fill:'rgba(91,155,213,0.07)', dashed:true}
+    ], {axisMax: AX.trend});
+  }
+
+  const presItems = [
+    {label:'Basic needs / social services', val:periodSum('presBasicNeeds'), color:B1},
+    {label:'Housing', val:periodSum('presHousing'), color:B1},
+    {label:'Welfare checks', val:periodSum('presWelfare'), color:B2},
+    {label:'Health & disability', val:periodSum('presHealth'), color:B2},
+    {label:'Substance use', val:periodSum('presSubUse'), color:B3},
+    {label:'Crisis intervention', val:periodSum('presCrisis'), color:B3},
+  ];
+  buildBars('bars-presenting', presItems, eng, AX.presenting);
+
+  const refItems = [
+    {label:'Unarmed security ambassadors', val:periodSum('refAmbassadors'), color:B1},
+    {label:'Sycamores outreach', val:periodSum('refSycamores'), color:B1},
+    {label:'Self', val:periodSum('refSelf'), color:B2},
+    {label:'Homeless concern line', val:periodSum('refHCL'), color:B2},
+    {label:'Law enforcement', val:periodSum('refLawEnf'), color:B3},
+    {label:'Other', val:periodSum('refOther'), color:B3},
+  ];
+  buildBars('bars-referral', refItems, eng, AX.referral);
+}
+
+function renderDemographics() {
+  const housed = periodSum('housingHoused');
+  const unhoused = periodSum('housingUnhoused');
+  const dts = periodSum('housingDTS');
+  const total = housed+unhoused+dts;
+
+  const AX = { age:260, race:400, housing:140 };
+
+  setKPI('kpi-demo-top',
+    kpiCard('Unhoused (% of contacts)', fmt(unhoused), pct(unhoused,total)+' of monthly contact counts') +
+    kpiCard('Housed (% of contacts)', fmt(housed), pct(housed,total)+' of monthly contact counts') +
+    kpiCard('Decline to state', fmt(dts), pct(dts,total)+' of monthly contact counts')
+  );
+
+  drawBar('c-age',
+    ['0–17','18–34','35–49','50–64','65–79','80+','DTS'],
+    ['ageU17','age1834','age3549','age5064','age6579','age80p','ageDTS'].map(k=>periodSum(k)),
+    [B4,B1,B1,B1,B2,B3,B4], {axisMax: AX.age}
+  );
+
+  drawBar('c-race',
+    ['White','Black / AA','Hispanic /\nLatino','DTS','Other /\nMulti','Asian / PI'],
+    ['raceWhite','raceBlack','raceHispanic','raceDTS','raceOther','raceAsian'].map(k=>periodSum(k)),
+    [B1,B1,B1,B3,B2,B4], {leftPad:44, axisMax: AX.race}
+  );
+
+  const gMale = periodSum('genderMale');
+  const gFemale = periodSum('genderFemale');
+  const gDTS = periodSum('genderDTS');
+  drawDonut('c-gender',['Male','Female','Decline to state'],[gMale,gFemale,gDTS],[B1,B2,B4]);
+
+  const mLabels = periodMonthLabels();
+  const mHoused = periodMonthData('housingHoused');
+  const mUnhoused = periodMonthData('housingUnhoused');
+  if (mLabels.length===1) {
+    drawGroupedBar('c-housing',mLabels,[
+      {label:'Unhoused',data:mUnhoused,color:B1},
+      {label:'Housed',data:mHoused,color:B2}
+    ], {axisMax: AX.housing});
+  } else {
+    drawLine('c-housing', mLabels, [
+      {data:mUnhoused, color:B1, fill:'rgba(0,48,135,0.07)'},
+      {data:mHoused, color:B2, fill:'rgba(91,155,213,0.07)', dashed:true}
+    ], {axisMax: AX.housing});
+  }
+}
+
+function renderCalls() {
+  const idx = monthsInPeriod();
+  const AX = { dow:260, tod:200 };
+
+  const dowKeys=['dowSun','dowMon','dowTue','dowWed','dowThu','dowFri','dowSat'];
+  const dowVals = dowKeys.map(k=>periodSum(k));
+  const maxDow = Math.max(...dowVals);
+  const dowColors = dowVals.map(v => v===maxDow?B1:B3);
+  drawBar('c-dow',['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], dowVals, dowColors, {axisMax: AX.dow});
+
+  const todLabels=['12–2a','2–4a','4–6a','6–8a','8–10a','10a–12p','12–2p','2–4p','4–6p','6–8p','8–10p','10p–12a'];
+  const todVals = D.tod.map(row => sum(row,idx));
+  const maxTod = Math.max(...todVals);
+  const todColors = todVals.map(v=>v===maxTod?B1:v>maxTod*0.7?B2:B3);
+  drawBar('c-tod', todLabels, todVals, todColors, {rotateLabels:true, maxBarW:32, axisMax: AX.tod});
+
+  const locLabels=['Public space','Telephone','Sheriff\nstation','Private\nresidence','Business','Other'];
+  const locVals=['locPublic','locTelephone','locSheriff','locPrivRes','locBusiness','locOther'].map(k=>periodSum(k));
+  drawDonut('c-loc', locLabels, locVals, [B1,B2,B3,B4,B5,'#cfe0f0']);
+}
+
+function renderOutcomes() {
+  const onUniq = periodSum('onSceneUnique');
+  const fuUniq = periodSum('fuUnique');
+  const trans = periodSum('transports');
+  const repeats = periodSum('repeats');
+  const AX = { onscene:500, furef:460, repeats:30 };
+
+  setKPI('kpi-outcomes-top',
+    kpiCard('On-scene care — unique individuals', fmt(onUniq), 'Sum of monthly counts') +
+    kpiCard('Follow-up care — unique individuals', fmt(fuUniq), 'Sum of monthly counts') +
+    kpiCard('Transports completed', fmt(trans), 'Avg 37 min per trip (FYTD)') +
+    kpiCard('Individuals w/ repeat engagements', fmt(repeats), 'Sum of monthly counts')
+  );
+
+  buildBars('bars-onscene', [
+    {label:'Supplies — basic needs', val:periodSum('onSceneSupplies'), color:B1},
+    {label:'Shelter / housing', val:periodSum('onSceneShelter'), color:B1},
+    {label:'Food resources', val:periodSum('onSceneFood'), color:B2},
+    {label:'Health services', val:periodSum('onSceneHealth'), color:B2},
+    {label:'Transport coordination', val:periodSum('onSceneTransCoord'), color:B3},
+    {label:'SUD treatment', val:periodSum('onSceneSUD'), color:B3},
+    {label:'Mental health', val:periodSum('onSceneMH'), color:B4},
+  ], null, AX.onscene);
+
+  buildBars('bars-followup', [
+    {label:'Shelter / housing', val:periodSum('fuShelter'), color:B1},
+    {label:'Declined services', val:periodSum('fuDeclined'), color:B3},
+    {label:'Food resources', val:periodSum('fuFood'), color:B2},
+    {label:'Health services', val:periodSum('fuHealth'), color:B2},
+    {label:'Mental health', val:periodSum('fuMH'), color:B3},
+    {label:'SUD treatment', val:periodSum('fuSUD'), color:B4},
+  ], null, AX.furef);
+
+  const lasd = periodSum('frLASD');
+  const lasdH = periodSum('frLASDHoused');
+  const lasdU = periodSum('frLASDUnhoused');
+  const lacfd = periodSum('frLACFD');
+  const lacfdH = periodSum('frLACFDHoused');
+  const lacfdU = periodSum('frLACFDUnhoused');
+  const holds = periodSum('frHoldsApplied');
+  const voided = periodSum('frHoldsVoided');
+
+  document.getElementById('tbl-fr').innerHTML = `
+    <tr><td>LASD requests by Care Team</td><td>${lasd}</td></tr>
+    <tr><td>&nbsp;&nbsp;— involving unhoused individuals</td><td>${lasdU}</td></tr>
+    <tr><td>&nbsp;&nbsp;— involving housed individuals</td><td>${lasdH}</td></tr>
+    <tr><td>LACFD requests by Care Team</td><td>${lacfd}</td></tr>
+    <tr><td>&nbsp;&nbsp;— involving unhoused individuals</td><td>${lacfdU}</td></tr>
+    <tr><td>&nbsp;&nbsp;— involving housed individuals</td><td>${lacfdH}</td></tr>
+    <tr><td>Involuntary holds applied (5585/5150)</td><td>${holds}</td></tr>
+    <tr><td>Holds voided / discontinued</td><td>${voided}</td></tr>`;
+
+  const mLabels = periodMonthLabels();
+  const mRepeats = periodMonthData('repeats');
+  drawBar('c-repeat', mLabels, mRepeats, B1, {axisMax: AX.repeats});
+}
+
+// ── INIT ──
+renderOverview();
+</script>
+</body>
+</html>
