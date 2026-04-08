@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -22,18 +22,23 @@
   .period-bar { background: #fff; border-bottom: 1px solid #dce3ef; padding: 10px 28px; display: flex; align-items: center; gap: 8px; }
   .period-label { font-size: 11px; color: #6b7a99; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px; }
   .period-btn { padding: 5px 16px; border-radius: 20px; border: 1.5px solid #c8d3e8; background: #fff; color: #4a5568; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: Arial, Helvetica, sans-serif; }
-  .period-btn:hover { border-color: #003087; color: #003087; }
+  .period-btn:hover { border-color: #003087; color: #003087; background: #f0f4ff; }
+  .period-btn:focus-visible { outline: 3px solid #003087; outline-offset: 2px; }
+  .page-tab:focus-visible { outline: 3px solid #003087; outline-offset: -2px; }
   .period-btn.active { background: #003087; color: #fff; border-color: #003087; }
-  .period-note { margin-left: auto; font-size: 11px; color: #9aa5be; font-style: italic; }
+  .period-note { margin-left: auto; font-size: 11px; color: #6b7a99; background: #f0f4ff; border: 1px solid #dce3ef; border-radius: 12px; padding: 3px 10px; white-space: nowrap; }
 
   /* ── PAGE NAV ── */
   .page-nav { background: #fff; border-bottom: 1px solid #dce3ef; padding: 0 28px; display: flex; gap: 0; }
   .page-tab { padding: 12px 20px; font-size: 13px; font-weight: 700; color: #6b7a99; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
-  .page-tab:hover { color: #003087; }
+  .page-tab:hover { color: #003087; background: #f8faff; }
   .page-tab.active { color: #003087; border-bottom-color: #003087; }
 
+  /* ── PAGE CONTEXT BANNER ── */
+  .page-context { background: #f0f4ff; border-left: 4px solid #003087; border-radius: 0 6px 6px 0; padding: 10px 16px; margin-bottom: 18px; font-size: 12px; color: #3a4a6b; line-height: 1.5; }
+
   /* ── LAYOUT ── */
-  .content { padding: 22px 28px; }
+  .content { padding: 22px 28px 8px; }
   .page { display: none; }
   .page.active { display: block; }
 
@@ -50,31 +55,38 @@
 
   /* ── CHART GRID ── */
   .chart-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 18px; }
-  .chart-card { background: #fff; border-radius: 8px; padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,135,0.06); }
+  .chart-card { background: #fff; border-radius: 8px; padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,135,0.06); overflow: hidden; }
   .chart-card.full { grid-column: span 2; }
-  .chart-title { font-size: 12px; font-weight: 700; color: #1a1a2e; margin-bottom: 2px; }
-  .chart-note { font-size: 10px; color: #9aa5be; font-style: italic; margin-bottom: 10px; }
+  .chart-title { font-size: 13px; font-weight: 700; color: #1a1a2e; margin-bottom: 3px; }
+  .chart-note { font-size: 11px; color: #9aa5be; margin-bottom: 12px; }
   .chart-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; font-size: 11px; color: #6b7a99; align-items: center; }
   .legend-swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; vertical-align: middle; }
-  canvas { display: block; }
+  canvas { display: block; max-width: 100%; }
 
   /* ── BAR ROWS ── */
-  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
-  .bar-label { font-size: 11px; color: #6b7a99; width: 148px; flex-shrink: 0; text-align: right; line-height: 1.3; }
-  .bar-track { flex: 1; background: #eef1f8; border-radius: 3px; height: 19px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding: 0 7px; font-size: 11px; color: #fff; font-weight: 700; transition: width 0.35s ease; min-width: 30px; }
-  .bar-val { font-size: 11px; color: #4a5568; font-weight: 700; width: 36px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+  .bar-label { font-size: 11px; color: #4a5568; width: 160px; flex-shrink: 0; text-align: right; line-height: 1.3; }
+  .bar-track { flex: 1; background: #eef1f8; border-radius: 4px; height: 22px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; color: #fff; font-weight: 700; transition: width 0.35s ease; min-width: 32px; }
 
   /* ── STAT TABLE ── */
   .stat-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  .stat-table td { padding: 7px 8px; border-bottom: 1px solid #eef1f8; color: #1a1a2e; }
-  .stat-table td:first-child { color: #6b7a99; }
-  .stat-table td:last-child { text-align: right; font-weight: 700; color: #003087; }
+  .stat-table td { padding: 8px 8px; border-bottom: 1px solid #eef1f8; color: #1a1a2e; line-height: 1.4; }
+  .stat-table td:first-child { color: #4a5568; }
+  .stat-table td:last-child { text-align: right; font-weight: 700; color: #003087; white-space: nowrap; }
   .stat-table tr:last-child td { border-bottom: none; }
+  .stat-table .row-indent td:first-child { color: #9aa5be; padding-left: 20px; font-size: 11px; }
+  .stat-table .row-indent td:last-child { color: #6b7a99; font-size: 11px; }
+  .stat-table .row-group td { background: #f8faff; font-weight: 700; font-size: 11px; color: #003087; padding-top: 10px; border-bottom: none; }
 
-  /* ── MISC ── */
+  /* ── SECTION NOTE ── */
   .section-note { font-size: 11px; color: #9aa5be; font-style: italic; margin: -12px 0 14px; }
+
+  /* ── HALF GRID ── */
   .half-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-bottom: 18px; }
+
+  /* ── FOOTER ── */
+  .dash-footer { margin-top: 12px; padding: 14px 0 4px; border-top: 1px solid #dce3ef; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #9aa5be; }
 
   @media (max-width: 900px) {
     .kpi-4, .kpi-3 { grid-template-columns: repeat(2,1fr); }
@@ -106,19 +118,18 @@
 <!-- PERIOD FILTER -->
 <div class="period-bar">
   <span class="period-label">Period</span>
-  <button class="period-btn active" onclick="setPeriod('ytd',this)">YTD</button>
-  <button class="period-btn" onclick="setPeriod('q1',this)">Q1 (Jul–Sep 2025)</button>
-  <button class="period-btn" onclick="setPeriod('q2',this)">Q2 (Oct–Dec 2025)</button>
-  <button class="period-btn" onclick="setPeriod('q3',this)">Q3 (Jan–Feb 2026)</button>
-  <span class="period-note" id="period-note">July 2025 – February 2026 &nbsp;|&nbsp; Q3 is partial (2 of 3 months)</span>
+  <button class="period-btn active" role="radio" aria-checked="true" aria-label="Year to date: July 2025 through February 2026" onclick="setPeriod('ytd',this)">YTD</button>
+  <button class="period-btn" role="radio" aria-checked="false" aria-label="Quarter 1: July through September 2025" onclick="setPeriod('q1',this)">Q1 (Jul–Sep 2025)</button>
+  <button class="period-btn" role="radio" aria-checked="false" aria-label="Quarter 2: October through December 2025" onclick="setPeriod('q2',this)">Q2 (Oct–Dec 2025)</button>
+  <span class="period-note" id="period-note">July 2025 – February 2026</span>
 </div>
 
 <!-- PAGE NAV -->
 <div class="page-nav">
-  <div class="page-tab active" onclick="showPage('overview',this)">Overview</div>
-  <div class="page-tab" onclick="showPage('demographics',this)">Demographics</div>
-  <div class="page-tab" onclick="showPage('calls',this)">Call Analysis</div>
-  <div class="page-tab" onclick="showPage('outcomes',this)">Outcomes</div>
+  <div class="page-tab active" role="tab" aria-selected="true" aria-controls="page-overview" tabindex="0" onclick="showPage('overview',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('overview',this)">Overview</div>
+  <div class="page-tab" role="tab" aria-selected="false" aria-controls="page-demographics" tabindex="0" onclick="showPage('demographics',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('demographics',this)">Demographics</div>
+  <div class="page-tab" role="tab" aria-selected="false" aria-controls="page-calls" tabindex="0" onclick="showPage('calls',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('calls',this)">Call Analysis</div>
+  <div class="page-tab" role="tab" aria-selected="false" aria-controls="page-outcomes" tabindex="0" onclick="showPage('outcomes',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('outcomes',this)">Outcomes</div>
 </div>
 
 <!-- ═══════════════════════════════════════════
@@ -127,28 +138,32 @@
 <div class="content">
 <div class="page active" id="page-overview">
 
+  <div class="page-context">
+    The Care Team is West Hollywood's mobile behavioral health response program, operated by Sycamores. This page summarizes call volume, response times, and the most common reasons people are contacted for help.
+  </div>
+
   <div class="kpi-row kpi-4" id="kpi-overview-top"></div>
   <div class="kpi-row kpi-4" id="kpi-overview-bot"></div>
 
   <div class="chart-card full" style="margin-bottom:18px;">
     <div class="chart-title">Monthly engagement volume</div>
-    <div class="chart-note">Engagements vs. follow-up engagements by month</div>
+    <div class="chart-note">Each bar shows the number of calls responded to (dark blue) and follow-up check-ins completed (light blue) for that month.</div>
     <div class="chart-legend">
-      <span><span class="legend-swatch" style="background:#003087;"></span>Engagements</span>
-      <span><span class="legend-swatch" style="background:#5B9BD5;"></span>Follow-ups</span>
+      <span><span class="legend-swatch" style="background:#003087;"></span>Calls responded to</span>
+      <span><span class="legend-swatch" style="background:#5B9BD5;"></span>Follow-up check-ins</span>
     </div>
     <canvas id="c-trend" height="200"></canvas>
   </div>
 
   <div class="half-grid">
     <div class="chart-card">
-      <div class="chart-title">Presenting issues (% of engagements)</div>
-      <div class="chart-note" style="margin-bottom:14px;">Multiple issues may be recorded per call</div>
+      <div class="chart-title">Why people were contacted</div>
+      <div class="chart-note">Percentage of calls where each issue was recorded. Calls often involve more than one issue, so percentages may add up to more than 100%.</div>
       <div id="bars-presenting"></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Referral sources (% of engagements)</div>
-      <div class="chart-note" style="margin-bottom:14px;">Multiple referral sources may apply per call</div>
+      <div class="chart-title">How calls were initiated</div>
+      <div class="chart-note">Percentage of calls attributed to each referral source. A single call may be referred by more than one source.</div>
       <div id="bars-referral"></div>
     </div>
   </div>
@@ -160,31 +175,34 @@
 ═══════════════════════════════════════════ -->
 <div class="page" id="page-demographics">
 
+  <div class="page-context">
+    Who the Care Team served — broken down by age, gender, race/ethnicity, and housing status. Counts are based on the number of individuals seen each month. People seen in multiple months are counted once per month, so totals may be higher than the number of unique individuals served.
+  </div>
+
   <div class="kpi-row kpi-3" id="kpi-demo-top"></div>
-  <p class="section-note">Demographic counts reflect the sum of monthly unduplicated figures. Individuals seen across multiple months are counted more than once.</p>
 
   <div class="chart-grid">
     <div class="chart-card">
-      <div class="chart-title">Age distribution</div>
-      <div class="chart-note">Sum of monthly unduplicated counts</div>
+      <div class="chart-title">Age groups served</div>
+      <div class="chart-note">Total contacts by age group across the selected period</div>
       <canvas id="c-age" height="220"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Race / ethnicity</div>
-      <div class="chart-note">Sum of monthly unduplicated counts</div>
+      <div class="chart-title">Race and ethnicity</div>
+      <div class="chart-note">Total contacts by race/ethnicity across the selected period</div>
       <canvas id="c-race" height="220"></canvas>
     </div>
     <div class="chart-card">
       <div class="chart-title">Gender identity</div>
-      <div class="chart-note">Sum of monthly unduplicated counts</div>
+      <div class="chart-note">Share of contacts by gender identity across the selected period</div>
       <canvas id="c-gender" height="220"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Housing status — monthly trend</div>
-      <div class="chart-note">Count of individuals per month by housing status</div>
+      <div class="chart-title">Housing status over time</div>
+      <div class="chart-note">How many contacts each month were unhoused vs. housed</div>
       <div class="chart-legend">
         <span><span class="legend-swatch" style="background:#003087;"></span>Unhoused</span>
-        <span><span class="legend-swatch" style="background:#5B9BD5; border:1px dashed #5B9BD5;"></span>Housed</span>
+        <span><span class="legend-swatch" style="background:#5B9BD5;"></span>Housed</span>
       </div>
       <canvas id="c-housing" height="180"></canvas>
     </div>
@@ -197,34 +215,42 @@
 ═══════════════════════════════════════════ -->
 <div class="page" id="page-calls">
 
+  <div class="page-context">
+    When and where calls happen — including the busiest days and times, where the team responded, and how quickly they arrived. Response time metrics are based on the full fiscal year and do not change with the period filter.
+  </div>
+
   <div class="chart-grid">
     <div class="chart-card">
-      <div class="chart-title">Engagements by day of week</div>
-      <div class="chart-note">Total engagement count per day</div>
+      <div class="chart-title">Calls by day of the week</div>
+      <div class="chart-note">Which days saw the most calls. The darkest bar is the busiest day.</div>
       <canvas id="c-dow" height="220"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Engagements by time of day</div>
-      <div class="chart-note">Total engagement count per 2-hour block</div>
+      <div class="chart-title">Calls by time of day</div>
+      <div class="chart-note">Which 2-hour windows had the most calls. Darkest bars are the busiest periods.</div>
       <canvas id="c-tod" height="220"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Location of service</div>
-      <div class="chart-note">Distribution of engagement locations</div>
+      <div class="chart-title">Where calls took place</div>
+      <div class="chart-note">Breakdown of the locations where the Care Team responded</div>
       <canvas id="c-loc" height="220"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Response &amp; call time metrics</div>
-      <div class="chart-note">FYTD averages — does not change by period filter</div>
+      <div class="chart-title">Response and call time summary</div>
+      <div class="chart-note">Full fiscal year averages — reflects all calls July 2025 through February 2026</div>
       <table class="stat-table">
-        <tr><td>Dispatch to arrival — average</td><td>19 min</td></tr>
-        <tr><td>Dispatch to arrival — median</td><td>14 min</td></tr>
-        <tr><td>Call duration — average</td><td>29 min</td></tr>
-        <tr><td>Call duration — median</td><td>13 min</td></tr>
-        <tr><td>Queue wait (when unavailable) — avg</td><td>7 min</td></tr>
-        <tr><td>Queue wait (when unavailable) — median</td><td>4 min</td></tr>
-        <tr><td>Initial engagement time — avg</td><td>17 min</td></tr>
-        <tr><td>Follow-up engagement time — avg</td><td>18 min</td></tr>
+        <tr class="row-group"><td colspan="2">Arrival speed</td></tr>
+        <tr><td>Time from dispatch to team arrival — average</td><td>19 min</td></tr>
+        <tr><td>Time from dispatch to team arrival — median</td><td>14 min</td></tr>
+        <tr class="row-group"><td colspan="2">Time spent on calls</td></tr>
+        <tr><td>Duration per call, arrival to close — average</td><td>29 min</td></tr>
+        <tr><td>Duration per call, arrival to close — median</td><td>13 min</td></tr>
+        <tr class="row-group"><td colspan="2">Queue wait (when team was already on a call)</td></tr>
+        <tr><td>Wait time in queue — average</td><td>7 min</td></tr>
+        <tr><td>Wait time in queue — median</td><td>4 min</td></tr>
+        <tr class="row-group"><td colspan="2">Time spent with clients</td></tr>
+        <tr><td>Initial visit — average time</td><td>17 min</td></tr>
+        <tr><td>Follow-up check-in — average time</td><td>18 min</td></tr>
       </table>
     </div>
   </div>
@@ -236,33 +262,44 @@
 ═══════════════════════════════════════════ -->
 <div class="page" id="page-outcomes">
 
+  <div class="page-context">
+    What happened after the Care Team responded — including resources provided on-scene, follow-up services, transports to other locations, and the small number of cases that required law enforcement or fire/EMS.
+  </div>
+
   <div class="kpi-row kpi-4" id="kpi-outcomes-top"></div>
 
   <div class="chart-grid">
     <div class="chart-card">
-      <div class="chart-title">On-scene referrals by type</div>
-      <div class="chart-note">Count of referrals provided during initial engagement</div>
+      <div class="chart-title">Resources provided on-scene</div>
+      <div class="chart-note">Count of resources or referrals given during initial visits</div>
       <div id="bars-onscene"></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Follow-up referrals by type</div>
-      <div class="chart-note">Count of referrals provided during follow-up engagements</div>
+      <div class="chart-title">Resources provided during follow-ups</div>
+      <div class="chart-note">Count of resources or referrals given during follow-up check-ins</div>
       <div id="bars-followup"></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">First responder involvement</div>
-      <div class="chart-note">Care Team-initiated requests for law enforcement and fire/EMS</div>
+      <div class="chart-title">Law enforcement and fire/EMS involvement</div>
+      <div class="chart-note">Number of times the Care Team requested additional first-responder support</div>
       <table class="stat-table" id="tbl-fr"></table>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Individuals with repeat engagements — monthly</div>
-      <div class="chart-note">Count of individuals engaged more than once per month</div>
+      <div class="chart-title">Repeat contacts per month</div>
+      <div class="chart-note">Number of individuals the team connected with more than once in a given month</div>
       <canvas id="c-repeat" height="200"></canvas>
     </div>
   </div>
 
 </div>
 </div><!-- /content -->
+
+<div class="content" style="padding-top:0;">
+  <div class="dash-footer">
+    <span>West Hollywood Care Team &nbsp;·&nbsp; Human Services Division &nbsp;·&nbsp; City of West Hollywood</span>
+    <span>Data source: Sycamores monthly report &nbsp;·&nbsp; FY 2025–26</span>
+  </div>
+</div>
 
 <script>
 // ══════════════════════════════════════════════
@@ -272,8 +309,8 @@ const MONTHS = ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
 const MONTH_LABELS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26'];
 
 // Quarter index ranges
-const QIDX = { ytd:[0,1,2,3,4,5,6,7], q1:[0,1,2], q2:[3,4,5], q3:[6,7] };
-const QLABELS = { ytd:'Jul 2025 – Feb 2026', q1:'Q1: Jul – Sep 2025', q2:'Q2: Oct – Dec 2025', q3:'Q3 (partial): Jan – Feb 2026' };
+const QIDX = { ytd:[0,1,2,3,4,5,6,7], q1:[0,1,2], q2:[3,4,5] };
+const QLABELS = { ytd:'Jul 2025 – Feb 2026', q1:'Q1: Jul – Sep 2025', q2:'Q2: Oct – Dec 2025' };
 
 // All monthly series [Jul,Aug,Sep,Oct,Nov,Dec,Jan,Feb]
 const D = {
@@ -403,11 +440,17 @@ function periodMonthLabels() { return monthsInPeriod().map(i => MONTH_LABELS[i])
 // ══════════════════════════════════════════════
 function setPeriod(p, btn) {
   currentPeriod = p;
-  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.period-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-checked','false');
+  });
   btn.classList.add('active');
-  const notes = { ytd:'July 2025 – February 2026 &nbsp;|&nbsp; Q3 is partial (2 of 3 months)',
-    q1:'Q1: July – September 2025 (3 months)', q2:'Q2: October – December 2025 (3 months)',
-    q3:'Q3: January – February 2026 (partial — 2 of 3 months)' };
+  btn.setAttribute('aria-checked','true');
+  const notes = {
+    ytd: 'July 2025 – February 2026',
+    q1:  'Q1: July – September 2025',
+    q2:  'Q2: October – December 2025'
+  };
   document.getElementById('period-note').innerHTML = notes[p];
   destroyCharts();
   renderCurrentPage();
@@ -419,9 +462,13 @@ function setPeriod(p, btn) {
 function showPage(id, el) {
   currentPage = id;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.page-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page-tab').forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected','false');
+  });
   document.getElementById('page-'+id).classList.add('active');
   el.classList.add('active');
+  el.setAttribute('aria-selected','true');
   destroyCharts();
   renderCurrentPage();
 }
@@ -454,11 +501,15 @@ const B1='#003087', B2='#5B9BD5', B3='#8FBBDB', B4='#B8D4EA', B5='#D4E8F4';
 const PALETTE = [B1,B2,B3,B4,B5,'#cfe0f0','#e6f0f8','#f0f6fb'];
 
 function setupCanvas(canvas) {
-  const W = canvas.parentElement.offsetWidth || 400;
+  const parent = canvas.parentElement;
+  const style = window.getComputedStyle(parent);
+  const padL = parseFloat(style.paddingLeft) || 0;
+  const padR = parseFloat(style.paddingRight) || 0;
+  const W = Math.max((parent.clientWidth - padL - padR), 200);
   const H = parseInt(canvas.getAttribute('height')) || 220;
   canvas.width = W;
   canvas.height = H;
-  canvas.style.width = '100%';
+  canvas.style.width = W + 'px';
   canvas.style.height = H + 'px';
   return { ctx: canvas.getContext('2d'), W, H };
 }
@@ -688,8 +739,8 @@ function renderOverview() {
 
   setKPI('kpi-overview-top',
     kpiCard('Total engagements', fmt(eng), '~'+Math.round(eng/days*10)/10+' per day') +
-    kpiCard('Unique individuals served', fmt(uniq), 'Sum of monthly unduplicated counts') +
-    kpiCard('Follow-up engagements', fmt(fu), '~'+Math.round(fu/days*10)/10+' per day') +
+    kpiCard('Unique individuals served', fmt(uniq), 'People seen each month, combined') +
+    kpiCard('Follow-up check-ins', fmt(fu), '~'+Math.round(fu/days*10)/10+' per day') +
     kpiCard('Transports completed', fmt(trans), '~'+Math.round(trans/idx.length)+' per month')
   );
   setKPI('kpi-overview-bot',
@@ -752,9 +803,9 @@ function renderDemographics() {
   const AX = { age:260, race:400, housing:140 };
 
   setKPI('kpi-demo-top',
-    kpiCard('Unhoused (% of contacts)', fmt(unhoused), pct(unhoused,total)+' of monthly contact counts') +
-    kpiCard('Housed (% of contacts)', fmt(housed), pct(housed,total)+' of monthly contact counts') +
-    kpiCard('Decline to state', fmt(dts), pct(dts,total)+' of monthly contact counts')
+    kpiCard('Contacts — unhoused', fmt(unhoused), pct(unhoused,total)+' of contacts this period') +
+    kpiCard('Contacts — housed', fmt(housed), pct(housed,total)+' of contacts this period') +
+    kpiCard('Housing status unknown', fmt(dts), pct(dts,total)+' declined to state')
   );
 
   drawBar('c-age',
@@ -814,15 +865,16 @@ function renderCalls() {
 function renderOutcomes() {
   const onUniq = periodSum('onSceneUnique');
   const fuUniq = periodSum('fuUnique');
+  const fuEng = periodSum('followups');
   const trans = periodSum('transports');
   const repeats = periodSum('repeats');
   const AX = { onscene:500, furef:460, repeats:30 };
 
   setKPI('kpi-outcomes-top',
-    kpiCard('On-scene care — unique individuals', fmt(onUniq), 'Sum of monthly counts') +
-    kpiCard('Follow-up care — unique individuals', fmt(fuUniq), 'Sum of monthly counts') +
-    kpiCard('Transports completed', fmt(trans), 'Avg 37 min per trip (FYTD)') +
-    kpiCard('Individuals w/ repeat engagements', fmt(repeats), 'Sum of monthly counts')
+    kpiCard('Initial visits', fmt(periodSum('engagements')), 'Total calls responded to this period') +
+    kpiCard('Follow-up check-ins', fmt(fuEng), 'Total follow-up contacts this period') +
+    kpiCard('Transports completed', fmt(trans), 'Avg 37 min per trip') +
+    kpiCard('Individuals with repeat contacts', fmt(repeats), 'Seen more than once in a month')
   );
 
   buildBars('bars-onscene', [
@@ -854,14 +906,17 @@ function renderOutcomes() {
   const voided = periodSum('frHoldsVoided');
 
   document.getElementById('tbl-fr').innerHTML = `
-    <tr><td>LASD requests by Care Team</td><td>${lasd}</td></tr>
-    <tr><td>&nbsp;&nbsp;— involving unhoused individuals</td><td>${lasdU}</td></tr>
-    <tr><td>&nbsp;&nbsp;— involving housed individuals</td><td>${lasdH}</td></tr>
-    <tr><td>LACFD requests by Care Team</td><td>${lacfd}</td></tr>
-    <tr><td>&nbsp;&nbsp;— involving unhoused individuals</td><td>${lacfdU}</td></tr>
-    <tr><td>&nbsp;&nbsp;— involving housed individuals</td><td>${lacfdH}</td></tr>
-    <tr><td>Involuntary holds applied (5585/5150)</td><td>${holds}</td></tr>
-    <tr><td>Holds voided / discontinued</td><td>${voided}</td></tr>`;
+    <tr class="row-group"><td colspan="2">Sheriff (LASD)</td></tr>
+    <tr><td>Times Care Team requested LASD support</td><td>${lasd}</td></tr>
+    <tr class="row-indent"><td>Contacts who were unhoused</td><td>${lasdU}</td></tr>
+    <tr class="row-indent"><td>Contacts who were housed</td><td>${lasdH}</td></tr>
+    <tr class="row-group"><td colspan="2">Fire / EMS (LACFD)</td></tr>
+    <tr><td>Times Care Team requested Fire/EMS support</td><td>${lacfd}</td></tr>
+    <tr class="row-indent"><td>Contacts who were unhoused</td><td>${lacfdU}</td></tr>
+    <tr class="row-indent"><td>Contacts who were housed</td><td>${lacfdH}</td></tr>
+    <tr class="row-group"><td colspan="2">Involuntary holds</td></tr>
+    <tr><td>Holds initiated (5585 / 5150)</td><td>${holds}</td></tr>
+    <tr><td>Holds voided or discontinued</td><td>${voided}</td></tr>`;
 
   const mLabels = periodMonthLabels();
   const mRepeats = periodMonthData('repeats');
@@ -869,7 +924,26 @@ function renderOutcomes() {
 }
 
 // ── INIT ──
-renderOverview();
+// Defer first render so Chrome has completed layout before we measure widths
+function init() {
+  renderCurrentPage();
+
+  // Redraw on window resize so charts never stay squeezed after resizing
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      destroyCharts();
+      renderCurrentPage();
+    }, 150);
+  });
+}
+
+if (document.readyState === 'complete') {
+  requestAnimationFrame(() => requestAnimationFrame(init));
+} else {
+  window.addEventListener('load', () => requestAnimationFrame(() => requestAnimationFrame(init)));
+}
 </script>
 </body>
 </html>
