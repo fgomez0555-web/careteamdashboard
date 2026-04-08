@@ -26,7 +26,6 @@
   .period-btn:focus-visible { outline: 3px solid #003087; outline-offset: 2px; }
   .page-tab:focus-visible { outline: 3px solid #003087; outline-offset: -2px; }
   .period-btn.active { background: #003087; color: #fff; border-color: #003087; }
-  .period-note { margin-left: auto; font-size: 11px; color: #6b7a99; background: #f0f4ff; border: 1px solid #dce3ef; border-radius: 12px; padding: 3px 10px; white-space: nowrap; }
 
   /* ── PAGE NAV ── */
   .page-nav { background: #fff; border-bottom: 1px solid #dce3ef; padding: 0 28px; display: flex; gap: 0; }
@@ -96,7 +95,6 @@
     .header-logos { flex-wrap: wrap; }
     .header-right { text-align: left; }
     .period-bar { flex-wrap: wrap; }
-    .period-note { margin-left: 0; }
   }
 </style>
 </head>
@@ -118,10 +116,10 @@
 <!-- PERIOD FILTER -->
 <div class="period-bar">
   <span class="period-label">Period</span>
-  <button class="period-btn active" role="radio" aria-checked="true" aria-label="Year to date: July 2025 through February 2026" onclick="setPeriod('ytd',this)">YTD</button>
+  <button class="period-btn active" role="radio" aria-checked="true" aria-label="Full year to date: July 2025 through February 2026" onclick="setPeriod('ytd',this)">Full Year (YTD)</button>
   <button class="period-btn" role="radio" aria-checked="false" aria-label="Quarter 1: July through September 2025" onclick="setPeriod('q1',this)">Q1 (Jul–Sep 2025)</button>
   <button class="period-btn" role="radio" aria-checked="false" aria-label="Quarter 2: October through December 2025" onclick="setPeriod('q2',this)">Q2 (Oct–Dec 2025)</button>
-  <span class="period-note" id="period-note">July 2025 – February 2026</span>
+  <button class="period-btn" role="radio" aria-checked="false" aria-label="Quarter 3: January through February 2026, partial quarter" onclick="setPeriod('q3',this)">Q3 (Jan–Feb 2026)</button>
 </div>
 
 <!-- PAGE NAV -->
@@ -139,7 +137,7 @@
 <div class="page active" id="page-overview">
 
   <div class="page-context">
-    The Care Team is West Hollywood's mobile behavioral health response program, operated by Sycamores. This page summarizes call volume, response times, and the most common reasons people are contacted for help.
+    The Care Team is West Hollywood's mobile behavioral health response program, operated by Sycamores. This page summarizes call volume, response times, and the most common reasons people are contacted for help. Q3 reflects January–February 2026 only (2 of 3 months).
   </div>
 
   <div class="kpi-row kpi-4" id="kpi-overview-top"></div>
@@ -176,7 +174,7 @@
 <div class="page" id="page-demographics">
 
   <div class="page-context">
-    Who the Care Team served — broken down by age, gender, race/ethnicity, and housing status. Counts are based on the number of individuals seen each month. People seen in multiple months are counted once per month, so totals may be higher than the number of unique individuals served.
+    Who the Care Team served — broken down by age, gender, race/ethnicity, and housing status. Across the full year to date (July 2025–February 2026), the Care Team served <strong>727 unique individuals</strong>, of whom <strong>578 (80%) were unhoused</strong>. These are unduplicated counts provided by Sycamores. Quarterly figures and demographic breakdowns are based on monthly counts, which may count the same person more than once if they were served across multiple months.
   </div>
 
   <div class="kpi-row kpi-3" id="kpi-demo-top"></div>
@@ -237,7 +235,7 @@
     </div>
     <div class="chart-card">
       <div class="chart-title">Response and call time summary</div>
-      <div class="chart-note">Full fiscal year averages — reflects all calls July 2025 through February 2026</div>
+      <div class="chart-note">Full year averages (July 2025–February 2026) — does not change with the period filter</div>
       <table class="stat-table">
         <tr class="row-group"><td colspan="2">Arrival speed</td></tr>
         <tr><td>Time from dispatch to team arrival — average</td><td>19 min</td></tr>
@@ -309,14 +307,20 @@ const MONTHS = ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
 const MONTH_LABELS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26'];
 
 // Quarter index ranges
-const QIDX = { ytd:[0,1,2,3,4,5,6,7], q1:[0,1,2], q2:[3,4,5] };
-const QLABELS = { ytd:'Jul 2025 – Feb 2026', q1:'Q1: Jul – Sep 2025', q2:'Q2: Oct – Dec 2025' };
+const QIDX = { ytd:[0,1,2,3,4,5,6,7], q1:[0,1,2], q2:[3,4,5], q3:[6,7] };
+const QLABELS = { ytd:'Jul 2025 – Feb 2026', q1:'Q1: Jul – Sep 2025', q2:'Q2: Oct – Dec 2025', q3:'Q3: Jan – Feb 2026 (partial)' };
 
 // All monthly series [Jul,Aug,Sep,Oct,Nov,Dec,Jan,Feb]
 const D = {
   engagements:       [140,86,73,115,170,200,198,266],
   followups:         [234,180,205,211,170,132,135,171],
   unique:            [113,83,60,94,132,143,131,171],
+
+  // True unduplicated FYTD counts from Sycamores — only available for full YTD, not by quarter
+  FYTD_unique:       727,
+  FYTD_unhoused:     578,
+  FYTD_housed:       102,
+  FYTD_dts:          47,
   repeats:           [14,5,7,15,14,20,19,26],
   transports:        [16,20,16,15,25,9,17,23],
 
@@ -449,9 +453,10 @@ function setPeriod(p, btn) {
   const notes = {
     ytd: 'July 2025 – February 2026',
     q1:  'Q1: July – September 2025',
-    q2:  'Q2: October – December 2025'
+    q2:  'Q2: October – December 2025',
+    q3:  'Q3: January – February 2026 (2 of 3 months)'
   };
-  document.getElementById('period-note').innerHTML = notes[p];
+  // period note element removed — no action needed
   destroyCharts();
   renderCurrentPage();
 }
@@ -734,20 +739,21 @@ function renderOverview() {
   const eng = periodSum('engagements');
   const fu = periodSum('followups');
   const trans = periodSum('transports');
-  const uniq = periodSum('unique');
+  const uniqDisplay = currentPeriod === 'ytd' ? D.FYTD_unique : periodSum('unique');
+  const uniqSub = currentPeriod === 'ytd' ? 'Unduplicated — source: Sycamores' : 'Sum of monthly counts (est.)';
   const days = idx.length * 30.4;
 
   setKPI('kpi-overview-top',
     kpiCard('Total engagements', fmt(eng), '~'+Math.round(eng/days*10)/10+' per day') +
-    kpiCard('Unique individuals served', fmt(uniq), 'People seen each month, combined') +
+    kpiCard('Unique individuals served', fmt(uniqDisplay), uniqSub) +
     kpiCard('Follow-up check-ins', fmt(fu), '~'+Math.round(fu/days*10)/10+' per day') +
     kpiCard('Transports completed', fmt(trans), '~'+Math.round(trans/idx.length)+' per month')
   );
   setKPI('kpi-overview-bot',
-    kpiCard('Avg response time', '19 min', 'Dispatch to arrival (FYTD)') +
-    kpiCard('Avg call duration', '29 min', 'Arrival to close (FYTD)') +
-    kpiCard('Avg follow-up time', '18 min', 'Per engagement (FYTD)') +
-    kpiCard('Avg transport time', '37 min', 'Per transport (FYTD)')
+    kpiCard('Avg response time', '19 min', 'Dispatch to arrival — Jul 2025–Feb 2026') +
+    kpiCard('Avg call duration', '29 min', 'Arrival to close — Jul 2025–Feb 2026') +
+    kpiCard('Avg follow-up time', '18 min', 'Per engagement — Jul 2025–Feb 2026') +
+    kpiCard('Avg transport time', '37 min', 'Per transport — Jul 2025–Feb 2026')
   );
 
   // Trend chart
@@ -795,17 +801,19 @@ function renderOverview() {
 }
 
 function renderDemographics() {
-  const housed = periodSum('housingHoused');
-  const unhoused = periodSum('housingUnhoused');
-  const dts = periodSum('housingDTS');
-  const total = housed+unhoused+dts;
+  const isYTD = currentPeriod === 'ytd';
+  const housed   = isYTD ? D.FYTD_housed   : periodSum('housingHoused');
+  const unhoused = isYTD ? D.FYTD_unhoused : periodSum('housingUnhoused');
+  const dts      = isYTD ? D.FYTD_dts      : periodSum('housingDTS');
+  const total    = housed + unhoused + dts;
+  const housingSub = isYTD ? 'Unduplicated — source: Sycamores' : 'Sum of monthly counts (est.)';
 
   const AX = { age:260, race:400, housing:140 };
 
   setKPI('kpi-demo-top',
-    kpiCard('Contacts — unhoused', fmt(unhoused), pct(unhoused,total)+' of contacts this period') +
-    kpiCard('Contacts — housed', fmt(housed), pct(housed,total)+' of contacts this period') +
-    kpiCard('Housing status unknown', fmt(dts), pct(dts,total)+' declined to state')
+    kpiCard('Contacts — unhoused', fmt(unhoused), pct(unhoused,total)+' of individuals served &nbsp;·&nbsp; '+housingSub) +
+    kpiCard('Contacts — housed', fmt(housed), pct(housed,total)+' of individuals served &nbsp;·&nbsp; '+housingSub) +
+    kpiCard('Housing status unknown', fmt(dts), pct(dts,total)+' declined to state &nbsp;·&nbsp; '+housingSub)
   );
 
   drawBar('c-age',
@@ -873,7 +881,7 @@ function renderOutcomes() {
   setKPI('kpi-outcomes-top',
     kpiCard('Initial visits', fmt(periodSum('engagements')), 'Total calls responded to this period') +
     kpiCard('Follow-up check-ins', fmt(fuEng), 'Total follow-up contacts this period') +
-    kpiCard('Transports completed', fmt(trans), 'Avg 37 min per trip') +
+    kpiCard('Transports completed', fmt(trans), 'Avg 37 min per trip — Jul 2025–Feb 2026') +
     kpiCard('Individuals with repeat contacts', fmt(repeats), 'Seen more than once in a month')
   );
 
