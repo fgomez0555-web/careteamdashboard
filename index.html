@@ -573,7 +573,7 @@ function drawGroupedBar(canvasId, labels, datasets, opts={}) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
   const { ctx, W, H } = setupCanvas(canvas);
-  const pad = {top:14,right:16,bottom:30,left:48};
+  const pad = {top:14,right:32,bottom:30,left:48};
   const chartW=W-pad.left-pad.right, chartH=H-pad.top-pad.bottom;
   const allVals = datasets.flatMap(d=>d.data);
   const max = opts.axisMax || Math.max(...allVals,1);
@@ -609,7 +609,7 @@ function drawLine(canvasId, labels, datasets, opts={}) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
   const { ctx, W, H } = setupCanvas(canvas);
-  const pad={top:14,right:16,bottom:30,left:48};
+  const pad={top:14,right:32,bottom:30,left:48};
   const chartW=W-pad.left-pad.right, chartH=H-pad.top-pad.bottom;
   const allVals=datasets.flatMap(d=>d.data);
   const max=opts.axisMax || Math.max(...allVals,1);
