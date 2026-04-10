@@ -83,6 +83,17 @@
     .chart-card.full { grid-column: span 1; }
     .header { flex-direction: column; align-items: flex-start; gap: 12px; }
     .header-right { text-align: left; }
+    .bar-label { width: 130px; }
+  }
+  @media (max-width: 520px) {
+    .kpi-4, .kpi-3 { grid-template-columns: 1fr; }
+    .kpi-value { font-size: 26px; }
+    .page-nav { overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; padding: 0 12px; }
+    .page-tab { padding: 10px 14px; font-size: 13px; display: inline-block; }
+    .content { padding: 12px; }
+    .bar-label { width: 100px; font-size: 11px; }
+    .bar-fill { font-size: 11px; }
+    .header-fy { font-size: 13px; }
   }
 
 /* ── FLOW CARDS ── */
@@ -97,6 +108,7 @@
 .flow-cards-note { font-size:12px; color:#9aa5be; font-style:italic; margin-top:8px; }
 @media(max-width:700px){
   .flow-cards{flex-direction:column;}
+  .flow-card-value{font-size:28px;}
 }
 
 /* ── TOOLTIP ── */
@@ -1085,6 +1097,25 @@ function attachDonutTooltips(canvasId, labels, values) {
     hideTooltip();
   }, hideTooltip);
 }
+
+
+// ── MOBILE CANVAS HEIGHT ADJUSTMENT ──
+function adjustCanvasHeights() {
+  if (window.innerWidth <= 520) {
+    document.querySelectorAll('canvas').forEach(c => {
+      const orig = parseInt(c.getAttribute('data-orig-height') || c.height);
+      c.setAttribute('data-orig-height', orig);
+      c.height = Math.round(orig * 0.7);
+    });
+  } else {
+    document.querySelectorAll('canvas').forEach(c => {
+      const orig = c.getAttribute('data-orig-height');
+      if (orig) c.height = parseInt(orig);
+    });
+  }
+}
+window.addEventListener('resize', function() { adjustCanvasHeights(); destroyCharts(); renderCurrentPage(); });
+adjustCanvasHeights();
 
 </script>
 <div class="chart-tooltip" id="chart-tooltip"></div>
