@@ -183,7 +183,7 @@
     Who the Care Team served — broken down by age, gender, race/ethnicity, and housing status.
   </div>
 
-  <div class="kpi-row kpi-3" id="kpi-demo-top"></div>
+  <div class="kpi-row kpi-3" id="kpi-demo-top" style="display:none;"></div>
 
   <div class="chart-grid">
     <div class="chart-card">
@@ -202,6 +202,11 @@
       <canvas id="c-gender" height="220"></canvas>
     </div>
     <div class="chart-card">
+      <div class="chart-title">Housing status — breakdown</div>
+      <div class="chart-note">Share of engagements by housing status</div>
+      <canvas id="c-housing-donut" height="240"></canvas>
+    </div>
+    <div class="chart-card full">
       <div class="chart-title">Housing status of contacts over time</div>
       <div class="chart-note">How many contacts each month were unhoused vs. housed</div>
       <div class="chart-legend">
@@ -699,31 +704,43 @@ function drawDonut(canvasId, labels, values, colors) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
   const { ctx, W, H } = setupCanvas(canvas);
-  const cx=W/2, cy=H/2-16, r=Math.min(W,H)/2-20, ir=r*0.55;
-  const total=values.reduce((a,b)=>a+b,0);
-  let angle=-Math.PI/2;
+  const n = labels.length;
+  const lh = 20;
+  const legendH = n * lh + 8;
+  const availH = H - legendH;
+  const r = Math.min(W, availH) / 2 - 12;
+  const cx = W / 2, cy = availH / 2 + 4;
+  const ir = r * 0.55;
+  const total = values.reduce((a,b)=>a+b,0);
+  let angle = -Math.PI / 2;
 
   values.forEach((v,i) => {
-    const slice=(v/total)*Math.PI*2;
+    const slice = (v/total)*Math.PI*2;
     ctx.beginPath(); ctx.moveTo(cx,cy);
     ctx.arc(cx,cy,r,angle,angle+slice);
     ctx.closePath(); ctx.fillStyle=colors[i]; ctx.fill();
     ctx.beginPath(); ctx.arc(cx,cy,ir,0,Math.PI*2);
     ctx.fillStyle='#fff'; ctx.fill();
-    angle+=slice;
+    angle += slice;
   });
 
-  // legend
-  const lh=14, startY=cy+r+16;
-  const cols=Math.ceil(labels.length/2);
+  // single-column centred legend below donut
+  const startY = availH + 8;
+  const swatchW = 12, swatchH = 12, gap = 6;
+  ctx.font = '12px Arial';
   labels.forEach((lbl,i) => {
-    const col=i%2, row=Math.floor(i/2);
-    const lx=col===0?(W/2-80):(W/2+4), ly=startY+row*lh;
-    ctx.fillStyle=colors[i]; ctx.fillRect(lx,ly-9,10,10);
-    ctx.fillStyle='#6b7a99'; ctx.font='12px Arial'; ctx.textAlign='left';
-    ctx.fillText(lbl+' '+pct(values[i],total), lx+13, ly);
+    const text = lbl + '  ' + pct(values[i], total);
+    const textW = ctx.measureText(text).width;
+    const rowW = swatchW + gap + textW;
+    const lx = (W - rowW) / 2;
+    const ly = startY + i * lh;
+    ctx.fillStyle = colors[i];
+    ctx.fillRect(lx, ly, swatchW, swatchH);
+    ctx.fillStyle = '#4a5568';
+    ctx.textAlign = 'left';
+    ctx.fillText(text, lx + swatchW + gap, ly + swatchH - 1);
   });
-  chartInstances[canvasId]=true;
+  chartInstances[canvasId] = true;
 }
 
 function roundRect(ctx,x,y,w,h,r) {
@@ -858,11 +875,7 @@ function renderDemographics() {
 
   const AX = { age:260, race:400, housing:140 };
 
-  setKPI('kpi-demo-top',
-    kpiCard('Unhoused', fmt(unhoused), pct(unhoused,total)+' of engagements') +
-    kpiCard('Housed', fmt(housed), pct(housed,total)+' of engagements') +
-    kpiCard('Housing status unknown', fmt(dts), pct(dts,total)+' of engagements')
-  );
+  setKPI('kpi-demo-top', '');
 
   drawBar('c-age',
     ['0–17','18–34','35–49','50–64','65–79','80+','DTS'],
@@ -881,6 +894,16 @@ function renderDemographics() {
   const gDTS = D_demo.genderDTS;
   drawDonut('c-gender',['Male','Female','Decline to state'],[gMale,gFemale,gDTS],[B1,B2,B4]);
   attachDonutTooltips('c-gender',['Male','Female','Decline to state'],[gMale,gFemale,gDTS]);
+
+  drawDonut('c-housing-donut',
+    ['Unhoused','Housed','Unknown'],
+    [unhoused, housed, dts],
+    [B1, B2, B4]
+  );
+  attachDonutTooltips('c-housing-donut',
+    ['Unhoused','Housed','Unknown'],
+    [unhoused, housed, dts]
+  );
 
   const mLabels = periodMonthLabels();
   const mHoused = periodMonthData('housingHoused');
