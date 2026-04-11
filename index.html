@@ -3,804 +3,1145 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>West Hollywood Homeless Initiative — Dashboard</title>
+<title>West Hollywood Care Team — Program Dashboard FY 2025–26</title>
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: Arial, Helvetica, sans-serif; background: #f4f6f9; color: #1a1a2e; font-size: 16px; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, Helvetica, sans-serif; background: #f4f6f9; color: #1a1a2e; font-size: 16px; }
 
-/* HEADER */
-.header { background: #003087; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.header-title { color: #fff; font-size: 21px; font-weight: 700; }
-.header-sub { color: rgba(255,255,255,0.72); font-size: 13px; margin-top: 2px; }
-.header-right { text-align: right; flex-shrink: 0; }
-.header-label { color: rgba(255,255,255,0.6); font-size: 13px; }
-.header-val { color: #fff; font-size: 14px; font-weight: 700; margin-top: 2px; }
+  /* ── HEADER ── */
+  .header { background: #003087; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .header-right { text-align: right; flex-shrink: 0; }
+  .header-period { color: rgba(255,255,255,0.6); font-size: 13px; }
+  .header-fy { color: #fff; font-size: 15px; font-weight: 700; margin-top: 2px; }
 
-/* PAGE NAV */
-.page-nav { background: #fff; border-bottom: 1px solid #dce3ef; padding: 0 28px; display: flex; }
-.page-tab { padding: 12px 20px; font-size: 15px; font-weight: 700; color: #6b7a99; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
-.page-tab:hover { color: #003087; background: #f8faff; }
-.page-tab.active { color: #003087; border-bottom-color: #003087; }
-.page-tab:focus-visible { outline: 3px solid #003087; outline-offset: -2px; }
+  /* ── PERIOD FILTER ── */
+  .page-tab:focus-visible { outline: 3px solid #003087; outline-offset: -2px; }
 
-/* LAYOUT */
-.content { padding: 22px 28px 8px; }
-.page { display: none; }
-.page.active { display: block; }
+  /* ── PAGE NAV ── */
+  .page-nav { background: #fff; border-bottom: 1px solid #dce3ef; padding: 0 28px; display: flex; gap: 0; }
+  .page-tab { padding: 12px 20px; font-size: 15px; font-weight: 700; color: #6b7a99; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
+  .page-tab:hover { color: #003087; background: #f8faff; }
+  .page-tab.active { color: #003087; border-bottom-color: #003087; }
 
-/* CONTEXT BANNER */
-.ctx { background: #f0f4ff; border-left: 4px solid #003087; border-radius: 0 6px 6px 0; padding: 12px 18px; margin-bottom: 18px; font-size: 14px; color: #2d3748; line-height: 1.7; }
+  /* ── PAGE CONTEXT BANNER ── */
+  .page-context { background: #f0f4ff; border-left: 4px solid #003087; border-radius: 0 6px 6px 0; padding: 10px 16px; margin-bottom: 18px; font-size: 14px; color: #3a4a6b; line-height: 1.6; }
 
-/* KPI CARDS */
-.kpi-row { display: grid; gap: 12px; margin-bottom: 18px; }
-.k4 { grid-template-columns: repeat(4,1fr); }
-.k3 { grid-template-columns: repeat(3,1fr); }
-.k2 { grid-template-columns: repeat(2,1fr); }
-.kpi { background: #fff; border-radius: 8px; padding: 16px 18px; border-top: 3px solid #003087; box-shadow: 0 1px 4px rgba(0,0,135,0.06); }
-.kpi.accent2 { border-top-color: #1a7abf; }
-.kpi.accent3 { border-top-color: #5B9BD5; }
-.kpi-label { font-size: 12px; color: #6b7a99; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
-.kpi-value { font-size: 32px; font-weight: 700; color: #003087; line-height: 1; }
-.kpi-value.sm { font-size: 26px; }
-.kpi-sub { font-size: 13px; color: #5a6a88; margin-top: 5px; }
+  /* ── LAYOUT ── */
+  .content { padding: 22px 28px 8px; }
+  .page { display: none; }
+  .page.active { display: block; }
 
-/* CHART GRID */
-.cgrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-bottom: 18px; }
-.card { background: #fff; border-radius: 8px; padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,135,0.06); overflow: hidden; }
-.card.full { grid-column: span 2; }
-.ct { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
-.cn { font-size: 13px; color: #5a6a88; margin-bottom: 12px; }
-.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; font-size: 13px; color: #6b7a99; align-items: center; }
-.ls { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; vertical-align: middle; }
-canvas { display: block; max-width: 100%; }
+  /* ── KPI CARDS ── */
+  .kpi-row { display: grid; gap: 12px; margin-bottom: 18px; }
+  .kpi-4 { grid-template-columns: repeat(4, 1fr); }
+  .kpi-3 { grid-template-columns: repeat(3, 1fr); }
+  .kpi-2 { grid-template-columns: repeat(2, 1fr); }
+  .kpi { background: #fff; border-radius: 8px; padding: 16px 18px; border-top: 3px solid #003087; box-shadow: 0 1px 4px rgba(0,0,135,0.06); }
+  .kpi-label { font-size: 12px; color: #6b7a99; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+  .kpi-value { font-size: 32px; font-weight: 700; color: #003087; line-height: 1; }
+  .kpi-sub { font-size: 13px; color: #9aa5be; margin-top: 5px; }
+  .kpi-sm .kpi-value { font-size: 26px; }
 
-/* BAR ROWS */
-.br { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
-.bl { font-size: 13px; color: #2d3748; width: 190px; flex-shrink: 0; text-align: right; line-height: 1.3; }
-.bt { flex: 1; background: #eef1f8; border-radius: 4px; height: 22px; overflow: hidden; }
-.bf { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 13px; color: #fff; font-weight: 700; min-width: 36px; }
+  /* ── CHART GRID ── */
+  .chart-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 18px; }
+  .chart-card { background: #fff; border-radius: 8px; padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,135,0.06); overflow: hidden; }
+  .chart-card.full { grid-column: span 2; }
+  .chart-title { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+  .chart-note { font-size: 13px; color: #9aa5be; margin-bottom: 12px; }
+  .chart-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; font-size: 13px; color: #6b7a99; align-items: center; }
+  .legend-swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; vertical-align: middle; }
+  canvas { display: block; max-width: 100%; }
 
-/* STAT TABLE */
-.st { width: 100%; border-collapse: collapse; font-size: 14px; }
-.st td { padding: 9px 8px; border-bottom: 1px solid #eef1f8; color: #1a1a2e; line-height: 1.5; font-size:14px; }
-.st td:first-child { color: #2d3748; }
-.st td:last-child { text-align: right; font-weight: 700; color: #003087; white-space: nowrap; }
-.st tr:last-child td { border-bottom: none; }
-.st .grp td { background: #f8faff; font-weight: 700; font-size: 13px; color: #003087; padding-top: 10px; border-bottom: none; }
-.st .sub td:first-child { color: #9aa5be; padding-left: 18px; font-size: 13px; }
-.st .sub td:last-child { color: #6b7a99; font-size: 13px; }
+  /* ── BAR ROWS ── */
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+  .bar-label { font-size: 13px; color: #4a5568; width: 180px; flex-shrink: 0; text-align: right; line-height: 1.3; }
+  .bar-track { flex: 1; background: #eef1f8; border-radius: 4px; height: 22px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 13px; color: #fff; font-weight: 700; transition: width 0.35s ease; min-width: 36px; }
 
+  /* ── STAT TABLE ── */
+  .stat-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .stat-table td { padding: 8px 8px; border-bottom: 1px solid #eef1f8; color: #1a1a2e; line-height: 1.4; }
+  .stat-table td:first-child { color: #4a5568; }
+  .stat-table td:last-child { text-align: right; font-weight: 700; color: #003087; white-space: nowrap; }
+  .stat-table tr:last-child td { border-bottom: none; }
+  .stat-table .row-indent td:first-child { color: #9aa5be; padding-left: 20px; font-size: 13px; }
+  .stat-table .row-indent td:last-child { color: #6b7a99; font-size: 13px; }
+  .stat-table .row-group td { background: #f8faff; font-weight: 700; font-size: 13px; color: #003087; padding-top: 10px; border-bottom: none; }
 
-/* FLOW */
-.flow { display: flex; gap: 0; margin-bottom: 18px; }
-.fs { flex: 1; background: #f8faff; border: 1px solid #dce3ef; border-radius: 8px; padding: 14px 15px; position: relative; }
-.fs + .fs { margin-left: 26px; }
-.fs::before { content:''; position:absolute; left:-18px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:9px solid transparent; border-bottom:9px solid transparent; border-left:11px solid #003087; }
-.fs:first-child::before { display:none; }
-.fn { width:24px; height:24px; background:#003087; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; margin-bottom:7px; }
-.ft { font-size:14px; font-weight:700; color:#003087; margin-bottom:3px; }
-.fd { font-size:13px; color:#4a5568; line-height:1.5; }
+  /* ── SECTION NOTE ── */
+  .section-note { font-size: 13px; color: #9aa5be; font-style: italic; margin: -12px 0 14px; }
 
-/* RESPONDERS */
-.rg { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
-.rc { background:#fff; border-radius:8px; padding:16px 18px; box-shadow:0 1px 4px rgba(0,0,135,0.06); border-left:5px solid #003087; }
-.rc.s { border-left-color:#5B9BD5; }
-.rn { font-size:15px; font-weight:700; color:#003087; margin-bottom:4px; }
-.rc.s .rn { color:#1a7abf; }
-.rh { font-size:13px; font-weight:700; color:#1a1a2e; margin-bottom:6px; }
-.rf { font-size:13px; color:#4a5568; line-height:1.5; }
-.rb { display:inline-block; font-size:12px; font-weight:700; padding:3px 10px; border-radius:10px; margin-bottom:7px; background:#003087; color:#fff; }
-.rc.s .rb { background:#eef1f8; color:#6b7a99; }
+  /* ── HALF GRID ── */
+  .half-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-bottom: 18px; }
 
-/* TAKEAWAY */
-.tg { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:18px; }
-.tk { background:#fff; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,135,0.06); display:flex; gap:12px; align-items:flex-start; }
-.ti { width:32px; height:32px; border-radius:50%; background:#003087; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-.tt { font-size:14px; color:#2d3748; line-height:1.6; }
-.tt strong { color:#003087; display:block; margin-bottom:3px; font-size:14px; }
+  /* ── FOOTER ── */
+  .dash-footer { margin-top: 12px; padding: 14px 0 4px; border-top: 1px solid #dce3ef; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #9aa5be; }
 
-/* HOLLOWAY */
+  @media (max-width: 900px) {
+    .kpi-4, .kpi-3 { grid-template-columns: repeat(2,1fr); }
+    .chart-grid, .half-grid { grid-template-columns: 1fr; }
+    .chart-card.full { grid-column: span 1; }
+    .header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .header-right { text-align: left; }
+    .bar-label { width: 130px; }
+  }
+  @media (max-width: 520px) {
+    .kpi-4, .kpi-3 { grid-template-columns: 1fr; }
+    .kpi-value { font-size: 26px; }
+    .page-nav { overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; padding: 0 12px; }
+    .page-tab { padding: 10px 14px; font-size: 13px; display: inline-block; }
+    .content { padding: 12px; }
+    .bar-label { width: 100px; font-size: 11px; }
+    .bar-fill { font-size: 11px; }
+    .header-fy { font-size: 13px; }
+  }
 
-/* FOOTNOTE */
-.fn-text { font-size:12px; color:#5a6a88; font-style:italic; margin-top:8px; line-height:1.5; }
-
-/* FOOTER */
-.footer { margin-top:12px; padding:14px 0 4px; border-top:1px solid #dce3ef; display:flex; justify-content:space-between; font-size:12px; color:#5a6a88; }
-
-@media(max-width:900px){
-  .k4,.k3{grid-template-columns:repeat(2,1fr);}
-  .cgrid,.rg,.tg,.svc-grid{grid-template-columns:1fr;}
-  .card.full{grid-column:span 1;}
-  .flow{flex-direction:column;gap:10px;}
-  .fs{margin-left:0!important;}
-  .fs::before{display:none;}
-  .header{flex-direction:column;align-items:flex-start;gap:10px;}
-  .bl{width:140px;}
-}
-@media(max-width:520px){
-  .svc-grid{grid-template-columns:1fr;}
-  .k4,.k3{grid-template-columns:1fr;}
-  .kpi-value{font-size:26px;}
-  .kpi-value.sm{font-size:22px;}
-  .page-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;padding:0 12px;}
-  .page-tab{padding:10px 14px;font-size:13px;display:inline-block;}
-  .content{padding:12px;}
-  .bl{width:90px;font-size:11px;}
-  .bf{font-size:11px;}
-  .ctx{font-size:13px;}
-  .header-title{font-size:17px;}
-}
-
-/* SERVICE CATEGORIES */
-.svc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
-.svc-card { background:#fff; border-radius:8px; padding:16px 18px; box-shadow:0 1px 4px rgba(0,0,135,0.06); }
-.svc-icon { font-size:24px; margin-bottom:8px; }
-.svc-title { font-size:15px; font-weight:700; color:#003087; margin-bottom:5px; }
-.svc-desc { font-size:13px; color:#4a5568; line-height:1.5; }
-
-/* CRF BANNER */
-.crf-banner { background:#fff; border-radius:8px; padding:18px 20px; box-shadow:0 1px 4px rgba(0,0,135,0.06); border-left:5px solid #003087; margin-bottom:18px; }
-.crf-label { display:inline-block; font-size:12px; font-weight:700; background:#003087; color:#fff; padding:2px 8px; border-radius:10px; margin-bottom:8px; letter-spacing:0.4px; }
-.crf-title { font-size:17px; font-weight:700; color:#003087; margin-bottom:6px; }
-.crf-body { font-size:14px; color:#2d3748; line-height:1.7; }
-.crf-body strong { color:#003087; }
-
-@media(max-width:900px){
-  .svc-grid { grid-template-columns:1fr 1fr; }
+/* ── FLOW CARDS ── */
+.flow-cards-wrap { margin-bottom:18px; }
+.flow-cards-heading { font-size:12px; font-weight:700; color:#6b7a99; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.flow-cards-heading::after { content:''; flex:1; height:1px; background:#dce3ef; }
+.flow-cards { display:flex; align-items:stretch; gap:14px; }
+.flow-card { flex:1; background:#fff; border-radius:8px; padding:18px 20px; border-top:3px solid #003087; box-shadow:0 1px 4px rgba(0,0,135,0.06); }
+.flow-card-label { font-size:12px; color:#6b7a99; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:6px; }
+.flow-card-value { font-size:36px; font-weight:700; color:#003087; line-height:1; }
+.flow-card-sub { font-size:13px; color:#5a6a88; margin-top:6px; line-height:1.5; }
+.flow-cards-note { font-size:12px; color:#9aa5be; font-style:italic; margin-top:8px; }
+@media(max-width:700px){
+  .flow-cards{flex-direction:column;}
+  .flow-card-value{font-size:28px;}
 }
 
 /* ── TOOLTIP ── */
-.chart-tooltip { position:fixed; background:#1a1a2e; color:#fff; font-family:Arial,Helvetica,sans-serif; font-size:13px; padding:8px 12px; border-radius:6px; pointer-events:none; opacity:0; transition:opacity 0.15s; z-index:9999; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+.chart-tooltip { position:fixed; background:#1a1a2e; color:#fff; font-family:Arial,Helvetica,sans-serif; font-size:12px; padding:7px 11px; border-radius:6px; pointer-events:none; opacity:0; transition:opacity 0.15s; z-index:9999; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); }
 .chart-tooltip.visible { opacity:1; }
-#pit-map .leaflet-control, #page-pit select, #page-pit label, #page-pit button, #page-pit .ct, #page-pit .cn { font-family: Arial, Helvetica, sans-serif !important; }
 </style>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="header">
-  <div>
-    <div class="header-title">West Hollywood Homeless Initiative</div>
-    <div class="header-sub">Serving the community &nbsp;·&nbsp; Program outcomes &nbsp;·&nbsp; FY 2025–26</div>
   </div>
-  <div style="display:flex;align-items:center;gap:16px;flex-shrink:0;">
+  <div class="header-right">
+    <div class="header-period">Program Performance Dashboard &nbsp;|&nbsp; Fiscal Year</div>
+    <div class="header-fy">2025–26</div>
   </div>
 </div>
 
-<div class="page-nav" role="tablist">
-  <div class="page-tab active" role="tab" aria-selected="true" tabindex="0"
-    onclick="showPage('overview',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('overview',this)">System Overview</div>
-  <div class="page-tab" role="tab" aria-selected="false" tabindex="0"
-    onclick="showPage('pit',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('pit',this)">Point-in-Time Data</div>
-  <div class="page-tab" role="tab" aria-selected="false" tabindex="0"
-    onclick="showPage('hcl',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('hcl',this)">Homeless Concern Line</div>
-  <div class="page-tab" role="tab" aria-selected="false" tabindex="0"
-    onclick="showPage('housing',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('housing',this)">Housing Outcomes</div>
-  <div class="page-tab" role="tab" aria-selected="false" tabindex="0"
-    onclick="showPage('prevention',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('prevention',this)">Prevention &amp; Services</div>
+<!-- PERIOD FILTER -->
+
+<!-- PAGE NAV -->
+<div class="page-nav">
+  <div class="page-tab active" role="tab" aria-selected="true" aria-controls="page-overview" tabindex="0" onclick="showPage('overview',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('overview',this)">Overview</div>
+  <div class="page-tab" role="tab" aria-selected="false" aria-controls="page-demographics" tabindex="0" onclick="showPage('demographics',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('demographics',this)">Demographics</div>
+  <div class="page-tab" role="tab" aria-selected="false" aria-controls="page-calls" tabindex="0" onclick="showPage('calls',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('calls',this)">Call Analysis</div>
+  <div class="page-tab" role="tab" aria-selected="false" aria-controls="page-outcomes" tabindex="0" onclick="showPage('outcomes',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('outcomes',this)">Outcomes</div>
 </div>
 
+<!-- ═══════════════════════════════════════════
+     PAGE: OVERVIEW
+═══════════════════════════════════════════ -->
 <div class="content">
-
-<!-- ═══════════ PAGE 1: SYSTEM OVERVIEW ═══════════ -->
 <div class="page active" id="page-overview">
 
-  <div class="ctx">
-    Since 2018, West Hollywood has invested approximately <strong>$8 million per year</strong> — about 5% of the City's operating budget — in a coordinated system of services, which includes services to address and prevent homelessness. That system has helped <strong>411 people find permanent housing</strong>, placed <strong>781 individuals in interim shelter</strong>, and provided <strong>over 1,800 households</strong> with rental assistance to prevent homelessness. The initiative is now evolving with a new Coordinated Response Framework — building on what's working to serve the community even better.
+  <div class="page-context">
+    The Care Team is West Hollywood's mobile behavioral health response program, operated by Sycamores. This page summarizes call volume, response times, and the most common reasons for Care Team service requests.
   </div>
 
+  <div class="flow-cards-wrap"><div class="flow-cards-heading">Care Team activity &mdash; July 2025 through February 2026</div><div id="flow-cards" class="flow-cards"></div><p class="flow-cards-note">Transports may occur during an initial service call or a follow-up contact. These figures reflect all logged Care Team interactions and are independent of each other.</p></div>
+  <div class="kpi-row kpi-3" id="kpi-overview-bot"></div>
 
-  <!-- SYSTEM FLOW -->
-  <div class="card full" style="margin-bottom:18px;">
-    <div class="ct">How the system works</div>
-    <div class="cn">Proactive outreach and a coordinated path — from first contact to a permanent home</div>
-    <div class="flow" style="margin-top:12px;">
-      <div class="fs">
-        <div class="fn">1</div>
-        <div class="ft">Outreach teams go out</div>
-        <div class="fd">Trained outreach teams engage people experiencing homelessness throughout West Hollywood — building trust, offering services, and meeting people where they are. Community members can also call the Homeless Concern Line (323-848-6590) to request help.</div>
-      </div>
-      <div class="fs">
-        <div class="fn">2</div>
-        <div class="ft">Needs are assessed</div>
-        <div class="fd">Teams engage with individuals, assess their health, housing, and service needs, and connect them with the right support — from medical care and meals to case management and benefits.</div>
-      </div>
-      <div class="fs">
-        <div class="fn">3</div>
-        <div class="ft">Shelter when ready</div>
-        <div class="fd">When someone is ready for housing, they can enter an interim housing placement. The <strong>Holloway Interim Housing Program</strong> serves West Hollywood community members experiencing chronic homelessness. Other interim and emergency shelter options are available for individuals who do not meet that criteria.</div>
-      </div>
-      <div class="fs">
-        <div class="fn">4</div>
-        <div class="ft">A permanent home</div>
-        <div class="fd">Case managers work with each person to secure permanent housing, apply for benefits, and access the ongoing support they need to stay housed long-term.</div>
-      </div>
+  <div class="chart-card full" style="margin-bottom:18px;">
+    <div class="chart-title">Monthly engagement volume</div>
+    <div class="chart-note">Each bar shows the number of calls responded to (dark blue) and follow-up check-ins completed (light blue) for that month.</div>
+    <div class="chart-legend">
+      <span><span class="legend-swatch" style="background:#003087;"></span>Calls responded to</span>
+      <span><span class="legend-swatch" style="background:#5B9BD5;"></span>Follow-up check-ins</span>
     </div>
+    <canvas id="c-trend" height="200"></canvas>
   </div>
 
-  <!-- FUNDED SERVICES -->
-  <div style="margin-bottom:10px;">
-    <div class="ct">What the City funds</div>
-    <div class="cn">The City funds services across six core areas</div>
-  </div>
-  <div class="svc-grid">
-    <div class="svc-card">
-      <div class="svc-icon">&#128226;</div>
-      <div class="svc-title">Street outreach &amp; crisis response</div>
-      <div class="svc-desc">Trained teams engage people where they are — providing care, connecting them to services, and responding to behavioral health crises 24/7.</div>
+  <div class="half-grid">
+    <div class="chart-card">
+      <div class="chart-title">Presenting issues per contact</div>
+      <div class="chart-note">Recorded per contact, not per individual. A single contact may involve more than one issue, so percentages may exceed 100%.</div>
+      <div id="bars-presenting"></div>
     </div>
-    <div class="svc-card">
-      <div class="svc-icon">&#127968;</div>
-      <div class="svc-title">Interim &amp; emergency shelter</div>
-      <div class="svc-desc">Short-term housing placements for individuals working toward a permanent home. The Holloway Interim Housing Program serves West Hollywood community members experiencing chronic homelessness. Additional interim and emergency shelter options are available for those who do not meet that criteria, including transitional housing for youth.</div>
-    </div>
-    <div class="svc-card">
-      <div class="svc-icon">&#128274;</div>
-      <div class="svc-title">Permanent housing placement</div>
-      <div class="svc-desc">Case managers connect individuals to permanent supportive housing, rental vouchers, and long-term stability — 411 people housed since 2016.</div>
-    </div>
-    <div class="svc-card">
-      <div class="svc-icon">&#128188;</div>
-      <div class="svc-title">Rental assistance &amp; eviction prevention</div>
-      <div class="svc-desc">Financial help for households at risk of losing their housing — including emergency rental assistance for older adults and eviction defense.</div>
-    </div>
-    <div class="svc-card">
-      <div class="svc-icon">&#127973;</div>
-      <div class="svc-title">Health &amp; recovery services</div>
-      <div class="svc-desc">Medical care, behavioral health support, substance use recovery, and services for people living with HIV/AIDS — helping individuals stabilize and rebuild.</div>
-    </div>
-    <div class="svc-card">
-      <div class="svc-icon">&#9878;&#65039;</div>
-      <div class="svc-title">Legal services &amp; tenant rights</div>
-      <div class="svc-desc">Free legal help to prevent evictions, protect tenant rights, and navigate benefits — keeping vulnerable households from falling into homelessness.</div>
-    </div>
-  </div>
-
-  <!-- CRF BANNER -->
-  <div class="crf-banner">
-    <div class="crf-label">What's next</div>
-    <div class="crf-title">Building on success: the Coordinated Response Framework</div>
-    <div class="crf-body">
-      West Hollywood's Homeless Initiative has delivered real results — 411 people permanently housed, the <strong>Holloway Interim Housing Program</strong> — West Hollywood's first in-city interim housing facility, serving community members experiencing chronic homelessness — and the Homeless Concern Line now operating 24/7 with expanded coverage managed by the Care Team. The City is now developing a <strong>Coordinated Response Framework (CRF)</strong> to build on this progress. The CRF will strengthen coordination across outreach teams, interim housing providers, housing programs, and public safety partners — ensuring people move more smoothly through the system and that the City's investment delivers the greatest possible impact.
+    <div class="chart-card">
+      <div class="chart-title">How calls were initiated</div>
+      <div id="bars-referral"></div>
     </div>
   </div>
 
 </div>
 
-<!-- ═══════════ PAGE 2: HCL ═══════════ -->
-<div class="page" id="page-hcl">
+<!-- ═══════════════════════════════════════════
+     PAGE: DEMOGRAPHICS
+═══════════════════════════════════════════ -->
+<div class="page" id="page-demographics">
 
-  <div class="ctx">
-    The Homeless Concern Line (323-848-6590) is West Hollywood's non-emergency number for homelessness-related concerns. Anyone — residents, visitors, City staff, or businesses — can call to request outreach or services for someone they are concerned about. Calls are answered 24/7 and routed to a trained response team.
+  <div class="page-context">
+    Who the Care Team served — broken down by age, gender, race/ethnicity, and housing status.
   </div>
 
-  <div class="kpi-row k4">
-    <div class="kpi">
-      <div class="kpi-label">Total requests</div>
-      <div class="kpi-value">993</div>
-      <div class="kpi-sub">Jul 2025 – Mar 2026</div>
-    </div>
-    <div class="kpi kpi-sm">
-      <div class="kpi-label">Daily average</div>
-      <div class="kpi-value sm">~4</div>
-      <div class="kpi-sub">Overall; recent months 6–7/day</div>
-    </div>
-    <div class="kpi kpi-sm">
-      <div class="kpi-label">Median response time</div>
-      <div class="kpi-value sm">10 min</div>
-      <div class="kpi-sub">Dispatch to arrival on scene</div>
-    </div>
-    <div class="kpi kpi-sm">
-      <div class="kpi-label">Within 15 minutes</div>
-      <div class="kpi-value sm">73%</div>
-      <div class="kpi-sub">Of all field engagements</div>
-    </div>
-  </div>
+  <div class="kpi-row kpi-3" id="kpi-demo-top" style="display:none;"></div>
 
-  <!-- FLOW -->
-  <div class="card full" style="margin-bottom:18px;">
-    <div class="ct">How HCL requests are handled</div>
-    <div class="cn">Every request follows a consistent four-step pathway</div>
-    <div class="flow" style="margin-top:12px;">
-      <div class="fs"><div class="fn">1</div><div class="ft">Request received</div><div class="fd">Community members, City staff, or individuals contact the line.</div></div>
-      <div class="fs"><div class="fn">2</div><div class="ft">Triage &amp; dispatch</div><div class="fd">Routed by need and time of day to the appropriate outreach team.</div></div>
-      <div class="fs"><div class="fn">3</div><div class="ft">Field response</div><div class="fd">Team engages on-scene, assesses needs, provides services or referrals.</div></div>
-      <div class="fs"><div class="fn">4</div><div class="ft">Outcome documented</div><div class="fd">Each interaction is logged for follow-up and program reporting.</div></div>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">Age groups served</div>
+      <div class="chart-note">Total contacts by age group across the selected period</div>
+      <canvas id="c-age" height="220"></canvas>
     </div>
-  </div>
-
-  <!-- RESPONDERS -->
-  <div style="margin-bottom:10px;"><div class="ct">Response teams</div><div class="cn">Two 24/7 teams with defined lead roles by time of day</div></div>
-  <div class="rg">
-    <div class="rc">
-      <div class="rb">Day lead — 7 AM to 7 PM</div>
-      <div class="rn">Healthcare in Action (HIA)</div>
-      <div class="rf">Medical care, behavioral health, ongoing client engagement. Also places clients in transitional housing through its street medicine program.</div>
+    <div class="chart-card">
+      <div class="chart-title">Race and ethnicity</div>
+      <div class="chart-note">Total contacts by race/ethnicity across the selected period</div>
+      <canvas id="c-race" height="220"></canvas>
     </div>
-    <div class="rc s">
-      <div class="rb">Night lead — 7 PM to 7 AM</div>
-      <div class="rn">WeHo Care Team (Sycamores)</div>
-      <div class="rh">Available as backup responder during daytime hours</div>
-      <div class="rf">Behavioral health response, de-escalation, and social service linkage — including coordination with public safety when needed.</div>
+    <div class="chart-card">
+      <div class="chart-title">Gender identity</div>
+      <div class="chart-note">Share of contacts by gender identity across the selected period</div>
+      <canvas id="c-gender" height="220"></canvas>
     </div>
-  </div>
-
-  <!-- CHARTS -->
-  <div class="cgrid">
-    <div class="card">
-      <div class="ct">Daily request rate — by month</div>
-      <div class="cn">Requests per day; July and March are partial months</div>
-      <canvas id="c-monthly" height="200"></canvas>
-      <p class="fn-text">Rates shown for fair comparison across full and partial months. Jul: Jul 15–31 (17 days) · Mar: Mar 1–15 (15 days).</p>
+    <div class="chart-card">
+      <div class="chart-title">Housing status — breakdown</div>
+      <div class="chart-note">Share of engagements by housing status</div>
+      <canvas id="c-housing-donut" height="240"></canvas>
     </div>
-    <div class="card">
-      <div class="ct">Why people reach out</div>
-      <div class="cn">Over 84% of requests are care-oriented</div>
-      <div id="bars-reasons" style="margin-top:6px;"></div>
-    </div>
-  </div>
-
-  <div class="cgrid">
-    <div class="card">
-      <div class="ct">Outcomes</div>
-      <div class="cn">Of those successfully reached, 63% accepted services</div>
-      <canvas id="c-outcomes" height="250"></canvas>
-      <p class="fn-text">"Unable to locate" is expected in street-based outreach — individuals are mobile and may have moved before the team arrives. All attempts are documented.</p>
-    </div>
-    <div class="card">
-      <div class="ct">When calls come in</div>
-      <div class="cn">Nearly all activity occurs between 6 AM and 6 PM</div>
-      <canvas id="c-time" height="160"></canvas>
-      <div class="ct" style="margin-top:16px;margin-bottom:3px;">Calls by day of the week</div>
-      <div class="cn">Fridays are the busiest day</div>
-      <canvas id="c-dow" height="140"></canvas>
-    </div>
-  </div>
-
-</div>
-
-<!-- ═══════════ PAGE 3: HOUSING OUTCOMES ═══════════ -->
-<div class="page" id="page-housing">
-
-  <div class="ctx">
-    West Hollywood's housing programs have made steady progress in connecting people with permanent homes. 2024 was a record year — 72 individuals were permanently housed, the highest annual total since 2017. The Holloway Interim Housing Program — the City's first in-city interim housing facility — opened in October 2025 and was fully occupied within weeks. Holloway serves West Hollywood community members experiencing chronic homelessness. Other interim and emergency shelter options serve individuals who do not meet that criteria.
-  </div>
-
-  <div class="kpi-row k3">
-    <div class="kpi">
-      <div class="kpi-label">People permanently housed</div>
-      <div class="kpi-value">411</div>
-      <div class="kpi-sub">Since 2016</div>
-    </div>
-    <div class="kpi accent2">
-      <div class="kpi-label">Placed in interim shelter</div>
-      <div class="kpi-value">781</div>
-      <div class="kpi-sub">New admissions since 2017</div>
-    </div>
-    <div class="kpi accent3">
-      <div class="kpi-label">Avg. shelter bed nights per year</div>
-      <div class="kpi-value">11,231</div>
-      <div class="kpi-sub">Annual average across all interim housing providers, 2021–2025</div>
-    </div>
-  </div>
-
-  <div class="cgrid">
-    <div class="card">
-      <div class="ct">Permanent housing placements — by year</div>
-      <div class="cn">2024 was a record year with 72 people permanently housed</div>
-      <canvas id="c-perm" height="220"></canvas>
-      <p class="fn-text"></p>
-    </div>
-    <div class="card">
-      <div class="ct">Interim housing admissions — by year</div>
-      <div class="cn">Admissions have grown steadily as interim housing capacity expanded</div>
-      <canvas id="c-interim" height="220"></canvas>
-      <p class="fn-text">The Holloway program (20 beds) opened October 2025 and is not reflected in this chart.</p>
-    </div>
-  </div>
-
-  <!-- HOLLOWAY -->
-  <div style="margin-bottom:10px;">
-    <div class="ct">Holloway Interim Housing Program — Q1 Status (Oct–Dec 2025)</div>
-    <div class="cn">West Hollywood's first in-city interim housing facility · Serves chronically homeless WeHo community members · 20 beds · Opened October 2025</div>
-  </div>
-  <div class="kpi-row k4">
-    <div class="kpi">
-      <div class="kpi-label">Individuals served</div>
-      <div class="kpi-value">24</div>
-      <div class="kpi-sub">All experiencing long-term homelessness in West Hollywood</div>
-    </div>
-    <div class="kpi accent2">
-      <div class="kpi-label">Engaged in housing planning</div>
-      <div class="kpi-value">22</div>
-      <div class="kpi-sub">Of 24 individuals served in Q1</div>
-    </div>
-    <div class="kpi accent3">
-      <div class="kpi-label">Permanent housing placements</div>
-      <div class="kpi-value">1</div>
-      <div class="kpi-sub">3 more anticipated by Feb 2026</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Current waitlist</div>
-      <div class="kpi-value">7</div>
-      <div class="kpi-sub">Eligible West Hollywood community members</div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ═══════════ PAGE 4: PREVENTION & SERVICES ═══════════ -->
-<div class="page" id="page-prevention">
-
-  <div class="ctx">
-    Beyond outreach and housing, West Hollywood funds a range of services that prevent homelessness and support stability — including rental assistance, eviction defense, legal advocacy, and specialized services for older adults and people living with HIV/AIDS. Since 2018, over $2.6 million has been provided directly to households in need.
-  </div>
-
-  <div class="kpi-row k3">
-    <div class="kpi">
-      <div class="kpi-label">Direct rental assistance (since 2018)</div>
-      <div class="kpi-value">$2.6M+</div>
-      <div class="kpi-sub">Provided to households in need</div>
-    </div>
-    <div class="kpi accent2">
-      <div class="kpi-label">Rental assistance payments (all-time)</div>
-      <div class="kpi-value">1,861</div>
-      <div class="kpi-sub">Households helped since 2017</div>
-    </div>
-    <div class="kpi accent3">
-      <div class="kpi-label">Households assisted (2025)</div>
-      <div class="kpi-value">108</div>
-      <div class="kpi-sub">Rental assistance this fiscal year</div>
-    </div>
-  </div>
-
-  <div class="cgrid">
-    <div class="card">
-      <div class="ct">Rental assistance — households served by year</div>
-      <div class="cn">2021 spike reflects expanded COVID-19 emergency rental assistance</div>
-      <canvas id="c-rental" height="220"></canvas>
-      <p class="fn-text">Totals reflect all rental assistance providers combined.</p>
-    </div>
-    <div class="card">
-      <div class="ct">What prevention services cover</div>
-      <div class="cn">The City funds four types of prevention and stability services</div>
-      <div style="margin-top:8px; display:flex; flex-direction:column; gap:12px;">
-        <div style="background:#f8faff; border-radius:8px; padding:14px 16px; border-left:4px solid #003087;">
-          <div style="font-size:15px; font-weight:700; color:#003087; margin-bottom:4px;">Rental assistance</div>
-          <div style="font-size:13px; color:#4a5568; line-height:1.5;">Emergency financial help for households at risk of losing their housing — including dedicated assistance for community members 55 and older.</div>
-        </div>
-        <div style="background:#f8faff; border-radius:8px; padding:14px 16px; border-left:4px solid #5B9BD5;">
-          <div style="font-size:15px; font-weight:700; color:#1a7abf; margin-bottom:4px;">Eviction defense &amp; tenant rights</div>
-          <div style="font-size:13px; color:#4a5568; line-height:1.5;">Free legal help to fight evictions, understand tenant rights, and access housing benefits — keeping people in their homes.</div>
-        </div>
-        <div style="background:#f8faff; border-radius:8px; padding:14px 16px; border-left:4px solid #8FBBDB;">
-          <div style="font-size:15px; font-weight:700; color:#4a7a9b; margin-bottom:4px;">Health &amp; recovery support</div>
-          <div style="font-size:13px; color:#4a5568; line-height:1.5;">Benefits counseling, substance use recovery, and services for people living with HIV/AIDS — addressing the underlying factors that can lead to housing instability.</div>
-        </div>
-        <div style="background:#f8faff; border-radius:8px; padding:14px 16px; border-left:4px solid #8FBBDB;">
-          <div style="font-size:15px; font-weight:700; color:#4a7a9b; margin-bottom:4px;">Outreach to at-risk communities</div>
-          <div style="font-size:13px; color:#4a5568; line-height:1.5;">Targeted outreach and peer support for transgender, gender non-conforming, and intersex community members who face heightened risk of housing instability.</div>
-        </div>
+    <div class="chart-card full">
+      <div class="chart-title">Housing status of contacts over time</div>
+      <div class="chart-note">How many contacts each month were unhoused vs. housed</div>
+      <div class="chart-legend">
+        <span><span class="legend-swatch" style="background:#003087;"></span>Unhoused</span>
+        <span><span class="legend-swatch" style="background:#5B9BD5;"></span>Housed</span>
       </div>
-    </div>
-  </div>
-
-  <!-- TAKEAWAYS -->
-  <div style="margin-bottom:10px;"><div class="ct">Key takeaways</div></div>
-  <div class="tg">
-    <div class="tk">
-      <div class="ti"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2L10 7H15L11 10L12.5 15L8 12L3.5 15L5 10L1 7H6L8 2Z" fill="#fff"/></svg></div>
-      <div class="tt"><strong>A coordinated, multi-layered system</strong>West Hollywood's approach connects outreach teams, interim housing providers, housing programs, and public safety partners to move people from first contact into permanent stability — with 411 individuals permanently housed since 2016.</div>
-    </div>
-    <div class="tk">
-      <div class="ti"><svg viewBox="0 0 16 16" fill="none"><path d="M2 13L6 5L9 10L11 7L14 13H2Z" fill="#fff"/></svg></div>
-      <div class="tt"><strong>HCL is the front door</strong>993 requests routed in nine months, with 73% of teams arriving within 15 minutes. The line is growing — recent months averaging 6–7 requests per day as community awareness increases.</div>
-    </div>
-    <div class="tk">
-      <div class="ti"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#fff" stroke-width="2"/><path d="M5 8L7 10L11 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
-      <div class="tt"><strong>Housing capacity is expanding</strong>Interim housing admissions grew from 64 in 2021 to 151 in 2025. The Holloway program added 20 in-city beds in October 2025 for West Hollywood community members experiencing chronic homelessness, reaching full occupancy within weeks.</div>
-    </div>
-    <div class="tk">
-      <div class="ti"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="10" width="2" height="4" fill="#fff"/><rect x="7" y="6" width="2" height="8" fill="#fff" opacity="0.7"/><rect x="12" y="2" width="2" height="12" fill="#fff" opacity="0.4"/></svg></div>
-      <div class="tt"><strong>Prevention keeps people housed</strong>Over $2.6 million in rental assistance has been disbursed since 2018. Eviction defense and tenant advocacy add an additional layer of stability for at-risk households.</div>
+      <canvas id="c-housing" height="180"></canvas>
     </div>
   </div>
 
 </div>
 
-<!-- PAGE: POINT-IN-TIME DATA -->
-<div class="page" id="page-pit">
-  <div class="ct">Locally collected Point-in-Time data — 2017 to 2025</div>
-  <div class="cn" style="margin-bottom:18px;">West Hollywood’s contracted outreach providers have conducted monthly counts since 2017, supplementing the annual LAHSA count with more frequent, West Hollywood–specific observations of unsheltered homelessness. Counts are conducted during early morning hours on a consistent schedule. The average monthly count grew from approximately 30 individuals in 2017 to approximately 55 in 2025 — consistent with broader regional trends across Los Angeles County.</div>
-  <div class="card" style="margin-bottom:18px;">
-    <div class="ct">Monthly counts — 2025</div>
-    <div class="cn">Observed unsheltered individuals, Jan–Sep 2025</div>
-    <canvas id="pit-bar-2025" height="200"></canvas>
+<!-- ═══════════════════════════════════════════
+     PAGE: CALL ANALYSIS
+═══════════════════════════════════════════ -->
+<div class="page" id="page-calls">
+
+  <div class="page-context">
+    When and where calls happen — including the busiest days and times, where the team responded, and how quickly they arrived. Response time metrics are based on the full fiscal year and do not change with the period filter.
   </div>
-  <div class="card" style="margin-bottom:18px;">
-    <div class="ct">Long-term trend — annual average monthly count, 2017–2025</div>
-    <div class="cn">2025 reflects Jan–Sep only. Counts reflect locally observed unsheltered individuals.</div>
-    <canvas id="pit-trend" height="180"></canvas>
-  </div>
-  <div class="card" style="margin-bottom:18px; padding:0; overflow:hidden;">
-    <div style="padding:16px 18px 10px;">
-      <div class="ct">Where people were observed</div>
-      <div class="cn" style="margin-bottom:10px;">All geocoded count locations, Jan 2024 – Sep 2025. Dot size reflects count. Use filters to explore by year or month.</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        <div><label style="font-size:12px;font-weight:700;color:#6b7a99;margin-right:6px;">Year</label>
-          <select id="pit-year-sel" onchange="pitFilter()" style="font-size:13px;border:1px solid #dce3ef;border-radius:4px;padding:4px 8px;color:#2d3748;">
-            <option value="all">All (2024–2025)</option><option value="2024">2024</option><option value="2025">2025</option>
-          </select></div>
-        <div><label style="font-size:12px;font-weight:700;color:#6b7a99;margin-right:6px;">Month</label>
-          <select id="pit-month-sel" onchange="pitFilter()" style="font-size:13px;border:1px solid #dce3ef;border-radius:4px;padding:4px 8px;color:#2d3748;">
-            <option value="all">All months</option>
-          </select></div>
-</div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">Calls by day of the week</div>
+      <div class="chart-note">Which days saw the most calls. The darkest bar is the busiest day.</div>
+      <canvas id="c-dow" height="220"></canvas>
     </div>
-    <div id="pit-map" style="height:460px;width:100%;"></div>
+    <div class="chart-card">
+      <div class="chart-title">Calls by time of day</div>
+      <div class="chart-note">Which 2-hour windows had the most calls. Darkest bars are the busiest periods.</div>
+      <canvas id="c-tod" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Where calls took place</div>
+      <div class="chart-note">Breakdown of the locations where the Care Team responded</div>
+      <div id="bars-loc" style="margin-top:6px;"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Response and call time summary</div>
+      <div class="chart-note">Full year averages (July 2025–February 2026) — does not change with the period filter</div>
+      <table class="stat-table">
+        <tr class="row-group"><td colspan="2">Arrival speed</td></tr>
+        <tr><td>Time from dispatch to team arrival — average</td><td>19 min</td></tr>
+        <tr><td>Time from dispatch to team arrival — median</td><td>14 min</td></tr>
+        <tr class="row-group"><td colspan="2">Time spent on calls</td></tr>
+        <tr><td>Duration per call, arrival to close — average</td><td>29 min</td></tr>
+        <tr><td>Duration per call, arrival to close — median</td><td>13 min</td></tr>
+        <tr class="row-group"><td colspan="2">Queue wait (when team was already on a call)</td></tr>
+        <tr><td>Wait time in queue — average</td><td>7 min</td></tr>
+        <tr><td>Wait time in queue — median</td><td>4 min</td></tr>
+      </table>
+    </div>
   </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: OUTCOMES
+═══════════════════════════════════════════ -->
+<div class="page" id="page-outcomes">
+
+  <div class="page-context">
+    What happened after the Care Team responded — including resources provided on-scene, follow-up services, transports to other locations, and the small number of cases that required law enforcement or fire/EMS.
+  </div>
+
+  <div class="kpi-row kpi-3" id="kpi-outcomes-top"></div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">Resources provided on-scene</div>
+      <div class="chart-note">Count of resources or referrals provided during service calls</div>
+      <div id="bars-onscene"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Resources provided during follow-ups</div>
+      <div class="chart-note">Count of resources or referrals given during follow-up check-ins</div>
+      <div id="bars-followup"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Law enforcement and fire/EMS involvement</div>
+      <div class="chart-note">Number of times the Care Team requested additional first-responder support</div>
+      <table class="stat-table" id="tbl-fr"></table>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Same-month repeat contacts</div>
+      <div class="chart-note">Contacts logged more than once within the same month. Does not capture repeat encounters where the individual declined to provide identifying information.</div>
+      <canvas id="c-repeat" height="200"></canvas>
+    </div>
+  </div>
+
 </div>
 </div><!-- /content -->
 
 <div class="content" style="padding-top:0;">
-
+  </div>
 </div>
 
 <script>
-// ── CANVAS SETUP ──
-function setupCanvas(canvas) {
-  const p=canvas.parentElement, s=window.getComputedStyle(p);
-  const W=Math.max(p.clientWidth-parseFloat(s.paddingLeft)-parseFloat(s.paddingRight),200);
-  const H=parseInt(canvas.getAttribute('height'))||220;
-  canvas.width=W; canvas.height=H;
-  canvas.style.width=W+'px'; canvas.style.height=H+'px';
-  return {ctx:canvas.getContext('2d'),W,H};
-}
+// ══════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════
+const MONTHS = ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
+const MONTH_LABELS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26'];
 
-const B1='#003087',B2='#5B9BD5',B3='#8FBBDB',B4='#B8D4EA';
+// Quarter index ranges
+const QIDX = { ytd:[0,1,2,3,4,5,6,7], q1:[0,1,2], q2:[3,4,5], q3:[6,7] };
+const QLABELS = { ytd:'Jul 2025 – Feb 2026', q1:'Q1: Jul – Sep 2025', q2:'Q2: Oct – Dec 2025', q3:'Q3: Jan – Feb 2026 (partial)' };
 
-// ── DATA ──
+// All monthly series [Jul,Aug,Sep,Oct,Nov,Dec,Jan,Feb]
 const D = {
-  // HCL daily rates (requests/day)
-  hclMonthly: { labels:['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'], values:[2.0,2.2,2.7,2.2,3.6,4.4,6.2,7.6,6.4] },
-  hclReasons: [
-    {label:'Housing / resource / outreach', val:513, pct:'52%', color:B1},
-    {label:'Medical / health / mental health', val:168, pct:'17%', color:B1},
-    {label:'Welfare / wellness check',         val:149, pct:'15%', color:B2},
-    {label:'Administrative',                   val:66,  pct:'7%',  color:B3},
-    {label:'Disturbance / safety concern',     val:52,  pct:'5%',  color:B3},
-    {label:'Other',                            val:45,  pct:'5%',  color:B4},
-  ],
-  hclOutcomes: { labels:['Accepted services','Declined services','Unable to locate','Outcome pending / unknown'], values:[381,228,185,199], colors:[B1,B3,B2,B4] },
-  hclTime:  { labels:['6–9 AM','9 AM–12','12–3 PM','3–6 PM','6 PM+'], values:[214,256,282,208,19] },
-  hclDow:   { labels:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], values:[114,146,148,136,156,179,114] },
-  // Housing outcomes — totals only, no provider breakout
-  years: ['2021','2022','2023','2024','2025'],
-  permTotal:  [50, 49, 57, 72, 44],
-  intTotal:   [64, 85, 117, 134, 151],
-  // Rental assistance — combined totals
-  rentalTotal:   [442, 139, 132, 83, 108],
+  engagements:       [140,86,73,115,170,200,198,266],
+  followups:         [234,180,205,211,170,132,135,171],
+  unique:            [113,83,60,94,132,143,131,171],
+
+  // True unduplicated FYTD counts from Sycamores — only available for full YTD, not by quarter
+  FYTD_unique:       727,
+  FYTD_unhoused:     578,
+  FYTD_housed:       102,
+  FYTD_dts:          47,
+  repeats:           [14,5,7,15,14,20,19,26],
+  transports:        [16,20,16,15,25,9,17,23],
+
+  ageU17:            [2,2,0,1,0,1,0,3],
+  age1834:           [21,15,16,19,28,25,29,43],
+  age3549:           [32,22,18,29,34,43,38,36],
+  age5064:           [26,16,13,21,30,30,25,36],
+  age6579:           [7,12,6,12,13,12,20,14],
+  age80p:            [3,0,0,1,0,0,2,3],
+  ageDTS:            [22,16,7,9,27,32,17,36],
+
+  genderMale:        [82,61,43,60,102,98,98,137],
+  genderFemale:      [30,22,17,31,29,45,31,32],
+  genderDTS:         [1,0,0,1,1,0,2,2],
+
+  raceAsian:         [1,3,1,1,1,5,1,5],
+  raceBlack:         [36,18,15,13,29,36,28,54],
+  raceHispanic:      [16,18,17,25,25,23,18,25],
+  raceWhite:         [47,40,21,44,59,54,60,64],
+  raceOther:         [4,1,2,3,7,13,14,10],
+  raceDTS:           [9,3,4,6,11,12,10,13],
+
+  housingHoused:     [10,8,7,11,13,17,29,25],
+  housingUnhoused:   [95,69,49,77,110,114,89,133],
+  housingDTS:        [8,6,4,4,9,12,13,13],
+
+  refAmbassadors:    [33,27,14,14,53,45,30,16],
+  refSycamores:      [47,19,21,23,25,32,14,25],
+  refSelf:           [8,8,9,11,24,40,42,59],
+  refHCL:            [11,6,2,5,12,25,40,97],
+  refLawEnf:         [18,12,9,13,17,21,37,22],
+  refOther:          [18,10,14,27,14,14,13,15],
+  refWeHoAgency:     [0,1,0,11,10,12,7,10],
+  refWeHoStaff:      [3,2,1,8,7,6,5,8],
+  refFriendFam:      [0,0,0,0,5,2,4,10],
+  refFireEMS:        [2,0,3,1,1,2,4,2],
+
+  presBasicNeeds:    [83,59,38,73,100,95,99,143],
+  presHousing:       [87,37,35,64,98,100,100,138],
+  presWelfare:       [26,19,22,24,32,46,42,61],
+  presHealth:        [11,7,8,7,21,16,21,24],
+  presSubUse:        [9,4,9,7,10,12,8,21],
+  presCrisis:        [5,4,3,4,7,10,10,16],
+
+  locPublic:         [104,61,52,85,113,135,108,173],
+  locTelephone:      [6,3,7,11,33,41,33,64],
+  locSheriff:        [10,3,3,10,12,7,22,5],
+  locPrivRes:        [10,7,6,5,3,10,18,13],
+  locBusiness:       [8,11,5,3,3,1,6,5],
+  locOther:          [2,6,1,7,6,6,11,6],
+
+  dowSun: [19,13,11,6,31,27,18,25],
+  dowMon: [25,13,7,6,9,25,23,32],
+  dowTue: [21,13,14,15,16,21,13,21],
+  dowWed: [16,10,10,27,26,47,31,63],
+  dowThu: [25,13,12,30,32,33,36,57],
+  dowFri: [24,13,13,25,31,24,48,39],
+  dowSat: [11,17,7,12,25,23,29,30],
+
+  tod: [[13,10,4,5,8,13,12,22],[6,3,2,6,9,3,17,17],[5,3,1,3,1,1,8,8],
+        [3,8,3,1,14,16,9,19],[10,7,6,9,24,35,19,27],[6,3,3,5,19,18,22,37],
+        [7,5,2,12,14,22,14,25],[32,14,13,22,22,32,29,25],[17,5,13,27,16,18,22,23],
+        [12,14,9,11,9,14,19,22],[10,11,9,11,16,11,11,10],[20,9,9,9,18,17,16,31]],
+
+  onSceneSupplies:   [74,48,34,54,65,66,70,76],
+  onSceneShelter:    [62,19,20,47,47,46,47,66],
+  onSceneFood:       [6,5,4,13,26,12,22,30],
+  onSceneHealth:     [9,3,6,10,13,19,17,21],
+  onSceneTransCoord: [9,8,7,9,12,9,18,20],
+  onSceneSUD:        [3,0,7,7,5,6,8,17],
+  onSceneMH:         [3,1,1,4,3,3,10,9],
+
+  fuShelter:         [63,56,64,87,54,53,25,47],
+  fuDeclined:        [69,43,39,48,36,31,35,55],
+  fuFood:            [44,41,28,22,33,11,8,19],
+  fuHealth:          [34,19,34,30,13,17,16,21],
+  fuMH:              [18,14,14,11,13,9,13,14],
+  fuSUD:             [13,11,15,8,18,7,5,11],
+
+  frLASD:            [2,2,1,0,3,6,2,4],
+  frLASDHoused:      [1,0,0,0,0,2,0,2],
+  frLASDUnhoused:    [1,2,1,0,3,4,1,1],
+  frLACFD:           [1,1,2,0,0,1,6,3],
+  frLACFDHoused:     [1,0,1,0,0,0,0,1],
+  frLACFDUnhoused:   [0,1,1,0,0,0,5,1],
+  frHoldsApplied:    [1,0,0,1,0,1,0,0],
+  frHoldsVoided:     [0,0,0,0,0,1,0,0],
+
+  onSceneUnique:     [98,71,55,77,102,100,107,125],
+  fuUnique:          [131,100,102,116,108,96,85,110],
 };
 
-// ── NAVIGATION ──
-let currentPage='overview';
-function showPage(id,el){
-  currentPage=id;
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.page-tab').forEach(t=>{t.classList.remove('active');t.setAttribute('aria-selected','false');});
-  document.getElementById('page-'+id).classList.add('active');
-  el.classList.add('active'); el.setAttribute('aria-selected','true');
-  destroyAll(); renderPage(id);
+
+// ── FYTD UNDUPLICATED DEMOGRAPHIC DATA (727 unique individuals) ──
+const D_demo = {
+  ageU17:       5,
+  age1834:      160,
+  age3549:      193,
+  age5064:      145,
+  age6579:      52,
+  age80p:       8,
+  ageDTS:       164,
+  genderMale:   532,
+  genderFemale: 188,
+  genderDTS:    7,
+  raceAsian:    15,
+  raceBlack:    187,
+  raceHispanic: 131,
+  raceWhite:    295,
+  raceOther:    43,
+  raceDTS:      56,
+  housingHoused:   102,
+  housingUnhoused: 578,
+  housingDTS:      47,
+};
+const DEMO_TOTAL = 727;
+
+// ── HELPERS ──
+const currentPeriod = 'ytd';
+let currentPage = 'overview';
+
+function sum(arr, idxs) {
+  return idxs.reduce((t,i) => t + (arr[i] || 0), 0);
 }
 
-// ── CHART ENGINE ──
-function rr(ctx,x,y,w,h,r){
-  if(h<1){ctx.rect(x,y+h,w,Math.max(1,Math.abs(h)));return;}
+function pct(val, total) {
+  if (!total) return '0%';
+  return Math.round(val/total*100) + '%';
+}
+
+function pctNum(val, total) {
+  if (!total) return 0;
+  return Math.round(val/total*100);
+}
+
+function monthsInPeriod() { return QIDX[currentPeriod]; }
+
+function periodSum(key) { return sum(D[key], monthsInPeriod()); }
+
+function periodMonthData(key) { return monthsInPeriod().map(i => D[key][i]); }
+
+function periodMonthLabels() { return monthsInPeriod().map(i => MONTH_LABELS[i]); }
+
+// Period switcher removed — YTD only
+
+// ══════════════════════════════════════════════
+// PAGE SWITCHER
+// ══════════════════════════════════════════════
+function showPage(id, el) {
+  currentPage = id;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.page-tab').forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected','false');
+  });
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active');
+  el.setAttribute('aria-selected','true');
+  destroyCharts();
+  renderCurrentPage();
+}
+
+function renderCurrentPage() {
+  if (currentPage==='overview') renderOverview();
+  else if (currentPage==='demographics') renderDemographics();
+  else if (currentPage==='calls') renderCalls();
+  else if (currentPage==='outcomes') renderOutcomes();
+}
+
+// ══════════════════════════════════════════════
+// CHART ENGINE (pure Canvas 2D — no dependencies)
+// ══════════════════════════════════════════════
+const chartInstances = {};
+
+function destroyCharts() {
+  Object.keys(chartInstances).forEach(id => {
+    const c = document.getElementById(id);
+    if (c) {
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, c.width, c.height);
+      c.removeAttribute('style');
+    }
+    delete chartInstances[id];
+  });
+}
+
+const B1='#003087', B2='#5B9BD5', B3='#8FBBDB', B4='#B8D4EA', B5='#D4E8F4';
+const PALETTE = [B1,B2,B3,B4,B5,'#cfe0f0','#e6f0f8','#f0f6fb'];
+
+function setupCanvas(canvas) {
+  const parent = canvas.parentElement;
+  const style = window.getComputedStyle(parent);
+  const padL = parseFloat(style.paddingLeft) || 0;
+  const padR = parseFloat(style.paddingRight) || 0;
+  const W = Math.max((parent.clientWidth - padL - padR), 200);
+  const H = parseInt(canvas.getAttribute('height')) || 220;
+  canvas.width = W;
+  canvas.height = H;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  return { ctx: canvas.getContext('2d'), W, H };
+}
+
+function drawBar(canvasId, labels, values, colors, opts={}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const { ctx, W, H } = setupCanvas(canvas);
+  const pad = { top:10, right:16, bottom: opts.rotateLabels?52:28, left: opts.leftPad||40 };
+  const chartW = W - pad.left - pad.right;
+  const chartH = H - pad.top - pad.bottom;
+  const max = opts.axisMax || Math.max(...values, 1);
+  const n = labels.length;
+  const groupW = chartW / n;
+  const barW = Math.min(groupW * 0.6, opts.maxBarW||50);
+
+  // Y gridlines
+  ctx.strokeStyle = '#eef1f8';
+  ctx.lineWidth = 1;
+  const ticks = 4;
+  for (let t=0; t<=ticks; t++) {
+    const y = pad.top + chartH - (t/ticks)*chartH;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left+chartW, y); ctx.stroke();
+    ctx.fillStyle='#9aa5be'; ctx.font='12px Arial'; ctx.textAlign='right';
+    ctx.fillText(Math.round((t/ticks)*max), pad.left-6, y+3);
+  }
+
+  // Bars
+  const total = opts.showPct ? (opts.pctBase || values.reduce((a,b)=>a+b,0)) : 0;
+  values.forEach((v,i) => {
+    const bh = (v/max)*chartH;
+    const x = pad.left + i*groupW + (groupW-barW)/2;
+    const y = pad.top + chartH - bh;
+    ctx.fillStyle = Array.isArray(colors) ? (colors[i]||B1) : colors;
+    roundRect(ctx, x, y, barW, bh, 3);
+    ctx.fill();
+    // value label on bar if room
+    if (bh>18) {
+      ctx.fillStyle='#fff'; ctx.font='bold 12px Arial'; ctx.textAlign='center';
+      ctx.fillText(v, x+barW/2, y+13);
+    }
+    // percentage above bar
+    if (opts.showPct && total > 0) {
+      const pct = Math.round(v/total*100);
+      ctx.fillStyle='#4a5568'; ctx.font='12px Arial'; ctx.textAlign='center';
+      ctx.fillText(pct+'%', x+barW/2, y-4);
+    }
+  });
+
+  // X labels
+  // Build hit areas for tooltips
+  const _hitAreas = values.map((v,i) => ({
+    x: pad.left+i*groupW+(groupW-barW)/2, y: pad.top+chartH-(v/max)*chartH,
+    w: barW, h: (v/max)*chartH, label: labels[i].replace('\\n',' '), value: v
+  }));
+  attachBarTooltips(canvasId, _hitAreas);
+
+  ctx.fillStyle='#6b7a99'; ctx.font='12px Arial'; ctx.textAlign='center';
+  labels.forEach((lbl,i) => {
+    const x = pad.left + i*groupW + groupW/2;
+    if (opts.rotateLabels) {
+      ctx.save(); ctx.translate(x, pad.top+chartH+6);
+      ctx.rotate(-Math.PI/4); ctx.textAlign='right';
+      ctx.fillText(lbl, 0, 0); ctx.restore();
+    } else {
+      const lines = lbl.split('\n');
+      lines.forEach((l,li) => ctx.fillText(l, x, pad.top+chartH+14+li*11));
+    }
+  });
+
+  chartInstances[canvasId] = true;
+}
+
+function drawGroupedBar(canvasId, labels, datasets, opts={}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const { ctx, W, H } = setupCanvas(canvas);
+  const pad = {top:14,right:32,bottom:30,left:48};
+  const chartW=W-pad.left-pad.right, chartH=H-pad.top-pad.bottom;
+  const allVals = datasets.flatMap(d=>d.data);
+  const max = opts.axisMax || Math.max(...allVals,1);
+  const n=labels.length, nd=datasets.length;
+  const groupW=chartW/n, barW=Math.min((groupW-4)/nd, 32);
+
+  ctx.strokeStyle='#eef1f8'; ctx.lineWidth=1;
+  for(let t=0;t<=4;t++){
+    const y=pad.top+chartH-(t/4)*chartH;
+    ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(pad.left+chartW,y); ctx.stroke();
+    ctx.fillStyle='#9aa5be'; ctx.font='12px Arial'; ctx.textAlign='right';
+    ctx.fillText(Math.round((t/4)*max),pad.left-4,y+3);
+  }
+
+  datasets.forEach((ds,di) => {
+    ds.data.forEach((v,i) => {
+      const bh=(v/max)*chartH;
+      const x=pad.left+i*groupW+di*barW+(groupW-nd*barW)/2;
+      const y=pad.top+chartH-bh;
+      ctx.fillStyle=ds.color||PALETTE[di];
+      roundRect(ctx,x,y,barW-2,bh,2); ctx.fill();
+    });
+  });
+
+  ctx.fillStyle='#6b7a99'; ctx.font='12px Arial'; ctx.textAlign='center';
+  labels.forEach((lbl,i) => {
+    ctx.fillText(lbl, pad.left+i*groupW+groupW/2, pad.top+chartH+14);
+  });
+  chartInstances[canvasId]=true;
+}
+
+function drawLine(canvasId, labels, datasets, opts={}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const { ctx, W, H } = setupCanvas(canvas);
+  const pad={top:14,right:32,bottom:30,left:48};
+  const chartW=W-pad.left-pad.right, chartH=H-pad.top-pad.bottom;
+  const allVals=datasets.flatMap(d=>d.data);
+  const max=opts.axisMax || Math.max(...allVals,1);
+  const n=labels.length;
+
+  ctx.strokeStyle='#eef1f8'; ctx.lineWidth=1;
+  for(let t=0;t<=4;t++){
+    const y=pad.top+chartH-(t/4)*chartH;
+    ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(pad.left+chartW,y); ctx.stroke();
+    ctx.fillStyle='#9aa5be'; ctx.font='12px Arial'; ctx.textAlign='right';
+    ctx.fillText(Math.round((t/4)*max),pad.left-4,y+3);
+  }
+
+  datasets.forEach(ds => {
+    const pts=ds.data.map((v,i)=>({
+      x: n===1 ? pad.left+chartW/2 : pad.left+i*(chartW/(n-1)),
+      y: pad.top+chartH-(v/max)*chartH
+    }));
+    // fill
+    if(ds.fill) {
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pad.top+chartH);
+      pts.forEach(p=>ctx.lineTo(p.x,p.y));
+      ctx.lineTo(pts[pts.length-1].x, pad.top+chartH);
+      ctx.closePath();
+      ctx.fillStyle=ds.fill; ctx.fill();
+    }
+    // line
+    ctx.beginPath(); ctx.strokeStyle=ds.color; ctx.lineWidth=2.5;
+    if(ds.dashed) ctx.setLineDash([5,3]); else ctx.setLineDash([]);
+    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.stroke(); ctx.setLineDash([]);
+    // dots
+    pts.forEach(p=>{
+      ctx.beginPath(); ctx.arc(p.x,p.y,3.5,0,Math.PI*2);
+      ctx.fillStyle=ds.color; ctx.fill();
+    });
+  });
+
+  // Collect all points for tooltips
+  const _linePoints = [];
+  datasets.forEach((ds,di) => {
+    ds.data.forEach((v,i) => {
+      _linePoints.push({
+        x: n===1 ? pad.left+chartW/2 : pad.left+i*(chartW/(n-1)),
+        y: pad.top+chartH-(v/max)*chartH,
+        label: labels[i], value: v,
+        datasetLabel: ds.label || null
+      });
+    });
+  });
+  attachLineTooltips(canvasId, _linePoints);
+
+  ctx.fillStyle='#6b7a99'; ctx.font='12px Arial'; ctx.textAlign='center';
+  labels.forEach((lbl,i) => {
+    const x = n===1 ? pad.left+chartW/2 : pad.left+i*(chartW/(n-1));
+    ctx.fillText(lbl, x, pad.top+chartH+14);
+  });
+  chartInstances[canvasId]=true;
+}
+
+function drawDonut(canvasId, labels, values, colors) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const { ctx, W, H } = setupCanvas(canvas);
+  const n = labels.length;
+  const lh = 20;
+  const legendH = n * lh + 8;
+  const availH = H - legendH;
+  const r = Math.min(W, availH) / 2 - 12;
+  const cx = W / 2, cy = availH / 2 + 4;
+  const ir = r * 0.55;
+  const total = values.reduce((a,b)=>a+b,0);
+  let angle = -Math.PI / 2;
+
+  values.forEach((v,i) => {
+    const slice = (v/total)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle,angle+slice);
+    ctx.closePath(); ctx.fillStyle=colors[i]; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,ir,0,Math.PI*2);
+    ctx.fillStyle='#fff'; ctx.fill();
+    angle += slice;
+  });
+
+  // single-column centred legend below donut
+  const startY = availH + 8;
+  const swatchW = 12, swatchH = 12, gap = 6;
+  ctx.font = '12px Arial';
+  labels.forEach((lbl,i) => {
+    const text = lbl + '  ' + pct(values[i], total);
+    const textW = ctx.measureText(text).width;
+    const rowW = swatchW + gap + textW;
+    const lx = (W - rowW) / 2;
+    const ly = startY + i * lh;
+    ctx.fillStyle = colors[i];
+    ctx.fillRect(lx, ly, swatchW, swatchH);
+    ctx.fillStyle = '#4a5568';
+    ctx.textAlign = 'left';
+    ctx.fillText(text, lx + swatchW + gap, ly + swatchH - 1);
+  });
+  chartInstances[canvasId] = true;
+}
+
+function roundRect(ctx,x,y,w,h,r) {
+  if(h<1) { ctx.rect(x,y+h,w,Math.max(1,Math.abs(h))); return; }
   r=Math.min(r,h/2,w/2);
   ctx.beginPath();
-  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
-  ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.lineTo(x,y+r);
-  ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.arcTo(x+w,y,x+w,y+r,r); ctx.lineTo(x+w,y+h);
+  ctx.lineTo(x,y+h); ctx.lineTo(x,y+r);
+  ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
 }
 
-function drawBar(id,labels,values,colors,opts={}){
-  const canvas=document.getElementById(id); if(!canvas)return;
-  const {ctx,W,H}=setupCanvas(canvas);
-  const pad={top:14,right:12,bottom:opts.rotateLabels?48:26,left:opts.leftPad||48};
-  const cW=W-pad.left-pad.right,cH=H-pad.top-pad.bottom;
-  const max=opts.axisMax||Math.max(...values,1);
-  const n=labels.length,gW=cW/n,bW=Math.min(gW*0.62,46);
-  ctx.strokeStyle='#eef1f8';ctx.lineWidth=1;
-  const ticks=opts.isRate?[0,2,4,6,8]:[0,0.25,0.5,0.75,1].map(t=>Math.round(t*max));
-  ticks.forEach(tv=>{
-    const y=pad.top+cH-(tv/max)*cH;
-    ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cW,y);ctx.stroke();
-    ctx.fillStyle='#9aa5be';ctx.font='12px Arial';ctx.textAlign='right';
-    ctx.fillText(opts.isRate?tv:Math.round(tv),pad.left-4,y+3);
-  });
-  values.forEach((v,i)=>{
-    const bh=(v/max)*cH,x=pad.left+i*gW+(gW-bW)/2,y=pad.top+cH-bh;
-    ctx.fillStyle=Array.isArray(colors)?(colors[i]||B1):colors;
-    rr(ctx,x,y,bW,bh,3);ctx.fill();
-    if(bh>16){ctx.fillStyle='#fff';ctx.font='bold 12px Arial';ctx.textAlign='center';
-      ctx.fillText(opts.isRate?v.toFixed(1):v,x+bW/2,y+13);}
-  });
-  // Tooltip hit areas
-  const _ha=values.map((v,i)=>({x:pad.left+i*gW+(gW-bW)/2,y:pad.top+cH-(v/max)*cH,w:bW,h:(v/max)*cH,label:labels[i].replace('\n',' '),value:v}));
-  attachBarTooltips(id,_ha);
-
-  ctx.fillStyle='#6b7a99';ctx.font='12px Arial';ctx.textAlign='center';
-  labels.forEach((lbl,i)=>{
-    const x=pad.left+i*gW+gW/2;
-    if(opts.rotateLabels){ctx.save();ctx.translate(x,pad.top+cH+6);ctx.rotate(-Math.PI/5);ctx.textAlign='right';ctx.fillText(lbl,0,0);ctx.restore();}
-    else ctx.fillText(lbl,x,pad.top+cH+14);
-  });
-  if(opts.isRate){ctx.save();ctx.translate(10,pad.top+cH/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillStyle='#9aa5be';ctx.font='12px Arial';ctx.fillText('req/day',0,0);ctx.restore();}
+// ══════════════════════════════════════════════
+// KPI HELPERS
+// ══════════════════════════════════════════════
+function kpiCard(label, value, sub) {
+  return `<div class="kpi kpi-sm"><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div><div class="kpi-sub">${sub||''}</div></div>`;
 }
 
+function setKPI(id, html) { document.getElementById(id).innerHTML = html; }
 
-function drawDonut(id,labels,values,colors){
-  const canvas=document.getElementById(id); if(!canvas)return;
-  const {ctx,W,H}=setupCanvas(canvas);
-  const total=values.reduce((a,b)=>a+b,0);
-  const legH=Math.ceil(labels.length/2)*17+12;
-  const cH=H-legH,cx=W/2,cy=cH/2;
-  const r=Math.min(W,cH)/2-14,ir=r*0.58;
-  let angle=-Math.PI/2;
-  values.forEach((v,i)=>{
-    const slice=(v/total)*Math.PI*2;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,angle,angle+slice);
-    ctx.closePath();ctx.fillStyle=colors[i];ctx.fill();
-    ctx.beginPath();ctx.arc(cx,cy,r,angle,angle+slice);
-    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
-    angle+=slice;
-  });
-  ctx.beginPath();ctx.arc(cx,cy,ir,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
-  canvas._donutGeom={cx,cy,r,ir};
-  ctx.fillStyle=B1;ctx.font='bold 18px Arial';ctx.textAlign='center';ctx.fillText('993',cx,cy-2);
-  ctx.fillStyle='#9aa5be';ctx.font='12px Arial';ctx.fillText('requests',cx,cy+13);
-  labels.forEach((lbl,i)=>{
-    const col=i%2,row=Math.floor(i/2);
-    const lx=col===0?(W/2-130):(W/2+8),ly=cH+10+row*17;
-    const pct=Math.round(values[i]/total*100);
-    ctx.fillStyle=colors[i];ctx.fillRect(lx,ly-9,10,10);
-    ctx.fillStyle='#4a5568';ctx.font='12px Arial';ctx.textAlign='left';
-    ctx.fillText(`${lbl}  ${pct}%`,lx+13,ly);
-  });
-}
+function fmt(n) { return n.toLocaleString(); }
 
-function buildBars(id,items){
-  const el=document.getElementById(id); if(!el)return;
-  const maxV=Math.max(...items.map(i=>i.val));
-  el.innerHTML=items.map(item=>{
-    const w=Math.round((item.val/maxV)*88);
-    return `<div class="br"><span class="bl">${item.label}</span><div class="bt"><div class="bf" style="width:${w}%;background:${item.color||B1};">${item.pct||item.val}</div></div></div>`;
+// ══════════════════════════════════════════════
+// BAR ROW BUILDER
+// ══════════════════════════════════════════════
+function buildBars(containerId, items, total, fixedMax) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const maxVal = fixedMax || Math.max(...items.map(i=>i.val));
+  el.innerHTML = items.map(item => {
+    const widthPct = Math.round((item.val/maxVal)*90);
+    const labelPct = total ? Math.round(item.val/total*100)+'%' : fmt(item.val);
+    return `<div class="bar-row">
+      <span class="bar-label">${item.label}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${widthPct}%;background:${item.color||B1};">${item.val>0?labelPct:''}</div></div>
+    </div>`;
   }).join('');
 }
 
-// ── DESTROY ──
-const charts=['c-monthly','c-outcomes','c-time','c-dow','c-perm','c-interim','c-rental'];
-function destroyAll(){
-  charts.forEach(id=>{
-    const c=document.getElementById(id);
-    if(c){c.getContext('2d').clearRect(0,0,c.width,c.height);c.removeAttribute('style');}
-  });
+// ══════════════════════════════════════════════
+// PAGE RENDERS
+// ══════════════════════════════════════════════
+function renderOverview() {
+  const idx = monthsInPeriod();
+  const eng = periodSum('engagements');
+  const fu = periodSum('followups');
+  const trans = periodSum('transports');
+  const days = idx.length * 30.4;
+
+  // Activity cards — parallel, not sequential
+  const flowEl = document.getElementById('flow-cards');
+  if (flowEl) {
+    flowEl.innerHTML =
+      '<div class="flow-card">' +
+        '<div class="flow-card-label">Service calls</div>' +
+        '<div class="flow-card-value">' + fmt(eng) + '</div>' +
+        '<div class="flow-card-sub">Total calls responded to by the Care Team</div>' +
+      '</div>' +
+      '<div class="flow-card">' +
+        '<div class="flow-card-label">Follow-up contacts</div>' +
+        '<div class="flow-card-value">' + fmt(fu) + '</div>' +
+        '<div class="flow-card-sub">Ongoing check-ins with individuals after initial contact</div>' +
+      '</div>' +
+      '<div class="flow-card">' +
+        '<div class="flow-card-label">Transports completed</div>' +
+        '<div class="flow-card-value">' + fmt(trans) + '</div>' +
+        '<div class="flow-card-sub">Individuals transported to services — may occur during any contact</div>' +
+      '</div>';
+  }
+  setKPI('kpi-overview-bot',
+    kpiCard('Avg response time', '19 min', 'Dispatch to arrival — Jul 2025–Feb 2026') +
+    kpiCard('Avg call duration', '29 min', 'Arrival to close — Jul 2025–Feb 2026') +
+    kpiCard('Avg transport time', '37 min', 'Per transport — Jul 2025–Feb 2026')
+  );
+
+  // Trend chart
+  const mLabels = periodMonthLabels();
+  const mEng = periodMonthData('engagements');
+  const mFU = periodMonthData('followups');
+
+  // Fixed YTD axis ceilings — keep scale consistent across all period filters
+  const AX = {
+    trend: 300, age: 260, race: 400, housing: 140,
+    dow: 260, tod: 200, onscene: 500, furef: 460, repeats: 30,
+    presenting: 700, referral: 300
+  };
+
+  if (mLabels.length === 1) {
+    drawGroupedBar('c-trend', mLabels,
+      [{label:'Engagements',data:mEng,color:B1},{label:'Follow-ups',data:mFU,color:B2}],
+      {axisMax: AX.trend});
+  } else {
+    drawLine('c-trend', mLabels, [
+      {data:mEng, color:B1, fill:'rgba(0,48,135,0.07)'},
+      {data:mFU, color:B2, fill:'rgba(91,155,213,0.07)'}
+    ], {axisMax: AX.trend});
+  }
+
+  const presItems = [
+    {label:'Basic needs / social services', val:periodSum('presBasicNeeds'), color:B1},
+    {label:'Housing', val:periodSum('presHousing'), color:B1},
+    {label:'Welfare checks', val:periodSum('presWelfare'), color:B2},
+    {label:'Health & disability', val:periodSum('presHealth'), color:B2},
+    {label:'Substance use', val:periodSum('presSubUse'), color:B3},
+    {label:'Crisis intervention', val:periodSum('presCrisis'), color:B3},
+  ];
+  buildBars('bars-presenting', presItems, eng, AX.presenting);
+  attachBarRowTooltips('bars-presenting');
+
+  const refItems = [
+    {label:'Unarmed security ambassadors', val:periodSum('refAmbassadors'), color:B1},
+    {label:'Sycamores outreach', val:periodSum('refSycamores'), color:B1},
+    {label:'Self-referral', val:periodSum('refSelf'), color:B2},
+    {label:'Homeless concern line', val:periodSum('refHCL'), color:B2},
+    {label:'Law enforcement', val:periodSum('refLawEnf'), color:B3},
+    {label:'Other City agency', val:periodSum('refWeHoAgency'), color:B3},
+    {label:'City staff', val:periodSum('refWeHoStaff'), color:B3},
+    {label:'Friend or family', val:periodSum('refFriendFam'), color:B3},
+    {label:'Fire / EMS', val:periodSum('refFireEMS'), color:B3},
+    {label:'Other', val:periodSum('refOther'), color:B3},
+  ];
+  buildBars('bars-referral', refItems, eng, AX.referral);
+  attachBarRowTooltips('bars-referral');
 }
 
-// ── RENDER ──
-function renderPage(id){
-  if(id==='hcl'){
-    const mMax=Math.max(...D.hclMonthly.values);
-    drawBar('c-monthly',D.hclMonthly.labels,D.hclMonthly.values,
-      D.hclMonthly.values.map(v=>v===mMax?B1:v>=5?B2:B3),{axisMax:9,isRate:true});
-    buildBars('bars-reasons',D.hclReasons);
-    attachBarRowTooltips('bars-reasons');
-    drawDonut('c-outcomes',D.hclOutcomes.labels,D.hclOutcomes.values,D.hclOutcomes.colors);
-    attachDonutTooltips('c-outcomes',D.hclOutcomes.labels,D.hclOutcomes.values);
-    const tMax=Math.max(...D.hclTime.values);
-    drawBar('c-time',D.hclTime.labels,D.hclTime.values,D.hclTime.values.map(v=>v===tMax?B1:v>150?B2:B3),{axisMax:320});
-    const dMax=Math.max(...D.hclDow.values);
-    drawBar('c-dow',D.hclDow.labels,D.hclDow.values,D.hclDow.values.map(v=>v===dMax?B1:v>140?B2:B3),{axisMax:220});
+function renderDemographics() {
+  const housed   = D_demo.housingHoused;
+  const unhoused = D_demo.housingUnhoused;
+  const dts      = D_demo.housingDTS;
+  const total    = DEMO_TOTAL;
+
+  const AX = { age:260, race:400, housing:140 };
+
+  setKPI('kpi-demo-top', '');
+
+  drawBar('c-age',
+    ['0–17','18–34','35–49','50–64','65–79','80+','DTS'],
+    ['ageU17','age1834','age3549','age5064','age6579','age80p','ageDTS'].map(k=>D_demo[k]),
+    [B4,B1,B1,B1,B2,B3,B4], {axisMax: AX.age, showPct: true, pctBase: DEMO_TOTAL}
+  );
+
+  drawBar('c-race',
+    ['White','Black / AA','Hispanic /\nLatino','DTS','Other /\nMulti','Asian / PI'],
+    ['raceWhite','raceBlack','raceHispanic','raceDTS','raceOther','raceAsian'].map(k=>D_demo[k]),
+    [B1,B1,B1,B3,B2,B4], {leftPad:44, axisMax: AX.race, showPct: true, pctBase: DEMO_TOTAL}
+  );
+
+  const gMale = D_demo.genderMale;
+  const gFemale = D_demo.genderFemale;
+  const gDTS = D_demo.genderDTS;
+  drawDonut('c-gender',['Male','Female','Decline to state'],[gMale,gFemale,gDTS],[B1,B2,B4]);
+  attachDonutTooltips('c-gender',['Male','Female','Decline to state'],[gMale,gFemale,gDTS]);
+
+  drawDonut('c-housing-donut',
+    ['Unhoused','Housed','Unknown'],
+    [unhoused, housed, dts],
+    [B1, B2, B4]
+  );
+  attachDonutTooltips('c-housing-donut',
+    ['Unhoused','Housed','Unknown'],
+    [unhoused, housed, dts]
+  );
+
+  const mLabels = periodMonthLabels();
+  const mHoused = periodMonthData('housingHoused');
+  const mUnhoused = periodMonthData('housingUnhoused');
+  if (mLabels.length===1) {
+    drawGroupedBar('c-housing',mLabels,[
+      {label:'Unhoused',data:mUnhoused,color:B1},
+      {label:'Housed',data:mHoused,color:B2}
+    ], {axisMax: AX.housing});
+  } else {
+    drawLine('c-housing', mLabels, [
+      {data:mUnhoused, color:B1, fill:'rgba(0,48,135,0.07)'},
+      {data:mHoused, color:B2, fill:'rgba(91,155,213,0.07)'}
+    ], {axisMax: AX.housing});
   }
-  if(id==='housing'){
-    drawBar('c-perm', D.years, D.permTotal,
-      D.permTotal.map(v=>v===Math.max(...D.permTotal)?B1:B2), {axisMax:80});
-    drawBar('c-interim', D.years, D.intTotal,
-      D.intTotal.map(v=>v===Math.max(...D.intTotal)?B1:B2), {axisMax:180});
-  }
-  if(id==='pit'){setTimeout(pitInit,50);}
-  if(id==='prevention'){
-    drawBar('c-rental', D.years, D.rentalTotal,
-      D.rentalTotal.map(v=>v===Math.max(...D.rentalTotal)?B1:v>100?B2:B3), {axisMax:500});
-  }
+}
+
+function renderCalls() {
+  const idx = monthsInPeriod();
+  const AX = { dow:260, tod:200 };
+
+  const dowKeys=['dowSun','dowMon','dowTue','dowWed','dowThu','dowFri','dowSat'];
+  const dowVals = dowKeys.map(k=>periodSum(k));
+  const maxDow = Math.max(...dowVals);
+  const dowColors = dowVals.map(v => v===maxDow?B1:B3);
+  drawBar('c-dow',['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], dowVals, dowColors, {axisMax: AX.dow});
+
+  const todLabels=['12–2a','2–4a','4–6a','6–8a','8–10a','10a–12p','12–2p','2–4p','4–6p','6–8p','8–10p','10p–12a'];
+  const todVals = D.tod.map(row => sum(row,idx));
+  const maxTod = Math.max(...todVals);
+  const todColors = todVals.map(v=>v===maxTod?B1:v>maxTod*0.7?B2:B3);
+  drawBar('c-tod', todLabels, todVals, todColors, {rotateLabels:true, maxBarW:32, axisMax: AX.tod});
+
+  const locLabels=['Public space','Telephone','Sheriff station','Private residence','Business','Other'];
+  const locVals=['locPublic','locTelephone','locSheriff','locPrivRes','locBusiness','locOther'].map(k=>periodSum(k));
+  const locTotal = locVals.reduce((a,b)=>a+b,0);
+  const locItems = locLabels.map((lbl,i) => ({label:lbl, val:locVals[i], color:[B1,B2,B3,B4,B3,B4][i]}));
+  buildBars('bars-loc', locItems, locTotal);
+  attachBarRowTooltips('bars-loc');
+}
+
+function renderOutcomes() {
+  const onUniq = periodSum('onSceneUnique');
+  const fuUniq = periodSum('fuUnique');
+  const fuEng = periodSum('followups');
+  const trans = periodSum('transports');
+  const repeats = periodSum('repeats');
+  const AX = { onscene:500, furef:460, repeats:30 };
+
+  setKPI('kpi-outcomes-top',
+    kpiCard('Service calls', fmt(periodSum('engagements')), 'Total calls responded to this period') +
+    kpiCard('Follow-up contacts', fmt(fuEng), 'Total follow-up contacts this period') +
+    kpiCard('Transports completed', fmt(trans), 'Avg 37 min per trip — Jul 2025–Feb 2026')
+  );
+
+  buildBars('bars-onscene', [
+    {label:'Supplies — basic needs', val:periodSum('onSceneSupplies'), color:B1},
+    {label:'Shelter / housing', val:periodSum('onSceneShelter'), color:B1},
+    {label:'Food resources', val:periodSum('onSceneFood'), color:B2},
+    {label:'Health services', val:periodSum('onSceneHealth'), color:B2},
+    {label:'Transport coordination', val:periodSum('onSceneTransCoord'), color:B3},
+    {label:'SUD treatment', val:periodSum('onSceneSUD'), color:B3},
+    {label:'Mental health', val:periodSum('onSceneMH'), color:B4},
+  ], null, AX.onscene);
+
+  buildBars('bars-followup', [
+    {label:'Shelter / housing', val:periodSum('fuShelter'), color:B1},
+    {label:'Declined services', val:periodSum('fuDeclined'), color:B3},
+    {label:'Food resources', val:periodSum('fuFood'), color:B2},
+    {label:'Health services', val:periodSum('fuHealth'), color:B2},
+    {label:'Mental health', val:periodSum('fuMH'), color:B3},
+    {label:'SUD treatment', val:periodSum('fuSUD'), color:B4},
+  ], null, AX.furef);
+
+  const lasd = periodSum('frLASD');
+  const lasdH = periodSum('frLASDHoused');
+  const lasdU = periodSum('frLASDUnhoused');
+  const lacfd = periodSum('frLACFD');
+  const lacfdH = periodSum('frLACFDHoused');
+  const lacfdU = periodSum('frLACFDUnhoused');
+  const holds = periodSum('frHoldsApplied');
+  const voided = periodSum('frHoldsVoided');
+
+  document.getElementById('tbl-fr').innerHTML = `
+    <tr class="row-group"><td colspan="2">Sheriff (LASD)</td></tr>
+    <tr><td>Times Care Team requested LASD support</td><td>${lasd}</td></tr>
+    <tr class="row-indent"><td>Contacts who were unhoused</td><td>${lasdU}</td></tr>
+    <tr class="row-indent"><td>Contacts who were housed</td><td>${lasdH}</td></tr>
+    <tr class="row-group"><td colspan="2">Fire / EMS (LACFD)</td></tr>
+    <tr><td>Times Care Team requested Fire/EMS support</td><td>${lacfd}</td></tr>
+    <tr class="row-indent"><td>Contacts who were unhoused</td><td>${lacfdU}</td></tr>
+    <tr class="row-indent"><td>Contacts who were housed</td><td>${lacfdH}</td></tr>
+    <tr class="row-group"><td colspan="2">Involuntary holds</td></tr>
+    <tr><td>Holds initiated (5585 / 5150)</td><td>${holds}</td></tr>
+    <tr><td>Holds voided or discontinued</td><td>${voided}</td></tr>`;
+
+  const mLabels = periodMonthLabels();
+  const mRepeats = periodMonthData('repeats');
+  drawBar('c-repeat', mLabels, mRepeats, B1, {axisMax: AX.repeats});
 }
 
 // ── INIT ──
-function init(){
-  let t;
-  window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(()=>{destroyAll();renderPage(currentPage);},150);});
+// Defer first render so Chrome has completed layout before we measure widths
+function init() {
+  renderCurrentPage();
+
+  // Redraw on window resize so charts never stay squeezed after resizing
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      destroyCharts();
+      renderCurrentPage();
+    }, 150);
+  });
 }
-if(document.readyState==='complete') requestAnimationFrame(()=>requestAnimationFrame(init));
-else window.addEventListener('load',()=>requestAnimationFrame(()=>requestAnimationFrame(init)));
+
+if (document.readyState === 'complete') {
+  requestAnimationFrame(() => requestAnimationFrame(init));
+} else {
+  window.addEventListener('load', () => requestAnimationFrame(() => requestAnimationFrame(init)));
+}
 
 // ══════════════════════════════════════════════
 // TOOLTIP SYSTEM
 // ══════════════════════════════════════════════
 const tooltip = document.getElementById('chart-tooltip');
+let tooltipTimeout;
 
 function showTooltip(x, y, content) {
   if (!tooltip) return;
   tooltip.innerHTML = content;
   tooltip.classList.add('visible');
-  const tw = tooltip.offsetWidth || 160;
+  // Position: prefer right of cursor, flip left if near edge
+  const tw = tooltip.offsetWidth || 140;
   const th = tooltip.offsetHeight || 36;
-  let tx = x + 14, ty = y - th / 2;
+  let tx = x + 14;
+  let ty = y - th / 2;
   if (tx + tw > window.innerWidth - 8) tx = x - tw - 14;
   if (ty < 8) ty = 8;
   if (ty + th > window.innerHeight - 8) ty = window.innerHeight - th - 8;
   tooltip.style.left = tx + 'px';
   tooltip.style.top  = ty + 'px';
 }
-function hideTooltip() { if (tooltip) tooltip.classList.remove('visible'); }
 
-function _setCanvasTooltip(id, onMove, onLeave) {
-  const c = document.getElementById(id); if (!c) return;
-  if (c._ttMove)  c.removeEventListener('mousemove',  c._ttMove);
-  if (c._ttLeave) c.removeEventListener('mouseleave', c._ttLeave);
-  c._ttMove = onMove; c._ttLeave = onLeave;
-  c.addEventListener('mousemove', onMove);
-  c.addEventListener('mouseleave', onLeave);
+function hideTooltip() {
+  if (tooltip) tooltip.classList.remove('visible');
 }
 
-function attachBarTooltips(id, hitAreas) {
-  _setCanvasTooltip(id, function(e) {
-    const c = document.getElementById(id); if (!c) return;
-    const rect = c.getBoundingClientRect();
-    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-    for (const a of hitAreas) {
-      if (mx >= a.x && mx <= a.x+a.w && my >= a.y && my <= a.y+a.h) {
-        showTooltip(e.clientX, e.clientY, '<strong>'+a.label+'</strong><br>'+a.value.toLocaleString());
-        return;
+// Attach hover listeners to a canvas bar chart
+// hitAreas: array of {x, y, w, h, label, value}
+// Store tooltip handlers on canvas/element to allow removal on re-render
+function _setCanvasTooltip(canvasId, onMove, onLeave) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  if (canvas._ttMove) canvas.removeEventListener('mousemove', canvas._ttMove);
+  if (canvas._ttLeave) canvas.removeEventListener('mouseleave', canvas._ttLeave);
+  canvas._ttMove = onMove;
+  canvas._ttLeave = onLeave;
+  canvas.addEventListener('mousemove', onMove);
+  canvas.addEventListener('mouseleave', onLeave);
+}
+
+function attachBarTooltips(canvasId, hitAreas) {
+  _setCanvasTooltip(canvasId, function(e) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    let found = false;
+    for (const area of hitAreas) {
+      if (mx >= area.x && mx <= area.x + area.w && my >= area.y && my <= area.y + area.h) {
+        showTooltip(e.clientX, e.clientY, '<strong>' + area.label + '</strong><br>' + area.value.toLocaleString());
+        found = true; break;
       }
     }
-    hideTooltip();
+    if (!found) hideTooltip();
+  }, hideTooltip);
+}
+
+function attachLineTooltips(canvasId, points) {
+  const RADIUS = 18;
+  _setCanvasTooltip(canvasId, function(e) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    let best = null, bestDist = Infinity;
+    for (const pt of points) {
+      const d = Math.sqrt((mx-pt.x)**2 + (my-pt.y)**2);
+      if (d < RADIUS && d < bestDist) { bestDist = d; best = pt; }
+    }
+    if (best) {
+      const line = best.datasetLabel ? '<strong>' + best.datasetLabel + '</strong><br>' : '';
+      showTooltip(e.clientX, e.clientY, line + best.label + ': ' + best.value.toLocaleString());
+    } else { hideTooltip(); }
   }, hideTooltip);
 }
 
 function attachBarRowTooltips(containerId) {
-  const el = document.getElementById(containerId); if (!el) return;
-  el.querySelectorAll('.br').forEach(row => {
-    const lbl  = row.querySelector('.bl');
-    const fill = row.querySelector('.bf');
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  // Remove old listeners by cloning each row
+  el.querySelectorAll('.bar-row').forEach(row => {
+    const lbl = row.querySelector('.bar-label');
+    const fill = row.querySelector('.bar-fill');
     if (!lbl || !fill) return;
     const labelText = lbl.textContent.trim();
-    const valText   = fill.textContent.trim();
-    row.onmouseenter = function(e) { showTooltip(e.clientX, e.clientY, '<strong>'+labelText+'</strong><br>'+valText); };
-    row.onmousemove  = function(e) { showTooltip(e.clientX, e.clientY, '<strong>'+labelText+'</strong><br>'+valText); };
+    const valText = fill.textContent.trim();
+    row.onmouseenter = function(e) { showTooltip(e.clientX, e.clientY, '<strong>' + labelText + '</strong><br>' + valText); };
+    row.onmousemove  = function(e) { showTooltip(e.clientX, e.clientY, '<strong>' + labelText + '</strong><br>' + valText); };
     row.onmouseleave = hideTooltip;
   });
 }
 
-function attachDonutTooltips(id, labels, values) {
+function attachDonutTooltips(canvasId, labels, values) {
   const total = values.reduce((a,b)=>a+b,0);
-  _setCanvasTooltip(id, function(e) {
-    const c = document.getElementById(id); if (!c) return;
-    const rect = c.getBoundingClientRect();
-    const geom = c._donutGeom; if (!geom) return;
-    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  _setCanvasTooltip(canvasId, function(e) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const geom = canvas._donutGeom;
+    if (!geom) return;
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
     const dx = mx - geom.cx, dy = my - geom.cy;
     const dist = Math.sqrt(dx*dx + dy*dy);
     if (dist < geom.ir || dist > geom.r) { hideTooltip(); return; }
     let angle = Math.atan2(dy, dx) + Math.PI/2;
     if (angle < 0) angle += Math.PI*2;
-    let cum = 0;
+    let cumAngle = 0;
     for (let i=0; i<values.length; i++) {
-      cum += (values[i]/total)*Math.PI*2;
-      if (angle <= cum) {
+      cumAngle += (values[i]/total)*Math.PI*2;
+      if (angle <= cumAngle) {
         const pct = Math.round(values[i]/total*100);
-        showTooltip(e.clientX, e.clientY, '<strong>'+labels[i]+'</strong><br>'+values[i].toLocaleString()+' ('+pct+'%)');
+        showTooltip(e.clientX, e.clientY, '<strong>' + labels[i] + '</strong><br>' + values[i].toLocaleString() + ' (' + pct + '%)');
         return;
       }
     }
@@ -810,12 +1151,12 @@ function attachDonutTooltips(id, labels, values) {
 
 
 // ── MOBILE CANVAS HEIGHT ADJUSTMENT ──
-function adjustCanvasHeightsHI() {
+function adjustCanvasHeights() {
   if (window.innerWidth <= 520) {
     document.querySelectorAll('canvas').forEach(c => {
       const orig = parseInt(c.getAttribute('data-orig-height') || c.height);
       c.setAttribute('data-orig-height', orig);
-      c.height = Math.round(orig * 0.72);
+      c.height = Math.round(orig * 0.7);
     });
   } else {
     document.querySelectorAll('canvas').forEach(c => {
@@ -824,73 +1165,9 @@ function adjustCanvasHeightsHI() {
     });
   }
 }
-window.addEventListener('resize', function() { adjustCanvasHeightsHI(); destroyAll(); renderPage(currentPage); });
-adjustCanvasHeightsHI();
+window.addEventListener('resize', function() { adjustCanvasHeights(); destroyCharts(); renderCurrentPage(); });
+adjustCanvasHeights();
 
-
-// ══ PIT DATA & MAP ══
-charts.push("pit-bar-2025","pit-trend");
-const chartInstances={};
-const PIT_PTS=[[34.09075, -118.355484, 1, "Curson and Santa Monica", "Jan 2024", 2024, 1], [34.081369, -118.389633, 3, "Doheny and Santa Monica", "Jan 2024", 2024, 1], [34.090635, -118.353323, 1, "Gardner and Santa Monica", "Jan 2024", 2024, 1], [34.095785, -118.371673, 3, "Hart Park", "Jan 2024", 2024, 1], [34.090716, -118.34436, 5, "La Brea and Santa Monica", "Jan 2024", 2024, 1], [34.082438, -118.376447, 1, "La Cienega and Melrose", "Jan 2024", 2024, 1], [34.082438, -118.376447, 1, "La Cienega and Warring", "Jan 2024", 2024, 1], [34.09068, -118.36487, 2, "Laurel and Santa Monica", "Jan 2024", 2024, 1], [34.097911, -118.36452, 1, "Laurel and Sunset", "Jan 2024", 2024, 1], [34.092885, -118.351288, 5, "Plummer Park", "Jan 2024", 2024, 1], [34.085498, -118.384377, 3, "Post Office/ San Vicente", "Jan 2024", 2024, 1], [34.083823, -118.385354, 2, "Robertson and Santa Monica", "Jan 2024", 2024, 1], [34.084919, -118.384228, 1, "San Vicente and Santa Monica", "Jan 2024", 2024, 1], [34.090517, -118.355523, 1, "Santa Monica and Curson", "Jan 2024", 2024, 1], [34.090782, -118.361573, 4, "Santa Monica and Fairfax", "Jan 2024", 2024, 1], [34.090902, -118.358164, 2, "Santa Monica and Genesee", "Jan 2024", 2024, 1], [34.090949, -118.367558, 2, "Santa Monica and Hayvenhurst", "Jan 2024", 2024, 1], [34.090795, -118.368048, 2, "Santa Monica and La Jolla", "Jan 2024", 2024, 1], [34.08589, -118.382938, 3, "Santa Monica and Palm", "Jan 2024", 2024, 1], [34.090935, -118.34828, 2, "Santa Monica and Poinsettia", "Jan 2024", 2024, 1], [34.088179, -118.379153, 1, "Santa Monica and Westmount", "Jan 2024", 2024, 1], [34.097396, -118.368931, 1, "Sunset and Roxburry", "Jan 2024", 2024, 1], [34.09631, -118.370415, 1, "Sunset and Sweetzer", "Jan 2024", 2024, 1], [34.082988, -118.384595, 4, "West Hollywood Park", "Jan 2024", 2024, 1], [34.089048, -118.346203, 2, "Formosa and Romaine", "Feb 2024", 2024, 2], [34.094446, -118.361554, 3, "Fountain and Fairfax", "Feb 2024", 2024, 2], [34.094239, -118.344362, 2, "Fountain and La Brea", "Feb 2024", 2024, 2], [34.097117, -118.368991, 2, "Harper and Sunset", "Feb 2024", 2024, 2], [34.095785, -118.371673, 1, "Hart Park", "Feb 2024", 2024, 2], [34.090916, -118.367489, 3, "Havenhurst and Santa Monica", "Feb 2024", 2024, 2], [34.090731, -118.376117, 2, "Holloway and La Cienega", "Feb 2024", 2024, 2], [34.095352, -118.372617, 2, "Kings and Sunset", "Feb 2024", 2024, 2], [34.088933, -118.344362, 1, "La Brea and Romaine", "Feb 2024", 2024, 2], [34.089274, -118.376479, 2, "La Cienega and Santa Monica", "Feb 2024", 2024, 2], [34.09068, -118.36487, 1, "Laurel and Santa Monica", "Feb 2024", 2024, 2], [34.081037, -118.385441, 1, "Melrose and Robertson", "Feb 2024", 2024, 2], [34.091816, -118.355077, 1, "Norton and Curson", "Feb 2024", 2024, 2], [34.092885, -118.351288, 4, "Plummer Park", "Feb 2024", 2024, 2], [34.089194, -118.376238, 2, "Romaine and Santa Monica", "Feb 2024", 2024, 2], [34.09092, -118.366208, 2, "Santa Monica and Crescent Heights", "Feb 2024", 2024, 2], [34.090782, -118.361573, 4, "Santa Monica and Fairfax", "Feb 2024", 2024, 2], [34.090663, -118.351279, 3, "Santa Monica and Martel", "Feb 2024", 2024, 2], [34.083645, -118.385635, 3, "Santa Monica and Robertson", "Feb 2024", 2024, 2], [34.082988, -118.384595, 6, "West Hollywood Park", "Feb 2024", 2024, 2], [34.087377, -118.379912, 2, "Westbourne and Santa Monica", "Feb 2024", 2024, 2], [34.089048, -118.346203, 2, "Formosa and Romaine", "Mar 2024", 2024, 3], [34.094446, -118.361554, 3, "Fountain and Fairfax", "Mar 2024", 2024, 3], [34.094239, -118.344362, 1, "Fountain and La Brea", "Mar 2024", 2024, 3], [34.097117, -118.368991, 1, "Harper and Sunset", "Mar 2024", 2024, 3], [34.095785, -118.371673, 1, "Hart Park", "Mar 2024", 2024, 3], [34.090916, -118.367489, 3, "Havenhurst and Santa Monica", "Mar 2024", 2024, 3], [34.090731, -118.376117, 2, "Holloway and La Cienega", "Mar 2024", 2024, 3], [34.095352, -118.372617, 2, "Kings and Sunset", "Mar 2024", 2024, 3], [34.088933, -118.344362, 1, "La Brea and Romaine", "Mar 2024", 2024, 3], [34.089274, -118.376479, 2, "La Cienega and Santa Monica", "Mar 2024", 2024, 3], [34.09068, -118.36487, 1, "Laurel and Santa Monica", "Mar 2024", 2024, 3], [34.081037, -118.385441, 1, "Melrose and Robertson", "Mar 2024", 2024, 3], [34.091816, -118.355077, 1, "Norton and Curson", "Mar 2024", 2024, 3], [34.092885, -118.351288, 4, "Plummer Park", "Mar 2024", 2024, 3], [34.089194, -118.376238, 2, "Romaine and Santa Monica", "Mar 2024", 2024, 3], [34.09092, -118.366208, 2, "Santa Monica and Crescent Heights", "Mar 2024", 2024, 3], [34.090782, -118.361573, 2, "Santa Monica and Fairfax", "Mar 2024", 2024, 3], [34.090663, -118.351279, 5, "Santa Monica and Martel", "Mar 2024", 2024, 3], [34.083645, -118.385635, 3, "Santa Monica and Robertson", "Mar 2024", 2024, 3], [34.082988, -118.384595, 6, "West Hollywood Park", "Mar 2024", 2024, 3], [34.087377, -118.379912, 2, "Westbourne and Santa Monica", "Mar 2024", 2024, 3], [34.09075, -118.355484, 2, "Curson and Santa Monica", "Apr 2024", 2024, 4], [34.081369, -118.389633, 3, "Doheny and Santa Monica", "Apr 2024", 2024, 4], [34.090635, -118.353323, 1, "Gardner and Santa Monica", "Apr 2024", 2024, 4], [34.095785, -118.371673, 3, "Hart Park", "Apr 2024", 2024, 4], [34.082438, -118.376447, 1, "La Cienega and Melrose", "Apr 2024", 2024, 4], [34.085494, -118.376382, 1, "La Cienega and Warring", "Apr 2024", 2024, 4], [34.09068, -118.36487, 2, "Laurel and Santa Monica", "Apr 2024", 2024, 4], [34.097911, -118.36452, 1, "Laurel and Sunset", "Apr 2024", 2024, 4], [34.092885, -118.351288, 4, "Plummer Park", "Apr 2024", 2024, 4], [34.085498, -118.384377, 2, "Post Office/ San Vicente", "Apr 2024", 2024, 4], [34.083823, -118.385354, 2, "Robertson and Santa Monica", "Apr 2024", 2024, 4], [34.084919, -118.384228, 1, "San Vicente and Santa Monica", "Apr 2024", 2024, 4], [34.090517, -118.355523, 3, "Santa Monica and Curson", "Apr 2024", 2024, 4], [34.090782, -118.361573, 3, "Santa Monica and Fairfax", "Apr 2024", 2024, 4], [34.090902, -118.358164, 2, "Santa Monica and Genesee", "Apr 2024", 2024, 4], [34.090949, -118.367558, 2, "Santa Monica and Hayvenhurst", "Apr 2024", 2024, 4], [34.09068, -118.344135, 6, "Santa Monica and La Brea", "Apr 2024", 2024, 4], [34.090795, -118.368048, 2, "Santa Monica and La Jolla", "Apr 2024", 2024, 4], [34.08589, -118.382938, 2, "Santa Monica and Palm", "Apr 2024", 2024, 4], [34.090935, -118.34828, 2, "Santa Monica and Poinsettia", "Apr 2024", 2024, 4], [34.088179, -118.379153, 1, "Santa Monica and Westmount", "Apr 2024", 2024, 4], [34.097396, -118.368931, 1, "Sunset and Roxburry", "Apr 2024", 2024, 4], [34.09631, -118.370415, 1, "Sunset and Sweetzer", "Apr 2024", 2024, 4], [34.082988, -118.384595, 4, "West Hollywood Park", "Apr 2024", 2024, 4], [34.077322, -118.387645, 1, "Beverly and Almont", "May 2024", 2024, 5], [34.094446, -118.361554, 2, "Fairfax and Fountian", "May 2024", 2024, 5], [34.088924, -118.361627, 1, "Fairfax and Romaine", "May 2024", 2024, 5], [34.097977, -118.361727, 1, "Fairfax and Sunset", "May 2024", 2024, 5], [34.094239, -118.344362, 1, "Fountain and La Brea", "May 2024", 2024, 5], [34.092885, -118.351288, 3, "Plummer Park", "May 2024", 2024, 5], [34.081008, -118.385339, 2, "Robertson and Melrose", "May 2024", 2024, 5], [34.09092, -118.366208, 1, "Santa Monica and Crescent Heights", "May 2024", 2024, 5], [34.090517, -118.355523, 1, "Santa Monica and Curson", "May 2024", 2024, 5], [34.081369, -118.389633, 3, "Santa Monica and Doheny", "May 2024", 2024, 5], [34.090624, -118.363822, 1, "Santa Monica and Edingburg", "May 2024", 2024, 5], [34.090782, -118.361573, 1, "Santa Monica and Fairfax", "May 2024", 2024, 5], [34.090762, -118.371622, 1, "Santa Monica and Flores", "May 2024", 2024, 5], [34.09088, -118.352895, 1, "Santa Monica and Gardner", "May 2024", 2024, 5], [34.090902, -118.358164, 1, "Santa Monica and Genesee", "May 2024", 2024, 5], [34.090988, -118.363043, 5, "Santa Monica and Hayworth", "May 2024", 2024, 5], [34.090576, -118.371993, 3, "Santa Monica and Kings", "May 2024", 2024, 5], [34.09068, -118.344135, 1, "Santa Monica and La Brea", "May 2024", 2024, 5], [34.089667, -118.376233, 2, "Santa Monica and La Cienega", "May 2024", 2024, 5], [34.090795, -118.368048, 3, "Santa Monica and La Jolla", "May 2024", 2024, 5], [34.090902, -118.364531, 2, "Santa Monica and Laurel", "May 2024", 2024, 5], [34.090663, -118.351279, 1, "Santa Monica and Martel", "May 2024", 2024, 5], [34.090771, -118.373992, 1, "Santa Monica and Olive", "May 2024", 2024, 5], [34.08589, -118.382938, 1, "Santa Monica and Palm", "May 2024", 2024, 5], [34.084919, -118.384228, 1, "Santa Monica and San Vicente", "May 2024", 2024, 5], [34.084919, -118.384228, 3, "Santa Monica and San Vicente", "May 2024", 2024, 5], [34.090708, -118.354355, 4, "Santa Monica and Sierra Bonita", "May 2024", 2024, 5], [34.090616, -118.370306, 1, "Santa Monica and Sweetzer", "May 2024", 2024, 5], [34.088772, -118.377573, 3, "Santa Monica and West Knoll", "May 2024", 2024, 5], [34.076914, -118.379645, 2, "Beverly and San Vicente", "Jun 2024", 2024, 6], [34.094391, -118.344384, 3, "La Brea and Fountain", "Jun 2024", 2024, 6], [34.092649, -118.344313, 1, "La Brea and Lexington", "Jun 2024", 2024, 6], [34.088933, -118.344362, 1, "La Brea and Romaine", "Jun 2024", 2024, 6], [34.090716, -118.34436, 5, "La Brea and Santa Monica", "Jun 2024", 2024, 6], [34.09092, -118.366208, 3, "Santa Monica and Crescent Heights", "Jun 2024", 2024, 6], [34.090517, -118.355523, 2, "Santa Monica and Curson", "Jun 2024", 2024, 6], [34.081369, -118.389633, 3, "Santa Monica and Doheny", "Jun 2024", 2024, 6], [34.090782, -118.361573, 1, "Santa Monica and Fairfax", "Jun 2024", 2024, 6], [34.090762, -118.371622, 2, "Santa Monica and Flores", "Jun 2024", 2024, 6], [34.090902, -118.358164, 1, "Santa Monica and Genesee", "Jun 2024", 2024, 6], [34.090958, -118.349205, 6, "Santa Monica and Greenacre", "Jun 2024", 2024, 6], [34.086895, -118.381591, 1, "Santa Monica and Hancock", "Jun 2024", 2024, 6], [34.090988, -118.363043, 3, "Santa Monica and Hayworth", "Jun 2024", 2024, 6], [34.090576, -118.371993, 1, "Santa Monica and Kings", "Jun 2024", 2024, 6], [34.090795, -118.368048, 1, "Santa Monica and La Jolla", "Jun 2024", 2024, 6], [34.090663, -118.351279, 3, "Santa Monica and Martel", "Jun 2024", 2024, 6], [34.08589, -118.382938, 7, "Santa Monica and Palm", "Jun 2024", 2024, 6], [34.083076, -118.387105, 2, "Santa Monica and Ramage", "Jun 2024", 2024, 6], [34.090598, -118.357633, 1, "Santa Monica and Spaulding", "Jun 2024", 2024, 6], [34.087377, -118.379912, 1, "Santa Monica and Westbourne", "Jun 2024", 2024, 6], [34.088179, -118.379153, 1, "Santa Monica and Westmount", "Jun 2024", 2024, 6], [34.093469, -118.377837, 2, "Sunset and Altaloma", "Jun 2024", 2024, 6], [34.097977, -118.361727, 2, "Sunset and Fairfax", "Jun 2024", 2024, 6], [34.095358, -118.37275, 1, "Sunset and Kings Road", "Jun 2024", 2024, 6], [34.090616, -118.384442, 1, "Sunset and Larabee", "Jun 2024", 2024, 6], [34.09631, -118.370415, 1, "Sunset and Sweetzer", "Jun 2024", 2024, 6], [34.090977, -118.361444, 3, "Fairfax and Santa Monica", "Jul 2024", 2024, 7], [34.095785, -118.371673, 2, "Hart Park", "Jul 2024", 2024, 7], [34.089411, -118.346291, 2, "La Brea and Formosa", "Jul 2024", 2024, 7], [34.088933, -118.344362, 1, "La Brea and Romaine", "Jul 2024", 2024, 7], [34.090716, -118.34436, 3, "La Brea and Santa Monica", "Jul 2024", 2024, 7], [34.078998, -118.389794, 3, "Melrose and Beverly", "Jul 2024", 2024, 7], [34.08136, -118.389065, 1, "Santa Monica and Beverly", "Jul 2024", 2024, 7], [34.09092, -118.366208, 2, "Santa Monica and Crescent Heights", "Jul 2024", 2024, 7], [34.090517, -118.355523, 3, "Santa Monica and Curson", "Jul 2024", 2024, 7], [34.081369, -118.389633, 1, "Santa Monica and Doheny", "Jul 2024", 2024, 7], [34.090606, -118.34623, 1, "Santa Monica and Formosa", "Jul 2024", 2024, 7], [34.090988, -118.363043, 4, "Santa Monica and Hayworth", "Jul 2024", 2024, 7], [34.090663, -118.351279, 3, "Santa Monica and Martel", "Jul 2024", 2024, 7], [34.090796, -118.360543, 2, "Santa Monica and Orange Grove", "Jul 2024", 2024, 7], [34.083645, -118.385635, 3, "Santa Monica and Robertson", "Jul 2024", 2024, 7], [34.084919, -118.384228, 10, "Santa Monica and San Vicente", "Jul 2024", 2024, 7], [34.090616, -118.370306, 1, "Santa Monica and Sweetzer", "Jul 2024", 2024, 7], [34.090692, -118.352784, 1, "Santa Monica and Vista", "Jul 2024", 2024, 7], [34.087377, -118.379912, 2, "Santa Monica and Westbourne", "Jul 2024", 2024, 7], [34.097977, -118.361727, 2, "Sunset and Fairfax", "Jul 2024", 2024, 7], [34.082988, -118.384595, 5, "West Hollywood Park", "Jul 2024", 2024, 7], [34.090977, -118.361444, 3, "Fairfax and Santa Monica", "Aug 2024", 2024, 8], [34.095785, -118.371673, 2, "Hart Park", "Aug 2024", 2024, 8], [34.089411, -118.346291, 2, "La Brea and Formosa", "Aug 2024", 2024, 8], [34.088933, -118.344362, 2, "La Brea and Romaine", "Aug 2024", 2024, 8], [34.090716, -118.34436, 4, "La Brea and Santa Monica", "Aug 2024", 2024, 8], [34.078998, -118.389794, 3, "Melrose and Beverly", "Aug 2024", 2024, 8], [34.08136, -118.389065, 2, "Santa Monica and Beverly", "Aug 2024", 2024, 8], [34.09092, -118.366208, 2, "Santa Monica and Crescent Heights", "Aug 2024", 2024, 8], [34.090517, -118.355523, 3, "Santa Monica and Curson", "Aug 2024", 2024, 8], [34.081369, -118.389633, 1, "Santa Monica and Doheny", "Aug 2024", 2024, 8], [34.090606, -118.34623, 1, "Santa Monica and Formosa", "Aug 2024", 2024, 8], [34.090988, -118.363043, 4, "Santa Monica and Hayworth", "Aug 2024", 2024, 8], [34.090663, -118.351279, 3, "Santa Monica and Martel", "Aug 2024", 2024, 8], [34.090796, -118.360543, 2, "Santa Monica and Orange Grove", "Aug 2024", 2024, 8], [34.083645, -118.385635, 3, "Santa Monica and Robertson", "Aug 2024", 2024, 8], [34.084919, -118.384228, 6, "Santa Monica and San Vicente", "Aug 2024", 2024, 8], [34.090616, -118.370306, 1, "Santa Monica and Sweetzer", "Aug 2024", 2024, 8], [34.090692, -118.352784, 1, "Santa Monica and Vista", "Aug 2024", 2024, 8], [34.087377, -118.379912, 2, "Santa Monica and Westbourne", "Aug 2024", 2024, 8], [34.097977, -118.361727, 1, "Sunset and Fairfax", "Aug 2024", 2024, 8], [34.082988, -118.384595, 5, "West Hollywood Park", "Aug 2024", 2024, 8], [34.082438, -118.376447, 1, "La Cienega and Melrose", "Sep 2024", 2024, 9], [34.088797, -118.37628, 1, "La Cienega and Romaine", "Sep 2024", 2024, 9], [34.092885, -118.351288, 2, "Plummer Park", "Sep 2024", 2024, 9], [34.087289, -118.385519, 1, "San Vicente and Cynthia", "Sep 2024", 2024, 9], [34.09092, -118.366208, 1, "Santa Monica and Crescent Heights", "Sep 2024", 2024, 9], [34.081369, -118.389633, 1, "Santa Monica and Doheny", "Sep 2024", 2024, 9], [34.090782, -118.361573, 2, "Santa Monica and Fairfax", "Sep 2024", 2024, 9], [34.090606, -118.34623, 1, "Santa Monica and Formosa", "Sep 2024", 2024, 9], [34.090705, -118.349916, 1, "Santa Monica and Fuller", "Sep 2024", 2024, 9], [34.090765, -118.3693, 3, "Santa Monica and Harper", "Sep 2024", 2024, 9], [34.090988, -118.363043, 2, "Santa Monica and Hayworth", "Sep 2024", 2024, 9], [34.084683, -118.384795, 1, "Santa Monica and Hilldale", "Sep 2024", 2024, 9], [34.090536, -118.374435, 1, "Santa Monica and Holloway", "Sep 2024", 2024, 9], [34.090576, -118.371993, 1, "Santa Monica and Kings", "Sep 2024", 2024, 9], [34.09068, -118.344135, 1, "Santa Monica and La Brea", "Sep 2024", 2024, 9], [34.089667, -118.376233, 2, "Santa Monica and La Cienega", "Sep 2024", 2024, 9], [34.090795, -118.368048, 5, "Santa Monica and La Jolla", "Sep 2024", 2024, 9], [34.080999, -118.389494, 1, "Santa Monica and Melrose", "Sep 2024", 2024, 9], [34.083076, -118.387105, 3, "Santa Monica and Ramage", "Sep 2024", 2024, 9], [34.083645, -118.385635, 1, "Santa Monica and Robertson", "Sep 2024", 2024, 9], [34.083645, -118.385635, 1, "Santa Monica and Robertson", "Sep 2024", 2024, 9], [34.084919, -118.384228, 1, "Santa Monica and San Vicente", "Sep 2024", 2024, 9], [34.090708, -118.354355, 2, "Santa Monica and Sierra Bonita", "Sep 2024", 2024, 9], [34.088179, -118.379153, 2, "Santa Monica and Westmount", "Sep 2024", 2024, 9], [34.097977, -118.361727, 2, "Sunset and Fairfax", "Sep 2024", 2024, 9], [34.090988, -118.363043, 2, "Sunset and Hayworth", "Sep 2024", 2024, 9], [34.090616, -118.384442, 2, "Sunset and Larabee", "Sep 2024", 2024, 9], [34.092203, -118.379866, 3, "Sunset and Westbourne", "Sep 2024", 2024, 9], [34.082988, -118.384595, 5, "West Hollywood Park", "Sep 2024", 2024, 9], [34.093469, -118.377837, 1, "Alta Loma and Sunset", "Oct 2024", 2024, 10], [34.09075, -118.355484, 1, "Curson and Santa Monica", "Oct 2024", 2024, 10], [34.081369, -118.389633, 1, "Doheny and Santa Monica", "Oct 2024", 2024, 10], [34.090977, -118.361444, 3, "Fairfax and Santa Monica", "Oct 2024", 2024, 10], [34.09085, -118.346339, 1, "Formosa and Santa Monica", "Oct 2024", 2024, 10], [34.090699, -118.349935, 2, "Fuller and Santa Monica", "Oct 2024", 2024, 10], [34.090932, -118.358028, 1, "Genesee and Santa Monica", "Oct 2024", 2024, 10], [34.086817, -118.381553, 1, "Hancock and Santa Monica", "Oct 2024", 2024, 10], [34.090916, -118.367489, 6, "Havenhurst and Santa Monica", "Oct 2024", 2024, 10], [34.090988, -118.363043, 3, "Hayworth and Santa Monica", "Oct 2024", 2024, 10], [34.090536, -118.374435, 1, "Holloway and Santa Monica", "Oct 2024", 2024, 10], [34.09068, -118.36487, 1, "La Jolla and Santa Monica", "Oct 2024", 2024, 10], [34.090744, -118.360613, 2, "Orange Grove and Santa Monica", "Oct 2024", 2024, 10], [34.092885, -118.351288, 4, "Plummer Park", "Oct 2024", 2024, 10], [34.077322, -118.383722, 2, "Robertson and Beverly", "Oct 2024", 2024, 10], [34.083823, -118.385354, 1, "Robertson and Santa Monica", "Oct 2024", 2024, 10], [34.084919, -118.384228, 2, "San Vicente and Santa Monica", "Oct 2024", 2024, 10], [34.09068, -118.344135, 2, "Santa Monica and La Brea", "Oct 2024", 2024, 10], [34.083076, -118.387105, 1, "Santa Monica and Ramage", "Oct 2024", 2024, 10], [34.088179, -118.379153, 2, "Santa Monica and Westmount", "Oct 2024", 2024, 10], [34.097977, -118.361727, 1, "Sunset and Fairfax", "Oct 2024", 2024, 10], [34.082988, -118.384595, 4, "West Hollywood Library", "Oct 2024", 2024, 10], [34.088118, -118.378938, 2, "Westmount and Santa Monica", "Oct 2024", 2024, 10], [34.082104, -118.387791, 1, "Almont and Santa Monica", "Nov 2024", 2024, 11], [34.097924, -118.366428, 1, "Crescent Heights and Sunset", "Nov 2024", 2024, 11], [34.090977, -118.361444, 4, "Fairfax and Santa Monica", "Nov 2024", 2024, 11], [34.097977, -118.361727, 2, "Fairfax and Sunset", "Nov 2024", 2024, 11], [34.09085, -118.346339, 6, "Formosa and Santa Monica", "Nov 2024", 2024, 11], [34.090536, -118.374435, 2, "Holloway and Santa Monica", "Nov 2024", 2024, 11], [34.090716, -118.34436, 2, "La Brea and Santa Monica", "Nov 2024", 2024, 11], [34.09068, -118.36487, 2, "Laurel and Santa Monica", "Nov 2024", 2024, 11], [34.092885, -118.351288, 4, "Plummer Park", "Nov 2024", 2024, 11], [34.083823, -118.385354, 2, "Robertson and Santa Monica", "Nov 2024", 2024, 11], [34.084919, -118.384228, 3, "San Vicente and Santa Monica", "Nov 2024", 2024, 11], [34.086895, -118.381591, 2, "Santa Monica and Hancock", "Nov 2024", 2024, 11], [34.090795, -118.368048, 5, "Santa Monica and La Jolla", "Nov 2024", 2024, 11], [34.090902, -118.364531, 1, "Santa Monica and Laurel", "Nov 2024", 2024, 11], [34.084919, -118.384228, 1, "Santa Monica and San Vicente", "Nov 2024", 2024, 11], [34.090598, -118.357633, 2, "Santa Monica and Spaulding ", "Nov 2024", 2024, 11], [34.082988, -118.384595, 6, "West Hollywood Park", "Nov 2024", 2024, 11], [34.088118, -118.378938, 3, "Westmount and Santa Monica", "Nov 2024", 2024, 11], [34.077322, -118.387645, 1, "Beverly and Almont", "Dec 2024", 2024, 12], [34.094446, -118.361554, 2, "Fairfax and Fountain", "Dec 2024", 2024, 12], [34.088924, -118.361627, 1, "Fairfax and Romaine", "Dec 2024", 2024, 12], [34.097977, -118.361727, 2, "Fairfax and Sunset", "Dec 2024", 2024, 12], [34.094239, -118.344362, 1, "Fountain and La Brea", "Dec 2024", 2024, 12], [34.092885, -118.351288, 3, "Plummer Park", "Dec 2024", 2024, 12], [34.081008, -118.385339, 2, "Robertson and Melrose", "Dec 2024", 2024, 12], [34.09092, -118.366208, 1, "Santa Monica and Crescent Heights", "Dec 2024", 2024, 12], [34.090517, -118.355523, 1, "Santa Monica and Curson", "Dec 2024", 2024, 12], [34.081369, -118.389633, 3, "Santa Monica and Doheny", "Dec 2024", 2024, 12], [34.090624, -118.363822, 3, "Santa Monica and Edinburgh", "Dec 2024", 2024, 12], [34.090782, -118.361573, 1, "Santa Monica and Fairfax", "Dec 2024", 2024, 12], [34.090762, -118.371622, 1, "Santa Monica and Flores", "Dec 2024", 2024, 12], [34.09088, -118.352895, 2, "Santa Monica and Gardner", "Dec 2024", 2024, 12], [34.090902, -118.358164, 1, "Santa Monica and Genesee", "Dec 2024", 2024, 12], [34.090988, -118.363043, 2, "Santa Monica and Hayworth", "Dec 2024", 2024, 12], [34.090576, -118.371993, 3, "Santa Monica and Kings Rd", "Dec 2024", 2024, 12], [34.09068, -118.344135, 1, "Santa Monica and La Brea", "Dec 2024", 2024, 12], [34.089667, -118.376233, 2, "Santa Monica and La Cienega", "Dec 2024", 2024, 12], [34.090795, -118.368048, 3, "Santa Monica and La Jolla", "Dec 2024", 2024, 12], [34.09068, -118.36487, 2, "Santa Monica and Laurel", "Dec 2024", 2024, 12], [34.090663, -118.351279, 1, "Santa Monica and Martel", "Dec 2024", 2024, 12], [34.090771, -118.373992, 1, "Santa Monica and Olive", "Dec 2024", 2024, 12], [34.08589, -118.382938, 1, "Santa Monica and Palm", "Dec 2024", 2024, 12], [34.084919, -118.384228, 3, "Santa Monica and San Vicente", "Dec 2024", 2024, 12], [34.084919, -118.384228, 3, "Santa Monica and San Vicente", "Dec 2024", 2024, 12], [34.090708, -118.354355, 2, "Santa Monica and Sierra Bonita", "Dec 2024", 2024, 12], [34.090616, -118.370306, 1, "Santa Monica and Sweetzer", "Dec 2024", 2024, 12], [34.088772, -118.377573, 3, "Santa Monica and West Knoll", "Dec 2024", 2024, 12], [34.077322, -118.387645, 1, "Beverly and Almont", "Jan 2025", 2025, 1], [34.094446, -118.361554, 1, "Fairfax and Fountain", "Jan 2025", 2025, 1], [34.088924, -118.361627, 2, "Fairfax and Romaine", "Jan 2025", 2025, 1], [34.097977, -118.361727, 2, "Fairfax and Sunset", "Jan 2025", 2025, 1], [34.094239, -118.344362, 1, "Fountain and La Brea", "Jan 2025", 2025, 1], [34.092885, -118.351288, 2, "Plummer Park", "Jan 2025", 2025, 1], [34.081008, -118.385339, 1, "Robertson and Melrose", "Jan 2025", 2025, 1], [34.09092, -118.366208, 1, "Santa Monica and Crescent Heights", "Jan 2025", 2025, 1], [34.081369, -118.389633, 3, "Santa Monica and Doheny", "Jan 2025", 2025, 1], [34.090624, -118.363822, 5, "Santa Monica and Edinburgh", "Jan 2025", 2025, 1], [34.090782, -118.361573, 1, "Santa Monica and Fairfax", "Jan 2025", 2025, 1], [34.090762, -118.371622, 1, "Santa Monica and Flores", "Jan 2025", 2025, 1], [34.09088, -118.352895, 1, "Santa Monica and Gardner", "Jan 2025", 2025, 1], [34.090902, -118.358164, 2, "Santa Monica and Genesee", "Jan 2025", 2025, 1], [34.090988, -118.363043, 4, "Santa Monica and Hayworth", "Jan 2025", 2025, 1], [34.090576, -118.371993, 3, "Santa Monica and Kings Rd", "Jan 2025", 2025, 1], [34.09068, -118.344135, 1, "Santa Monica and La Brea", "Jan 2025", 2025, 1], [34.089667, -118.376233, 2, "Santa Monica and La Cienega", "Jan 2025", 2025, 1], [34.090795, -118.368048, 1, "Santa Monica and La Jolla", "Jan 2025", 2025, 1], [34.09068, -118.36487, 2, "Santa Monica and Laurel", "Jan 2025", 2025, 1], [34.090663, -118.351279, 3, "Santa Monica and Martel", "Jan 2025", 2025, 1], [34.090771, -118.373992, 1, "Santa Monica and Olive", "Jan 2025", 2025, 1], [34.08589, -118.382938, 3, "Santa Monica and Palm", "Jan 2025", 2025, 1], [34.084919, -118.384228, 3, "Santa Monica and San Vicente", "Jan 2025", 2025, 1], [34.084919, -118.384228, 3, "Santa Monica and San Vicente", "Jan 2025", 2025, 1], [34.090708, -118.354355, 4, "Santa Monica and Sierra Bonita", "Jan 2025", 2025, 1], [34.090616, -118.370306, 2, "Santa Monica and Sweetzer", "Jan 2025", 2025, 1], [34.088772, -118.377573, 3, "Santa Monica and West Knoll", "Jan 2025", 2025, 1], [34.089048, -118.346203, 2, "Formosa and Romaine", "Feb 2025", 2025, 2], [34.094446, -118.361554, 2, "Fountain and Fairfax", "Feb 2025", 2025, 2], [34.094239, -118.344362, 2, "Fountain and La Brea", "Feb 2025", 2025, 2], [34.097117, -118.368991, 2, "Harper and Sunset", "Feb 2025", 2025, 2], [34.095785, -118.371673, 1, "Hart Park", "Feb 2025", 2025, 2], [34.090916, -118.367489, 3, "Havenhurst and Santa Monica", "Feb 2025", 2025, 2], [34.090731, -118.376117, 3, "Holloway and La Cienega", "Feb 2025", 2025, 2], [34.095352, -118.372617, 2, "Kings Rd and Sunset", "Feb 2025", 2025, 2], [34.088933, -118.344362, 1, "La Brea and Romaine", "Feb 2025", 2025, 2], [34.089274, -118.376479, 2, "La Cienega and Santa Monica", "Feb 2025", 2025, 2], [34.09068, -118.36487, 1, "Laurel and Santa Monica", "Feb 2025", 2025, 2], [34.081037, -118.385441, 3, "Melrose and Robertson", "Feb 2025", 2025, 2], [34.091816, -118.355077, 1, "Norton and Curson", "Feb 2025", 2025, 2], [34.092885, -118.351288, 6, "Plummer Park", "Feb 2025", 2025, 2], [34.089194, -118.376238, 2, "Romaine and Santa Monica", "Feb 2025", 2025, 2], [34.09092, -118.366208, 2, "Santa Monica and Crescent Heights", "Feb 2025", 2025, 2], [34.090782, -118.361573, 4, "Santa Monica and Fairfax", "Feb 2025", 2025, 2], [34.090663, -118.351279, 3, "Santa Monica and Martel", "Feb 2025", 2025, 2], [34.083645, -118.385635, 2, "Santa Monica and Robertson", "Feb 2025", 2025, 2], [34.082988, -118.384595, 6, "West Hollywood Park", "Feb 2025", 2025, 2], [34.087377, -118.379912, 2, "Westbourne and Santa Monica", "Feb 2025", 2025, 2], [34.089048, -118.346203, 2, "Formosa and Romaine", "Mar 2025", 2025, 3], [34.094446, -118.361554, 3, "Fountain and Fairfax", "Mar 2025", 2025, 3], [34.094239, -118.344362, 1, "Fountain and La Brea", "Mar 2025", 2025, 3], [34.094239, -118.344362, 2, "Harper and Sunset", "Mar 2025", 2025, 3], [34.095785, -118.371673, 1, "Hart Park", "Mar 2025", 2025, 3], [34.090916, -118.367489, 3, "Havenhurst and Santa Monica", "Mar 2025", 2025, 3], [34.090731, -118.376117, 2, "Holloway and La Cienega", "Mar 2025", 2025, 3], [34.090731, -118.376117, 2, "Holloway and La Cienega", "Mar 2025", 2025, 3], [34.095352, -118.372617, 1, "Kings Road and Sunset", "Mar 2025", 2025, 3], [34.088933, -118.344362, 1, "La Brea and Romaine", "Mar 2025", 2025, 3], [34.082438, -118.376447, 4, "La Brea and Santa Monica", "Mar 2025", 2025, 3], [34.089274, -118.376479, 2, "La Cienega and Santa Monica", "Mar 2025", 2025, 3], [34.09068, -118.36487, 2, "Laurel and Santa Monica", "Mar 2025", 2025, 3], [34.081037, -118.385441, 2, "Melrose and Robertson", "Mar 2025", 2025, 3], [34.091816, -118.355077, 1, "Norton and Curson", "Mar 2025", 2025, 3], [34.092885, -118.351288, 4, "Plummer Park", "Mar 2025", 2025, 3], [34.089194, -118.376238, 4, "Romaine and Santa Monica", "Mar 2025", 2025, 3], [34.09092, -118.366208, 3, "Santa Monica and Crescent Heights", "Mar 2025", 2025, 3], [34.090782, -118.361573, 6, "Santa Monica and Fairfax", "Mar 2025", 2025, 3], [34.083645, -118.385635, 1, "Santa Monica and Robertson", "Mar 2025", 2025, 3], [34.090536, -118.374435, 1, "Veterans Park", "Mar 2025", 2025, 3], [34.082988, -118.384595, 5, "West Hollywood Library", "Mar 2025", 2025, 3], [34.087377, -118.379912, 2, "Westbourne and Santa Monica", "Mar 2025", 2025, 3], [34.077322, -118.387645, 1, "Beverly and Almont", "Apr 2025", 2025, 4], [34.094446, -118.361554, 2, "Fairfax and Fountain", "Apr 2025", 2025, 4], [34.088924, -118.361627, 1, "Fairfax and Romaine", "Apr 2025", 2025, 4], [34.097977, -118.361727, 1, "Fairfax and Sunset", "Apr 2025", 2025, 4], [34.094391, -118.344384, 1, "Fountain and La Brea", "Apr 2025", 2025, 4], [34.092885, -118.351288, 3, "Plummer Park", "Apr 2025", 2025, 4], [34.081008, -118.385339, 2, "Robertson and Melrose", "Apr 2025", 2025, 4], [34.09092, -118.366208, 1, "Santa Monica and Crescent Heights", "Apr 2025", 2025, 4], [34.090517, -118.355523, 1, "Santa Monica and Curson", "Apr 2025", 2025, 4], [34.081369, -118.389633, 3, "Santa Monica and Doheny", "Apr 2025", 2025, 4], [34.090624, -118.363822, 1, "Santa Monica and Edinburgh", "Apr 2025", 2025, 4], [34.090782, -118.361573, 3, "Santa Monica and Fairfax", "Apr 2025", 2025, 4], [34.090762, -118.371622, 1, "Santa Monica and Flores", "Apr 2025", 2025, 4], [34.09088, -118.352895, 1, "Santa Monica and Gardner", "Apr 2025", 2025, 4], [34.090902, -118.358164, 1, "Santa Monica and Genesee", "Apr 2025", 2025, 4], [34.090988, -118.363043, 5, "Santa Monica and Hayworth", "Apr 2025", 2025, 4], [34.090576, -118.371993, 3, "Santa Monica and Kings Road", "Apr 2025", 2025, 4], [34.09068, -118.344135, 1, "Santa Monica and La Brea", "Apr 2025", 2025, 4], [34.089667, -118.376233, 2, "Santa Monica and La Cienega", "Apr 2025", 2025, 4], [34.090795, -118.368048, 3, "Santa Monica and La Jolla", "Apr 2025", 2025, 4], [34.09068, -118.36487, 2, "Santa Monica and Laurel", "Apr 2025", 2025, 4], [34.090663, -118.351279, 1, "Santa Monica and Martel", "Apr 2025", 2025, 4], [34.090796, -118.360543, 1, "Santa Monica and Olive", "Apr 2025", 2025, 4], [34.08589, -118.382938, 1, "Santa Monica and Palm", "Apr 2025", 2025, 4], [34.084919, -118.384228, 2, "Santa Monica and San Vicente", "Apr 2025", 2025, 4], [34.084919, -118.384228, 3, "Santa Monica and San Vicente", "Apr 2025", 2025, 4], [34.090598, -118.357633, 4, "Santa Monica and Sierra Bonita", "Apr 2025", 2025, 4], [34.090692, -118.352784, 1, "Santa Monica and Sweetzer", "Apr 2025", 2025, 4], [34.088772, -118.377573, 3, "Santa Monica and West Knoll ", "Apr 2025", 2025, 4], [34.07738, -118.38784, 1, "Beverly and Almont", "May 2025", 2025, 5], [34.091, -118.35543, 1, "Curson and Santa Monica", "May 2025", 2025, 5], [34.08897, -118.36166, 1, "Fairfax and Romaine", "May 2025", 2025, 5], [34.09824, -118.36166, 3, "Fairfax and Sunset", "May 2025", 2025, 5], [34.09453, -118.34425, 1, "Fountain & La Brea", "May 2025", 2025, 5], [34.09092, -118.35343, 1, "Gardner and Santa Monica", "May 2025", 2025, 5], [34.09101, -118.35815, 1, "Genesee and Santa Monica", "May 2025", 2025, 5], [34.09044, -118.374298, 2, "Holloway & sm", "May 2025", 2025, 5], [34.09104, -118.36453, 2, "Laurel and Santa Monica", "May 2025", 2025, 5], [34.09159, -118.3508, 6, "Plummer Park", "May 2025", 2025, 5], [34.08095, -118.38564, 2, "Robertson and Melrose", "May 2025", 2025, 5], [34.08532, -118.38411, 2, "Santa Monica & San Vicente", "May 2025", 2025, 5], [34.09148, -118.36715, 1, "Santa Monica and Crescent Heights", "May 2025", 2025, 5], [34.08102, -118.38995, 3, "Santa Monica and Doheny", "May 2025", 2025, 5], [34.09095, -118.36398, 1, "Santa Monica and Edinburgh", "May 2025", 2025, 5], [34.09098, -118.36151, 3, "Santa Monica and Fairfax", "May 2025", 2025, 5], [34.09088, -118.37161, 1, "Santa Monica and Flores", "May 2025", 2025, 5], [34.09094, -118.36294, 4, "Santa Monica and Hayworth", "May 2025", 2025, 5], [34.09088, -118.37186, 3, "Santa Monica and Kings", "May 2025", 2025, 5], [34.09083, -118.34422, 1, "Santa Monica and La Brea", "May 2025", 2025, 5], [34.08976, -118.37643, 2, "Santa Monica and La Cienega", "May 2025", 2025, 5], [34.09089, -118.3682, 3, "Santa Monica and La Jolla", "May 2025", 2025, 5], [34.09092, -118.35123, 3, "Santa Monica and Martel", "May 2025", 2025, 5], [34.09085, -118.37405, 1, "Santa Monica and Olive", "May 2025", 2025, 5], [34.08602, -118.38294, 1, "Santa Monica and Palm", "May 2025", 2025, 5], [34.08532, -118.38411, 3, "Santa Monica and San Vicente", "May 2025", 2025, 5], [34.09098, -118.3545, 2, "Santa Monica and Sierra Bonita", "May 2025", 2025, 5], [34.0909, -118.37039, 1, "Sweetzer and Santa Monica", "May 2025", 2025, 5], [34.08934, -118.3772, 3, "West Knoll and Santa Monica", "May 2025", 2025, 5], [34.08907, -118.34635, 2, "Formosa and Romaine", "Jun 2025", 2025, 6], [34.09466, -118.36165, 3, "Fountain and Fairfax", "Jun 2025", 2025, 6], [34.09453, -118.34425, 2, "Fountain and La Brea", "Jun 2025", 2025, 6], [34.09743, -118.36911, 2, "Harper and Sunset", "Jun 2025", 2025, 6], [34.09555, -118.37178, 1, "Hart Park", "Jun 2025", 2025, 6], [34.09087, -118.36709, 3, "Havenhurst and Santa Monica", "Jun 2025", 2025, 6], [34.09083, -118.37637, 3, "Holloway and La Cienega", "Jun 2025", 2025, 6], [34.0954, -118.3728, 2, "Kings and Sunset", "Jun 2025", 2025, 6], [34.08909, -118.34416, 1, "La Brea and Romaine", "Jun 2025", 2025, 6], [34.08976, -118.37643, 2, "La Cienega and Santa Monica", "Jun 2025", 2025, 6], [34.09104, -118.36453, 1, "Laurel and Santa Monica", "Jun 2025", 2025, 6], [34.08095, -118.38564, 3, "Melrose and Robertson", "Jun 2025", 2025, 6], [34.09188, -118.35515, 1, "Norton and Curson", "Jun 2025", 2025, 6], [34.09159, -118.3508, 6, "Plummer Park", "Jun 2025", 2025, 6], [34.08907, -118.34635, 2, "Romaine and Santa Monica", "Jun 2025", 2025, 6], [34.09148, -118.36715, 2, "Santa Monica and Crescent Heights", "Jun 2025", 2025, 6], [34.09098, -118.36151, 4, "Santa Monica and Fairfax", "Jun 2025", 2025, 6], [34.09092, -118.35123, 3, "Santa Monica and Martel", "Jun 2025", 2025, 6], [34.08399, -118.38561, 2, "Santa Monica and Robertson", "Jun 2025", 2025, 6], [34.0829, -118.38449, 6, "West Hollywood Park", "Jun 2025", 2025, 6], [34.08783, -118.37989, 2, "Westbourne and Santa Monica", "Jun 2025", 2025, 6], [34.07738, -118.38784, 1, "Beverly and Almont", "Jul 2025", 2025, 7], [34.09466, -118.36165, 2, "Fairfax and Fountain", "Jul 2025", 2025, 7], [34.08897, -118.36166, 1, "Fairfax and Romaine", "Jul 2025", 2025, 7], [34.09824, -118.36166, 1, "Fairfax and Sunset", "Jul 2025", 2025, 7], [34.09453, -118.34425, 4, "Fountain and La Brea", "Jul 2025", 2025, 7], [34.09159, -118.3508, 3, "Plummer Park", "Jul 2025", 2025, 7], [34.08095, -118.38564, 2, "Robertson and Melrose", "Jul 2025", 2025, 7], [34.09148, -118.36715, 1, "Santa Monica and Crescent Heights", "Jul 2025", 2025, 7], [34.091, -118.35543, 1, "Santa Monica and Curson", "Jul 2025", 2025, 7], [34.08102, -118.38995, 3, "Santa Monica and Doheny", "Jul 2025", 2025, 7], [34.09095, -118.36398, 1, "Santa Monica and Edinburgh", "Jul 2025", 2025, 7], [34.09098, -118.36151, 3, "Santa Monica and Fairfax", "Jul 2025", 2025, 7], [34.09088, -118.37161, 1, "Santa Monica and Flores", "Jul 2025", 2025, 7], [34.09092, -118.35343, 1, "Santa Monica and Gardner", "Jul 2025", 2025, 7], [34.09101, -118.35815, 1, "Santa Monica and Genesee", "Jul 2025", 2025, 7], [34.09094, -118.36294, 4, "Santa Monica and Hayworth", "Jul 2025", 2025, 7], [34.09088, -118.37186, 3, "Santa Monica and Kings Road", "Jul 2025", 2025, 7], [34.09083, -118.34422, 1, "Santa Monica and La Brea", "Jul 2025", 2025, 7], [34.08976, -118.37643, 2, "Santa Monica and La Cienega", "Jul 2025", 2025, 7], [34.09089, -118.3682, 3, "Santa Monica and La Jolla", "Jul 2025", 2025, 7], [34.09104, -118.36453, 2, "Santa Monica and Laurel", "Jul 2025", 2025, 7], [34.09092, -118.35123, 1, "Santa Monica and Martel", "Jul 2025", 2025, 7], [34.09085, -118.37405, 1, "Santa Monica and Olive", "Jul 2025", 2025, 7], [34.08602, -118.38294, 1, "Santa Monica and Palm", "Jul 2025", 2025, 7], [34.08532, -118.38411, 1, "Santa Monica and San Vicente", "Jul 2025", 2025, 7], [34.08532, -118.38411, 3, "Santa Monica and San Vicente", "Jul 2025", 2025, 7], [34.09098, -118.3545, 3, "Santa Monica and Sierra Bonita", "Jul 2025", 2025, 7], [34.0909, -118.37039, 1, "Santa Monica and Sweetzer", "Jul 2025", 2025, 7], [34.08934, -118.3772, 3, "Santa Monica and West Knoll", "Jul 2025", 2025, 7], [34.089048, -118.346203, 2, "Formosa and Romaine", "Aug 2025", 2025, 8], [34.094446, -118.361554, 3, "Fountain and Fairfax", "Aug 2025", 2025, 8], [34.094446, -118.361554, 2, "Fountain and La Brea", "Aug 2025", 2025, 8], [34.097117, -118.368991, 2, "Harper and Sunset", "Aug 2025", 2025, 8], [34.095785, -118.371673, 1, "Hart Park", "Aug 2025", 2025, 8], [34.090916, -118.367489, 3, "Havenhurst and Santa Monica", "Aug 2025", 2025, 8], [34.090731, -118.376117, 3, "Holloway and La Cienega", "Aug 2025", 2025, 8], [34.095352, -118.372617, 2, "Kings and Sunset", "Aug 2025", 2025, 8], [34.088933, -118.344362, 1, "La Brea and Romaine", "Aug 2025", 2025, 8], [34.089274, -118.376479, 2, "La Cienega and Santa Monica", "Aug 2025", 2025, 8], [34.09068, -118.36487, 1, "Laurel and Santa Monica", "Aug 2025", 2025, 8], [34.081037, -118.385441, 3, "Melrose and Robertson", "Aug 2025", 2025, 8], [34.091816, -118.355077, 1, "Norton and Curson", "Aug 2025", 2025, 8], [34.092885, -118.351288, 6, "Plummer Park", "Aug 2025", 2025, 8], [34.089194, -118.376238, 2, "Romaine and Santa Monica", "Aug 2025", 2025, 8], [34.09092, -118.366208, 2, "Santa Monica and Crescent Heights", "Aug 2025", 2025, 8], [34.090782, -118.361573, 4, "Santa Monica and Fairfax", "Aug 2025", 2025, 8], [34.090663, -118.351279, 3, "Santa Monica and Martel", "Aug 2025", 2025, 8], [34.083645, -118.385635, 2, "Santa Monica and Robertson", "Aug 2025", 2025, 8], [34.082988, -118.384595, 6, "West Hollywood Park", "Aug 2025", 2025, 8], [34.087377, -118.379912, 2, "Westbourne and Santa Monica", "Aug 2025", 2025, 8], [34.089048, -118.346203, 2, "Formosa and Romaine", "Sep 2025", 2025, 9], [34.094446, -118.361554, 3, "Fountain and Fairfax", "Sep 2025", 2025, 9], [34.094239, -118.344362, 1, "Fountain and La Brea", "Sep 2025", 2025, 9], [34.097117, -118.368991, 2, "Harper and Sunset", "Sep 2025", 2025, 9], [34.090916, -118.367489, 1, "Hart Park", "Sep 2025", 2025, 9], [34.090916, -118.367489, 3, "Havenhurst and Santa Monica", "Sep 2025", 2025, 9], [34.090731, -118.376117, 2, "Holloway and La Cienega", "Sep 2025", 2025, 9], [34.090731, -118.376117, 2, "Holloway and La Cienega", "Sep 2025", 2025, 9], [34.095352, -118.372617, 1, "Kings Road and Sunset", "Sep 2025", 2025, 9], [34.088933, -118.344362, 1, "La Brea and Romaine", "Sep 2025", 2025, 9], [34.082438, -118.376447, 4, "La Brea and Santa Monica", "Sep 2025", 2025, 9], [34.089274, -118.376479, 2, "La Cienega and Santa Monica", "Sep 2025", 2025, 9], [34.089274, -118.376479, 2, "Laurel and Santa Monica", "Sep 2025", 2025, 9], [34.081037, -118.385441, 2, "Melrose and Robertson", "Sep 2025", 2025, 9], [34.091816, -118.355077, 1, "Norton and Curson", "Sep 2025", 2025, 9], [34.092885, -118.351288, 4, "Plummer Park", "Sep 2025", 2025, 9], [34.089194, -118.376238, 4, "Romaine and Santa Monica", "Sep 2025", 2025, 9], [34.09092, -118.366208, 2, "Santa Monica and Crescent Heights", "Sep 2025", 2025, 9], [34.090782, -118.361573, 5, "Santa Monica and Fairfax", "Sep 2025", 2025, 9], [34.083645, -118.385635, 1, "Santa Monica and Robertson", "Sep 2025", 2025, 9], [34.090536, -118.374435, 1, "Veterans Park", "Sep 2025", 2025, 9], [34.082988, -118.384595, 4, "West Hollywood Library", "Sep 2025", 2025, 9], [34.087377, -118.379912, 2, "Westbourne and Santa Monica", "Sep 2025", 2025, 9]];
-const PIT_MO_2025={"Jan": 59, "Feb": 52, "Mar": 55, "Apr": 55, "May": 59, "Jun": 53, "Jul": 55, "Aug": 53, "Sep": 52};
-const PIT_YR_AVGS=[30.4, 38.8, 49.5, 43.4, 39.4, 41.7, 47.1, 51.4, 55];
-const PIT_YR_LBLS=["2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
-const PIT_MONTHS9=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"];
-let _pitMap=null,_pitHeat=null,_pitDots=null,_pitView="points";
-
-function pitPopulateMonths(){
-  const yr=document.getElementById("pit-year-sel").value;
-  const sel=document.getElementById("pit-month-sel");
-  const cur=sel.value;
-  sel.innerHTML='<option value="all">All months</option>';
-  const data=yr==="all"?PIT_PTS:PIT_PTS.filter(p=>String(p[5])===yr);
-  const seen=new Set();data.forEach(p=>seen.add(p[4]));
-  [...seen].sort((a,b)=>new Date("01 "+a)-new Date("01 "+b)).forEach(m=>{
-    const o=document.createElement("option");
-    o.value=m;o.textContent=m;if(m===cur)o.selected=true;
-    sel.appendChild(o);
-  });
-}
-function pitFilter(){pitPopulateMonths();pitRenderMap();}
-function pitRenderMap(){
-  const yr=document.getElementById("pit-year-sel").value;
-  const mo=document.getElementById("pit-month-sel").value;
-  let data=PIT_PTS;
-  if(yr!=="all")data=data.filter(p=>String(p[5])===yr);
-  if(mo!=="all")data=data.filter(p=>p[4]===mo);
-  if(_pitDots){_pitMap.removeLayer(_pitDots);_pitDots=null;}
-  {
-    _pitDots=L.layerGroup();
-    data.forEach(p=>{
-      const r=Math.max(5,Math.min(15,p[2]*2.5));
-      L.circleMarker([p[0],p[1]],{
-        radius:r,fillColor:"#003087",color:"#fff",weight:1.5,opacity:1,fillOpacity:0.75
-      }).bindTooltip("<strong>"+p[3]+"</strong><br>"+p[4]+": "+p[2]+" individual"+(p[2]!==1?"s":""),
-        {direction:"top",offset:[0,-4]})
-       .addTo(_pitDots);
-    });
-    _pitDots.addTo(_pitMap);
-  }
-}
-function pitRenderCharts(){
-  const B1="#003087",B2="#5B9BD5";
-  const v25=PIT_MONTHS9.map(m=>PIT_MO_2025[m]||0);
-  drawBar("pit-bar-2025",PIT_MONTHS9,v25,v25.map(v=>v===Math.max(...v25)?B1:B2),{axisMax:80});
-  drawBar("pit-trend",PIT_YR_LBLS,PIT_YR_AVGS,PIT_YR_AVGS.map((v,i)=>i===PIT_YR_AVGS.length-1?B1:B2),{axisMax:80});
-}
-function pitInit(){
-  pitRenderCharts();
-  pitPopulateMonths();
-  if(!_pitMap){
-    _pitMap=L.map("pit-map").setView([34.0887,-118.3671],14);
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{
-      attribution:"&copy; OpenStreetMap &copy; CARTO",
-      maxZoom:19
-    }).addTo(_pitMap);
-  }
-  pitRenderMap();
-  setTimeout(()=>{if(_pitMap)_pitMap.invalidateSize();},150);
-}
 </script>
 <div class="chart-tooltip" id="chart-tooltip"></div>
 </body>
