@@ -168,7 +168,6 @@
     </div>
     <div class="chart-card">
       <div class="chart-title">How calls were initiated</div>
-      <div class="chart-note">Percentage of calls attributed to each referral source. A single call may be referred by more than one source.</div>
       <div id="bars-referral"></div>
     </div>
   </div>
@@ -414,6 +413,31 @@ const D = {
   fuUnique:          [131,100,102,116,108,96,85,110],
 };
 
+
+// ── FYTD UNDUPLICATED DEMOGRAPHIC DATA (727 unique individuals) ──
+const D_demo = {
+  ageU17:       5,
+  age1834:      160,
+  age3549:      193,
+  age5064:      145,
+  age6579:      52,
+  age80p:       8,
+  ageDTS:       164,
+  genderMale:   532,
+  genderFemale: 188,
+  genderDTS:    7,
+  raceAsian:    15,
+  raceBlack:    187,
+  raceHispanic: 131,
+  raceWhite:    295,
+  raceOther:    43,
+  raceDTS:      56,
+  housingHoused:   102,
+  housingUnhoused: 578,
+  housingDTS:      47,
+};
+const DEMO_TOTAL = 727;
+
 // ── HELPERS ──
 const currentPeriod = 'ytd';
 let currentPage = 'overview';
@@ -524,7 +548,7 @@ function drawBar(canvasId, labels, values, colors, opts={}) {
   }
 
   // Bars
-  const total = opts.showPct ? values.reduce((a,b)=>a+b,0) : 0;
+  const total = opts.showPct ? (opts.pctBase || values.reduce((a,b)=>a+b,0)) : 0;
   values.forEach((v,i) => {
     const bh = (v/max)*chartH;
     const x = pad.left + i*groupW + (groupW-barW)/2;
@@ -785,7 +809,7 @@ function renderOverview() {
   const AX = {
     trend: 300, age: 260, race: 400, housing: 140,
     dow: 260, tod: 200, onscene: 500, furef: 460, repeats: 30,
-    presenting: 700, referral: 250
+    presenting: 700, referral: 300
   };
 
   if (mLabels.length === 1) {
@@ -813,9 +837,13 @@ function renderOverview() {
   const refItems = [
     {label:'Unarmed security ambassadors', val:periodSum('refAmbassadors'), color:B1},
     {label:'Sycamores outreach', val:periodSum('refSycamores'), color:B1},
-    {label:'Self', val:periodSum('refSelf'), color:B2},
+    {label:'Self-referral', val:periodSum('refSelf'), color:B2},
     {label:'Homeless concern line', val:periodSum('refHCL'), color:B2},
     {label:'Law enforcement', val:periodSum('refLawEnf'), color:B3},
+    {label:'Other City agency', val:periodSum('refWeHoAgency'), color:B3},
+    {label:'City staff', val:periodSum('refWeHoStaff'), color:B3},
+    {label:'Friend or family', val:periodSum('refFriendFam'), color:B3},
+    {label:'Fire / EMS', val:periodSum('refFireEMS'), color:B3},
     {label:'Other', val:periodSum('refOther'), color:B3},
   ];
   buildBars('bars-referral', refItems, eng, AX.referral);
@@ -823,34 +851,34 @@ function renderOverview() {
 }
 
 function renderDemographics() {
-  const housed   = periodSum('housingHoused');
-  const unhoused = periodSum('housingUnhoused');
-  const dts      = periodSum('housingDTS');
-  const total    = housed + unhoused + dts;
+  const housed   = D_demo.housingHoused;
+  const unhoused = D_demo.housingUnhoused;
+  const dts      = D_demo.housingDTS;
+  const total    = DEMO_TOTAL;
 
   const AX = { age:260, race:400, housing:140 };
 
   setKPI('kpi-demo-top',
-    kpiCard('Contacts — unhoused', fmt(unhoused), pct(unhoused,total)+' of contacts this period') +
-    kpiCard('Contacts — housed', fmt(housed), pct(housed,total)+' of contacts this period') +
-    kpiCard('Housing status unknown', fmt(dts), pct(dts,total)+' declined to state')
+    kpiCard('Unhoused', fmt(unhoused), pct(unhoused,total)+' of engagements') +
+    kpiCard('Housed', fmt(housed), pct(housed,total)+' of engagements') +
+    kpiCard('Housing status unknown', fmt(dts), pct(dts,total)+' of engagements')
   );
 
   drawBar('c-age',
     ['0–17','18–34','35–49','50–64','65–79','80+','DTS'],
-    ['ageU17','age1834','age3549','age5064','age6579','age80p','ageDTS'].map(k=>periodSum(k)),
-    [B4,B1,B1,B1,B2,B3,B4], {axisMax: AX.age, showPct: true}
+    ['ageU17','age1834','age3549','age5064','age6579','age80p','ageDTS'].map(k=>D_demo[k]),
+    [B4,B1,B1,B1,B2,B3,B4], {axisMax: AX.age, showPct: true, pctBase: DEMO_TOTAL}
   );
 
   drawBar('c-race',
     ['White','Black / AA','Hispanic /\nLatino','DTS','Other /\nMulti','Asian / PI'],
-    ['raceWhite','raceBlack','raceHispanic','raceDTS','raceOther','raceAsian'].map(k=>periodSum(k)),
-    [B1,B1,B1,B3,B2,B4], {leftPad:44, axisMax: AX.race, showPct: true}
+    ['raceWhite','raceBlack','raceHispanic','raceDTS','raceOther','raceAsian'].map(k=>D_demo[k]),
+    [B1,B1,B1,B3,B2,B4], {leftPad:44, axisMax: AX.race, showPct: true, pctBase: DEMO_TOTAL}
   );
 
-  const gMale = periodSum('genderMale');
-  const gFemale = periodSum('genderFemale');
-  const gDTS = periodSum('genderDTS');
+  const gMale = D_demo.genderMale;
+  const gFemale = D_demo.genderFemale;
+  const gDTS = D_demo.genderDTS;
   drawDonut('c-gender',['Male','Female','Decline to state'],[gMale,gFemale,gDTS],[B1,B2,B4]);
   attachDonutTooltips('c-gender',['Male','Female','Decline to state'],[gMale,gFemale,gDTS]);
 
