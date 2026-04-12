@@ -239,7 +239,7 @@
 <div class="page" id="page-calls">
 
   <div class="page-context">
-    When and where calls happen — including the busiest days and times, where the team responded, and how quickly they arrived. Response time metrics are based on the full fiscal year and do not change with the period filter.
+    When and where calls happen — including the busiest days and times, where the team responded, and how quickly they arrived.
   </div>
 
   <div class="chart-grid">
@@ -1079,7 +1079,7 @@ function renderCalls() {
   var callTime = CALL_TIME_CONFIG[currentFY];
   var callTimeNote = document.querySelector('#tbl-calltime')?.closest('.chart-card')?.querySelector('.chart-note');
   if (callTimeNote) {
-    callTimeNote.textContent = 'Full-year averages (' + callTime.dateRange + ') — does not change with the period filter';
+    callTimeNote.textContent = 'Full-year averages — ' + callTime.dateRange + '';
   }
   document.getElementById('tbl-calltime').innerHTML = `
     <tr class="row-group"><td colspan="2">Arrival speed</td></tr>
