@@ -131,7 +131,7 @@
 <div class="header">
   <div>
     <div class="header-title">West Hollywood Care Team</div>
-    <div class="header-sub">Program Performance Dashboard</div>
+    <div class="header-sub">FY 2025–2026 Program Performance Dashboard</div>
   </div>
   <div class="header-right">
     <span class="fy-label">Fiscal Year</span>
@@ -159,10 +159,10 @@
 <div class="page active" id="page-overview">
 
   <div class="page-context">
-    The Care Team is West Hollywood's mobile behavioral health response program, operated by Sycamores. This page summarizes call volume, response times, and the most common reasons for Care Team service requests.
+    Call volume increased in winter months, with most requests related to basic needs and housing support.
   </div>
 
-  <div class="flow-cards-wrap"><div class="flow-cards-heading" id="flow-cards-heading">Care Team activity</div><div id="flow-cards" class="flow-cards"></div><p class="flow-cards-note">FY 2025 transport counts reflect Care Team transports to a remote resource or location as logged in the monthly report. Follow-up contacts and transports are separate activity measures and should not be added together.</p></div>
+  <div class="flow-cards-wrap"><div class="flow-cards-heading" id="flow-cards-heading">Care Team activity</div><div id="flow-cards" class="flow-cards"></div><p class="flow-cards-note" id="transport-note">FY 2025 transport counts reflect logged transports to a remote resource or location. Transport counts are shown separately from follow-up contacts.</p></div>
   <div class="kpi-row kpi-4" id="kpi-overview-bot"></div>
 
   <div class="chart-card full" style="margin-bottom:18px;">
@@ -178,7 +178,7 @@
   <div class="half-grid">
     <div class="chart-card">
       <div class="chart-title">Presenting issues</div>
-      <div class="chart-note">Recorded per contact, not per individual. A single contact may involve more than one issue, so percentages may exceed 100%.</div>
+      <div class="chart-note">Contacts may include multiple issues.</div>
       <div id="bars-presenting"></div>
     </div>
     <div class="chart-card">
@@ -195,30 +195,30 @@
 <div class="page" id="page-demographics">
 
   <div class="page-context">
-    Who the Care Team served — broken down by age, gender, race/ethnicity, and housing status.
+    Most people served were adults ages 25–64, and a majority were experiencing homelessness.
   </div>
 
-  <div class="kpi-row kpi-3" id="kpi-demo-top" style="display:none;"></div>
+  
 
   <div class="chart-grid">
     <div class="chart-card">
-      <div class="chart-title">Age groups</div>
-      <div class="chart-note">Total contacts by age group across the selected period</div>
+      <div class="chart-title" id="age-title">Age groups</div>
+      <div class="chart-note" id="age-note">Total by age group across the selected fiscal year</div>
       <canvas id="c-age" height="220"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Race / ethnicity</div>
-      <div class="chart-note">Total contacts by race/ethnicity across the selected period</div>
+      <div class="chart-title" id="race-title">Race / ethnicity</div>
+      <div class="chart-note" id="race-note">Total by race/ethnicity across the selected fiscal year</div>
       <canvas id="c-race" height="220"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Gender</div>
-      <div class="chart-note">Share of contacts by gender identity across the selected period</div>
+      <div class="chart-title" id="gender-title">Gender</div>
+      <div class="chart-note" id="gender-note">Share by gender identity across the selected fiscal year</div>
       <canvas id="c-gender" height="220"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Housing status</div>
-      <div class="chart-note">Share of engagements by housing status</div>
+      <div class="chart-title" id="housing-title">Housing status</div>
+      <div class="chart-note" id="housing-note">Share by housing status across the selected fiscal year</div>
       <canvas id="c-housing-donut" height="240"></canvas>
     </div>
     <div class="chart-card full">
@@ -240,12 +240,12 @@
 <div class="page" id="page-calls">
 
   <div class="page-context">
-    When and where calls happen — including the busiest days and times, where the team responded, and how quickly they arrived.
+    Activity peaks midweek, particularly in public spaces and afternoon hours.
   </div>
 
   <div class="chart-grid">
     <div class="chart-card">
-      <div class="chart-title">Calls by day of the week</div>
+      <div class="chart-title">Calls by day</div>
       <div class="chart-note">Which days saw the most calls. The darkest bar is the busiest day.</div>
       <canvas id="c-dow" height="220"></canvas>
     </div>
@@ -274,7 +274,7 @@
 <div class="page" id="page-outcomes">
 
   <div class="page-context">
-    What happened after the Care Team responded — including resources provided on-scene, follow-up services, transports to other locations, and the small number of cases that required law enforcement or fire/EMS.
+    Most engagements resulted in service connections, with relatively few cases requiring first-responder support.
   </div>
 
   <div class="flow-cards-wrap"><div class="flow-cards-heading" id="outcomes-cards-heading">Outcomes activity</div><div id="kpi-outcomes-top" class="flow-cards"></div></div>
@@ -291,14 +291,14 @@
       <div id="bars-followup"></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">First responder involvement</div>
-      <div class="chart-note">Number of times the Care Team requested additional first-responder support</div>
-      <table class="stat-table" id="tbl-fr"></table>
-    </div>
-    <div class="chart-card">
       <div class="chart-title">Repeat contacts (same month)</div>
       <div class="chart-note">Contacts logged more than once within the same month. Does not capture repeat encounters where the individual declined to provide identifying information.</div>
       <canvas id="c-repeat" height="200"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">First responder involvement</div>
+      <div class="chart-note">Number of times the Care Team requested additional first-responder support</div>
+      <table class="stat-table" id="tbl-fr"></table>
     </div>
   </div>
 
@@ -554,13 +554,39 @@ function sum(arr, idxs) {
   return idxs.reduce((t,i) => t + (arr[i] || 0), 0);
 }
 
-function pct(val, total) {
+function roundedPercentages(values, totalOverride=null) {
+  const total = totalOverride != null ? totalOverride : values.reduce((a,b)=>a+b,0);
+  if (!total) return values.map(() => 0);
+  const exact = values.map(v => (v / total) * 100);
+  const base = exact.map(v => Math.floor(v));
+  let remainder = 100 - base.reduce((a,b)=>a+b,0);
+
+  const order = exact
+    .map((v,i) => ({ i, frac: v - Math.floor(v), value: values[i] }))
+    .sort((a,b) => {
+      if (b.frac !== a.frac) return b.frac - a.frac;
+      return b.value - a.value;
+    });
+
+  for (let k = 0; k < remainder; k++) {
+    base[order[k % order.length].i] += 1;
+  }
+  return base;
+}
+
+function pct(val, total, allValues=null, idx=null) {
   if (!total) return '0%';
+  if (Array.isArray(allValues) && idx !== null) {
+    return roundedPercentages(allValues, total)[idx] + '%';
+  }
   return Math.round(val/total*100) + '%';
 }
 
-function pctNum(val, total) {
+function pctNum(val, total, allValues=null, idx=null) {
   if (!total) return 0;
+  if (Array.isArray(allValues) && idx !== null) {
+    return roundedPercentages(allValues, total)[idx];
+  }
   return Math.round(val/total*100);
 }
 
@@ -658,6 +684,7 @@ function drawBar(canvasId, labels, values, colors, opts={}) {
 
   // Bars
   const total = opts.showPct ? (opts.pctBase || values.reduce((a,b)=>a+b,0)) : 0;
+  const roundedPcts = (opts.showPct && opts.sumTo100) ? roundedPercentages(values, total) : null;
   values.forEach((v,i) => {
     const bh = (v/max)*chartH;
     const x = pad.left + i*groupW + (groupW-barW)/2;
@@ -672,7 +699,7 @@ function drawBar(canvasId, labels, values, colors, opts={}) {
     }
     // percentage above bar
     if (opts.showPct && total > 0) {
-      const pct = Math.round(v/total*100);
+      const pct = roundedPcts ? roundedPcts[i] : Math.round(v/total*100);
       ctx.fillStyle='#4a5568'; ctx.font='12px Arial'; ctx.textAlign='center';
       ctx.fillText(pct+'%', x+barW/2, y-4);
     }
@@ -816,6 +843,7 @@ function drawDonut(canvasId, labels, values, colors) {
   const cx = W / 2, cy = availH / 2 + 4;
   const ir = r * 0.55;
   const total = values.reduce((a,b)=>a+b,0);
+  const roundedPcts = roundedPercentages(values, total);
   let angle = -Math.PI / 2;
 
   values.forEach((v,i) => {
@@ -833,7 +861,7 @@ function drawDonut(canvasId, labels, values, colors) {
   const swatchW = 12, swatchH = 12, gap = 6;
   ctx.font = '12px Arial';
   labels.forEach((lbl,i) => {
-    const text = lbl + '  ' + pct(values[i], total);
+    const text = lbl + '  ' + roundedPcts[i] + '%';
     const textW = ctx.measureText(text).width;
     const rowW = swatchW + gap + textW;
     const lx = (W - rowW) / 2;
@@ -874,13 +902,14 @@ function roundDisplay(val) { return Math.ceil(Number(val)); }
 // ══════════════════════════════════════════════
 // BAR ROW BUILDER
 // ══════════════════════════════════════════════
-function buildBars(containerId, items, total, fixedMax) {
+function buildBars(containerId, items, total, fixedMax, options={}) {
   const el = document.getElementById(containerId);
   if (!el) return;
   const maxVal = fixedMax || Math.max(...items.map(i=>i.val));
-  el.innerHTML = items.map(item => {
+  const roundedPcts = (total && options.sumTo100) ? roundedPercentages(items.map(i=>i.val), total) : null;
+  el.innerHTML = items.map((item, idx) => {
     const widthPct = Math.round((item.val/maxVal)*90);
-    const labelPct = total ? Math.round(item.val/total*100)+'%' : fmt(item.val);
+    const labelPct = total ? ((roundedPcts ? roundedPcts[idx] : Math.round(item.val/total*100)) + '%') : fmt(item.val);
     return `<div class="bar-row">
       <span class="bar-label">${item.label}</span>
       <div class="bar-track"><div class="bar-fill" style="width:${widthPct}%;background:${item.color||B1};">${item.val>0?labelPct:''}</div></div>
@@ -922,6 +951,9 @@ function renderOverview() {
         '<div class="flow-card-sub">Care Team transports to a remote resource or location</div>' +
       '</div>';
   }
+  var transportNote = document.getElementById('transport-note');
+  if (transportNote) transportNote.style.display = currentFY === '25' ? 'block' : 'none';
+
   var fyCfg = FY_CONFIG[currentFY];
   setKPI('kpi-overview-bot',
     kpiCard('Response time', roundDisplay(fyCfg.avgResponse) + ' min', 'Dispatch to arrival — ' + fyCfg.dateRange) +
@@ -957,10 +989,10 @@ function renderOverview() {
   }
 
   const presItems = [
-    {label:'Basic needs / social services', val:periodSum('presBasicNeeds'), color:B1},
+    {label:'Basic needs', val:periodSum('presBasicNeeds'), color:B1},
     {label:'Housing', val:periodSum('presHousing'), color:B1},
-    {label:'Welfare checks', val:periodSum('presWelfare'), color:B2},
-    {label:'Health & disability', val:periodSum('presHealth'), color:B2},
+    {label:'Welfare', val:periodSum('presWelfare'), color:B2},
+    {label:'Health', val:periodSum('presHealth'), color:B2},
     {label:'Substance use', val:periodSum('presSubUse'), color:B3},
     {label:'Crisis intervention', val:periodSum('presCrisis'), color:B3},
   ];
@@ -968,7 +1000,7 @@ function renderOverview() {
   attachBarRowTooltips('bars-presenting');
 
   const refItems = [
-    {label:'Unarmed security ambassadors', val:periodSum('refAmbassadors'), color:B1},
+    {label:'Ambassadors', val:periodSum('refAmbassadors'), color:B1},
     {label:'Sycamores outreach', val:periodSum('refSycamores'), color:B1},
     {label:'Self-referral', val:periodSum('refSelf'), color:B2},
     {label:'Homeless concern line', val:periodSum('refHCL'), color:B2},
@@ -979,7 +1011,7 @@ function renderOverview() {
     {label:'Fire / EMS', val:periodSum('refFireEMS'), color:B3},
     {label:'Other', val:periodSum('refOther'), color:B3},
   ];
-  buildBars('bars-referral', refItems, eng, AX.referral);
+  buildBars('bars-referral', refItems, eng, AX.referral, {sumTo100: true});
   attachBarRowTooltips('bars-referral');
 }
 
@@ -1009,18 +1041,17 @@ function renderDemographics() {
   const AX = { age: isFY25d ? 500 : 260, race: isFY25d ? 700 : 400, housing: isFY25d ? 250 : 140 };
   const pctBase = isFY26 ? DEMO_TOTAL : total;
 
-  setKPI('kpi-demo-top', '');
 
   drawBar('c-age',
     ['0–17','18–34','35–49','50–64','65–79','80+','DTS'],
     ageVals,
-    [B4,B1,B1,B1,B2,B3,B4], {axisMax: AX.age, showPct: true, pctBase: pctBase}
+    [B4,B1,B1,B1,B2,B3,B4], {axisMax: AX.age, showPct: true, pctBase: pctBase, sumTo100: true}
   );
 
   drawBar('c-race',
     ['White','Black / AA','Hispanic /\nLatino','DTS','Other /\nMulti','Asian / PI'],
     raceVals,
-    [B1,B1,B1,B3,B2,B4], {leftPad:44, axisMax: AX.race, showPct: true, pctBase: pctBase}
+    [B1,B1,B1,B3,B2,B4], {leftPad:44, axisMax: AX.race, showPct: true, pctBase: pctBase, sumTo100: true}
   );
 
   drawDonut('c-gender',['Male','Female','Decline to state'],[gMale,gFemale,gDTS],[B1,B2,B4]);
@@ -1074,7 +1105,7 @@ function renderCalls() {
   const locVals=['locPublic','locTelephone','locSheriff','locPrivRes','locBusiness','locOther'].map(k=>periodSum(k));
   const locTotal = locVals.reduce((a,b)=>a+b,0);
   const locItems = locLabels.map((lbl,i) => ({label:lbl, val:locVals[i], color:[B1,B2,B3,B4,B3,B4][i]}));
-  buildBars('bars-loc', locItems, locTotal);
+  buildBars('bars-loc', locItems, locTotal, null, {sumTo100: true});
   attachBarRowTooltips('bars-loc');
 
   var callTime = CALL_TIME_CONFIG[currentFY];
