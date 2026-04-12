@@ -260,7 +260,7 @@
     </div>
     <div class="chart-card">
       <div class="chart-title">Response and call time</div>
-      <div class="chart-note">Full year averages (July 2025–February 2026) — does not change with the period filter</div>
+      <div class="chart-note">Average response and call-time measures for the selected fiscal year</div>
       <table class="stat-table" id="tbl-calltime"></table>
     </div>
   </div>
@@ -1097,28 +1097,29 @@ function renderOutcomes() {
   const fuEng = periodSum('followups');
   const trans = periodSum('transports');
   const isFY25o = currentFY === '25';
-  const AX = { onscene: isFY25o ? 900 : 500, furef: isFY25o ? null : 460, repeats: isFY25o ? 100 : 30 };
+  const AX = { onscene: isFY25o ? 900 : 500, furef: isFY25o ? undefined : 460, repeats: isFY25o ? 100 : 30 };
 
   var fyCfg = FY_CONFIG[currentFY];
   var outcomesHead = document.getElementById('outcomes-cards-heading');
   if (outcomesHead) outcomesHead.textContent = 'Outcomes activity — ' + fyCfg.dateRange;
+
   var outcomesEl = document.getElementById('kpi-outcomes-top');
   if (outcomesEl) {
     outcomesEl.innerHTML =
       '<div class="flow-card">' +
-        '<div class="flow-card-label">Service calls</div>' +
-        '<div class="flow-card-value">' + fmt(periodSum('engagements')) + '</div>' +
-        '<div class="flow-card-sub">Total calls responded to during this period</div>' +
+        '<div class="flow-card-label">On-scene services</div>' +
+        '<div class="flow-card-value">' + fmt(periodSum('onSceneUnique')) + '</div>' +
+        '<div class="flow-card-sub">Contacts receiving resources or referrals during service calls</div>' +
       '</div>' +
       '<div class="flow-card">' +
-        '<div class="flow-card-label">Follow-up contacts</div>' +
-        '<div class="flow-card-value">' + fmt(fuEng) + '</div>' +
-        '<div class="flow-card-sub">Total follow-up contacts during this period</div>' +
+        '<div class="flow-card-label">Follow-up services</div>' +
+        '<div class="flow-card-value">' + fmt(periodSum('fuUnique')) + '</div>' +
+        '<div class="flow-card-sub">Contacts receiving resources or referrals during follow-up outreach</div>' +
       '</div>' +
       '<div class="flow-card">' +
         '<div class="flow-card-label">Transports completed</div>' +
         '<div class="flow-card-value">' + fmt(trans) + '</div>' +
-        '<div class="flow-card-sub">Logged remote-resource transports · avg ' + round(fyCfg.avgTransport) + ' min</div>' +
+        '<div class="flow-card-sub">Logged remote-resource transports · avg ' + roundDisplay(fyCfg.avgTransport) + ' min</div>' +
       '</div>';
   }
 
@@ -1129,14 +1130,16 @@ function renderOutcomes() {
     {label:'Health services', val:periodSum('onSceneHealth'), color:B2},
     {label:'Transport coordination', val:periodSum('onSceneTransCoord'), color:B3},
     {label:'SUD treatment', val:periodSum('onSceneSUD'), color:B3},
-    {label:'Mental health', val:periodSum('onSceneMH'), color:B4},
+    {label:'Mental health', val:periodSum('onSceneMH'), color:B4}
   ];
-  const displayedOnSceneItems = isFY25o ? onSceneItems.filter(item => item.val > 0) : onSceneItems;
+  const displayedOnSceneItems = isFY25o ? onSceneItems.filter(function(item){ return item.val > 0; }) : onSceneItems;
   buildBars('bars-onscene', displayedOnSceneItems, null, AX.onscene);
   attachBarRowTooltips('bars-onscene');
-  var onSceneNote = document.querySelector('#bars-onscene')?.closest('.chart-card')?.querySelector('.chart-note');
-  if (onSceneNote) {
-    onSceneNote.textContent = 'Count of resources or referrals provided during service calls';
+
+  var onSceneCard = document.getElementById('bars-onscene');
+  if (onSceneCard && onSceneCard.closest('.chart-card')) {
+    var note = onSceneCard.closest('.chart-card').querySelector('.chart-note');
+    if (note) note.textContent = 'Count of resources or referrals provided during service calls';
   }
 
   const followupItems = [
@@ -1145,7 +1148,7 @@ function renderOutcomes() {
     {label:'Food resources', val:periodSum('fuFood'), color:B2},
     {label:'Health services', val:periodSum('fuHealth'), color:B2},
     {label:'Mental health', val:periodSum('fuMH'), color:B3},
-    {label:'SUD treatment', val:periodSum('fuSUD'), color:B4},
+    {label:'SUD treatment', val:periodSum('fuSUD'), color:B4}
   ];
   buildBars('bars-followup', followupItems, null, AX.furef);
   attachBarRowTooltips('bars-followup');
@@ -1161,34 +1164,38 @@ function renderOutcomes() {
   const holds = periodSum('frHoldsApplied');
   const voided = periodSum('frHoldsVoided');
 
-  document.getElementById('tbl-fr').innerHTML = `
-    <tr class="row-group"><td colspan="2">Response support requested — FY ${currentFY === '25' ? '2025' : '2026'}</td></tr>
-    <tr class="row-group"><td colspan="2">Sheriff (LASD)</td></tr>
-    <tr><td>Times Care Team requested LASD support</td><td>${lasd}</td></tr>
-    <tr class="row-indent"><td>Contacts who were unhoused</td><td>${lasdU}</td></tr>
-    <tr class="row-indent"><td>Contacts who were housed</td><td>${lasdH}</td></tr>
-    ${lasdD ? `<tr class="row-indent"><td>Housing status not recorded</td><td>${lasdD}</td></tr>` : ``}
-    <tr class="row-group"><td colspan="2">Fire / EMS (LACFD)</td></tr>
-    <tr><td>Times Care Team requested Fire/EMS support</td><td>${lacfd}</td></tr>
-    <tr class="row-indent"><td>Contacts who were unhoused</td><td>${lacfdU}</td></tr>
-    <tr class="row-indent"><td>Contacts who were housed</td><td>${lacfdH}</td></tr>
-    ${lacfdD ? `<tr class="row-indent"><td>Housing status not recorded</td><td>${lacfdD}</td></tr>` : ``}
-    <tr class="row-group"><td colspan="2">Involuntary holds</td></tr>
-    <tr><td>Holds initiated (5585 / 5150)</td><td>${holds}</td></tr>
-    <tr><td>Holds voided or discontinued</td><td>${voided}</td></tr>`;
+  var tbl = document.getElementById('tbl-fr');
+  if (tbl) {
+    tbl.innerHTML = ''
+      + '<tr class="row-group"><td colspan="2">Response support requested — FY ' + (currentFY === '25' ? '2025' : '2026') + '</td></tr>'
+      + '<tr class="row-group"><td colspan="2">Sheriff (LASD)</td></tr>'
+      + '<tr><td>Times Care Team requested LASD support</td><td>' + lasd + '</td></tr>'
+      + '<tr class="row-indent"><td>Contacts who were unhoused</td><td>' + lasdU + '</td></tr>'
+      + '<tr class="row-indent"><td>Contacts who were housed</td><td>' + lasdH + '</td></tr>'
+      + (lasdD ? '<tr class="row-indent"><td>Housing status not recorded</td><td>' + lasdD + '</td></tr>' : '')
+      + '<tr class="row-group"><td colspan="2">Fire / EMS (LACFD)</td></tr>'
+      + '<tr><td>Times Care Team requested Fire/EMS support</td><td>' + lacfd + '</td></tr>'
+      + '<tr class="row-indent"><td>Contacts who were unhoused</td><td>' + lacfdU + '</td></tr>'
+      + '<tr class="row-indent"><td>Contacts who were housed</td><td>' + lacfdH + '</td></tr>'
+      + (lacfdD ? '<tr class="row-indent"><td>Housing status not recorded</td><td>' + lacfdD + '</td></tr>' : '')
+      + '<tr class="row-group"><td colspan="2">Involuntary holds</td></tr>'
+      + '<tr><td>Holds initiated (5585 / 5150)</td><td>' + holds + '</td></tr>'
+      + '<tr><td>Holds voided or discontinued</td><td>' + voided + '</td></tr>';
+  }
 
   const mLabels = periodMonthLabels();
   const mRepeats = periodMonthData('repeats');
-  if (mLabels.length > 8) {
-    drawLine('c-repeat', mLabels, [{label:'Repeat contacts (same month)', data:mRepeats, color:B1, fill:'rgba(0,48,135,0.07)'}], {axisMax: AX.repeats});
-  } else {
-    drawBar('c-repeat', mLabels, mRepeats, B1, {axisMax: AX.repeats, rotateLabels: mLabels.length > 6});
-  }
-  var repeatNote = document.querySelector('#c-repeat')?.closest('.chart-card')?.querySelector('.chart-note');
-  if (repeatNote) {
-    repeatNote.textContent = isFY25o
-      ? 'Monthly trend across FY 2025. June 2025 has been adjusted to 25 repeat contacts for presentation purposes.'
-      : 'Contacts logged more than once within the same month. Does not capture repeat encounters where the individual declined to provide identifying information.';
+  const repeatAxisMax = Math.max(10, Math.ceil(Math.max.apply(null, mRepeats.concat([0])) / 5) * 5);
+  drawBar('c-repeat', mLabels, mRepeats, B1, {axisMax: repeatAxisMax, rotateLabels: mLabels.length > 6});
+
+  var repeatCanvas = document.getElementById('c-repeat');
+  if (repeatCanvas && repeatCanvas.closest('.chart-card')) {
+    var repeatNote = repeatCanvas.closest('.chart-card').querySelector('.chart-note');
+    if (repeatNote) {
+      repeatNote.textContent = isFY25o
+        ? 'Monthly trend across FY 2025. June 2025 has been adjusted to 25 repeat contacts for presentation purposes.'
+        : 'Contacts logged more than once within the same month. Does not capture repeat encounters where the individual declined to provide identifying information.';
+    }
   }
 }
 
