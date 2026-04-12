@@ -17,7 +17,8 @@
   .fy-btn { font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; border:2px solid rgba(255,255,255,0.55); background:transparent; color:#fff; cursor:pointer; transition:all 0.15s ease; }
   .fy-btn.active { background:#fff; color:#003087; border-color:#fff; }
   .header-divider { height:1px; background:#dce3ef; }
-  .fy-note { font-size:12px; color:#6b7a99; padding:6px 28px 0; }
+  .fy-note { font-size:13px; font-weight:600; color:#003087; background:#e8eef8; border-left:4px solid #003087; padding:8px 18px; display:none; }
+  .fy-note.visible { display:block; }
 
   /* ── PERIOD FILTER ── */
   .page-tab:focus-visible { outline: 3px solid #003087; outline-offset: -2px; }
@@ -139,7 +140,7 @@
   </div>
 </div>
 <div class="header-divider"></div>
-<div class="fy-note" id="fy-context-note">FY 2026 reflects partial-year data (July–February)</div>
+<div class="fy-note" id="fy-context-note"></div>
 
 <!-- PERIOD FILTER -->
 
@@ -1266,8 +1267,13 @@ function updateFYNote(fy) {
   var note = document.getElementById('fy-context-note');
   var footer = document.getElementById('dash-footer');
   if (!note) return;
-  note.textContent = fy === '26' ? 'FY 2026 reflects partial-year data (July–February)' : '';
-  note.style.display = fy === '26' ? 'block' : 'none';
+  if (fy === '26') {
+    note.textContent = 'FY 2026 data covers July 2025 through February 2026 — a partial fiscal year. Totals reflect 8 of 12 months.';
+    note.classList.add('visible');
+  } else {
+    note.textContent = '';
+    note.classList.remove('visible');
+  }
   if (footer) footer.innerHTML = '<div></div>';
 }
 
