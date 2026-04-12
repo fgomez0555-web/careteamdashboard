@@ -9,10 +9,15 @@
   body { font-family: Arial, Helvetica, sans-serif; background: #f4f6f9; color: #1a1a2e; font-size: 16px; }
 
   /* ── HEADER ── */
-  .header { background: #003087; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .header-right { text-align: right; flex-shrink: 0; }
-  .header-period { color: rgba(255,255,255,0.6); font-size: 13px; }
-  .header-fy { color: #fff; font-size: 15px; font-weight: 700; margin-top: 2px; }
+  .header { background: #003087; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .header-title { color: #fff; font-size: 18px; font-weight: 700; }
+  .header-sub { color: rgba(255,255,255,0.88); font-size: 13px; margin-top: 2px; }
+  .header-right { display:flex; align-items:center; gap:10px; flex-shrink: 0; }
+  .fy-label { font-size:12px; color:rgba(255,255,255,0.8); font-weight:700; }
+  .fy-btn { font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; border:2px solid rgba(255,255,255,0.55); background:transparent; color:#fff; cursor:pointer; transition:all 0.15s ease; }
+  .fy-btn.active { background:#fff; color:#003087; border-color:#fff; }
+  .header-divider { height:1px; background:#dce3ef; }
+  .fy-note { font-size:12px; color:#6b7a99; padding:6px 28px 0; }
 
   /* ── PERIOD FILTER ── */
   .page-tab:focus-visible { outline: 3px solid #003087; outline-offset: -2px; }
@@ -27,12 +32,12 @@
   .page-context { background: #f0f4ff; border-left: 4px solid #003087; border-radius: 0 6px 6px 0; padding: 10px 16px; margin-bottom: 18px; font-size: 14px; color: #3a4a6b; line-height: 1.6; }
 
   /* ── LAYOUT ── */
-  .content { padding: 22px 28px 8px; }
+  .content { padding: 18px 28px 8px; }
   .page { display: none; }
   .page.active { display: block; }
 
   /* ── KPI CARDS ── */
-  .kpi-row { display: grid; gap: 12px; margin-bottom: 18px; }
+  .kpi-row { display: grid; gap: 10px; margin-bottom: 14px; }
   .kpi-4 { grid-template-columns: repeat(4, 1fr); }
   .kpi-3 { grid-template-columns: repeat(3, 1fr); }
   .kpi-2 { grid-template-columns: repeat(2, 1fr); }
@@ -43,7 +48,7 @@
   .kpi-sm .kpi-value { font-size: 26px; }
 
   /* ── CHART GRID ── */
-  .chart-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 18px; }
+  .chart-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 14px; }
   .chart-card { background: #fff; border-radius: 8px; padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,135,0.06); overflow: hidden; }
   .chart-card.full { grid-column: span 2; }
   .chart-title { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
@@ -72,7 +77,7 @@
   .section-note { font-size: 13px; color: #9aa5be; font-style: italic; margin: -12px 0 14px; }
 
   /* ── HALF GRID ── */
-  .half-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-bottom: 18px; }
+  .half-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-bottom: 14px; }
 
   /* ── FOOTER ── */
   .dash-footer { margin-top: 12px; padding: 14px 0 4px; border-top: 1px solid #dce3ef; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #9aa5be; }
@@ -100,7 +105,7 @@
 .flow-cards-wrap { margin-bottom:18px; }
 .flow-cards-heading { font-size:12px; font-weight:700; color:#6b7a99; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
 .flow-cards-heading::after { content:''; flex:1; height:1px; background:#dce3ef; }
-.flow-cards { display:flex; align-items:stretch; gap:14px; }
+.flow-cards { display:flex; align-items:stretch; gap:12px; }
 .flow-card { flex:1; background:#fff; border-radius:8px; padding:18px 20px; border-top:3px solid #003087; box-shadow:0 1px 4px rgba(0,0,135,0.06); }
 .flow-card-label { font-size:12px; color:#6b7a99; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:6px; }
 .flow-card-value { font-size:36px; font-weight:700; color:#003087; line-height:1; }
@@ -114,18 +119,27 @@
 /* ── TOOLTIP ── */
 .chart-tooltip { position:fixed; background:#1a1a2e; color:#fff; font-family:Arial,Helvetica,sans-serif; font-size:12px; padding:7px 11px; border-radius:6px; pointer-events:none; opacity:0; transition:opacity 0.15s; z-index:9999; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); }
 .chart-tooltip.visible { opacity:1; }
+
+.fy-badge { display:inline-block; background:#003087; color:#fff; font-size:11px; font-weight:700; padding:2px 8px; border-radius:10px; margin-left:8px; vertical-align:middle; }
+
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <div class="header">
+  <div>
+    <div class="header-title">West Hollywood Care Team</div>
+    <div class="header-sub">Program Performance Dashboard</div>
   </div>
   <div class="header-right">
-    <div class="header-period">Program Performance Dashboard &nbsp;|&nbsp; Fiscal Year</div>
-    <div class="header-fy">2025–26</div>
+    <span class="fy-label">Fiscal Year</span>
+    <button id="btn-fy25" class="fy-btn" onclick="switchFY('25')">FY 2025</button>
+    <button id="btn-fy26" class="fy-btn active" onclick="switchFY('26')">FY 2026</button>
   </div>
 </div>
+<div class="header-divider"></div>
+<div class="fy-note" id="fy-context-note">FY 2026 reflects partial-year data (July–February)</div>
 
 <!-- PERIOD FILTER -->
 
@@ -147,11 +161,11 @@
     The Care Team is West Hollywood's mobile behavioral health response program, operated by Sycamores. This page summarizes call volume, response times, and the most common reasons for Care Team service requests.
   </div>
 
-  <div class="flow-cards-wrap"><div class="flow-cards-heading">Care Team activity &mdash; July 2025 through February 2026</div><div id="flow-cards" class="flow-cards"></div><p class="flow-cards-note">Transports may occur during an initial service call or a follow-up contact. These figures reflect all logged Care Team interactions and are independent of each other.</p></div>
-  <div class="kpi-row kpi-3" id="kpi-overview-bot"></div>
+  <div class="flow-cards-wrap"><div class="flow-cards-heading" id="flow-cards-heading">Care Team activity</div><div id="flow-cards" class="flow-cards"></div><p class="flow-cards-note">FY 2025 transport counts reflect Care Team transports to a remote resource or location as logged in the monthly report. Follow-up contacts and transports are separate activity measures and should not be added together.</p></div>
+  <div class="kpi-row kpi-4" id="kpi-overview-bot"></div>
 
   <div class="chart-card full" style="margin-bottom:18px;">
-    <div class="chart-title">Monthly engagement volume</div>
+    <div class="chart-title">Monthly activity</div>
     <div class="chart-note">Each bar shows the number of calls responded to (dark blue) and follow-up check-ins completed (light blue) for that month.</div>
     <div class="chart-legend">
       <span><span class="legend-swatch" style="background:#003087;"></span>Calls responded to</span>
@@ -162,12 +176,12 @@
 
   <div class="half-grid">
     <div class="chart-card">
-      <div class="chart-title">Presenting issues per contact</div>
+      <div class="chart-title">Presenting issues</div>
       <div class="chart-note">Recorded per contact, not per individual. A single contact may involve more than one issue, so percentages may exceed 100%.</div>
       <div id="bars-presenting"></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">How calls were initiated</div>
+      <div class="chart-title">Referral sources</div>
       <div id="bars-referral"></div>
     </div>
   </div>
@@ -187,22 +201,22 @@
 
   <div class="chart-grid">
     <div class="chart-card">
-      <div class="chart-title">Age groups served</div>
+      <div class="chart-title">Age groups</div>
       <div class="chart-note">Total contacts by age group across the selected period</div>
       <canvas id="c-age" height="220"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Race and ethnicity</div>
+      <div class="chart-title">Race / ethnicity</div>
       <div class="chart-note">Total contacts by race/ethnicity across the selected period</div>
       <canvas id="c-race" height="220"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Gender identity</div>
+      <div class="chart-title">Gender</div>
       <div class="chart-note">Share of contacts by gender identity across the selected period</div>
       <canvas id="c-gender" height="220"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Housing status — breakdown</div>
+      <div class="chart-title">Housing status</div>
       <div class="chart-note">Share of engagements by housing status</div>
       <canvas id="c-housing-donut" height="240"></canvas>
     </div>
@@ -240,24 +254,14 @@
       <canvas id="c-tod" height="220"></canvas>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Where calls took place</div>
+      <div class="chart-title">Service locations</div>
       <div class="chart-note">Breakdown of the locations where the Care Team responded</div>
       <div id="bars-loc" style="margin-top:6px;"></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Response and call time summary</div>
+      <div class="chart-title">Response and call time</div>
       <div class="chart-note">Full year averages (July 2025–February 2026) — does not change with the period filter</div>
-      <table class="stat-table">
-        <tr class="row-group"><td colspan="2">Arrival speed</td></tr>
-        <tr><td>Time from dispatch to team arrival — average</td><td>19 min</td></tr>
-        <tr><td>Time from dispatch to team arrival — median</td><td>14 min</td></tr>
-        <tr class="row-group"><td colspan="2">Time spent on calls</td></tr>
-        <tr><td>Duration per call, arrival to close — average</td><td>29 min</td></tr>
-        <tr><td>Duration per call, arrival to close — median</td><td>13 min</td></tr>
-        <tr class="row-group"><td colspan="2">Queue wait (when team was already on a call)</td></tr>
-        <tr><td>Wait time in queue — average</td><td>7 min</td></tr>
-        <tr><td>Wait time in queue — median</td><td>4 min</td></tr>
-      </table>
+      <table class="stat-table" id="tbl-calltime"></table>
     </div>
   </div>
 
@@ -272,48 +276,49 @@
     What happened after the Care Team responded — including resources provided on-scene, follow-up services, transports to other locations, and the small number of cases that required law enforcement or fire/EMS.
   </div>
 
-  <div class="kpi-row kpi-3" id="kpi-outcomes-top"></div>
+  <div class="flow-cards-wrap"><div class="flow-cards-heading" id="outcomes-cards-heading">Outcomes activity</div><div id="kpi-outcomes-top" class="flow-cards"></div></div>
 
   <div class="chart-grid">
     <div class="chart-card">
-      <div class="chart-title">Resources provided on-scene</div>
+      <div class="chart-title">On-scene services</div>
       <div class="chart-note">Count of resources or referrals provided during service calls</div>
       <div id="bars-onscene"></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Resources provided during follow-ups</div>
+      <div class="chart-title">Follow-up services</div>
       <div class="chart-note">Count of resources or referrals given during follow-up check-ins</div>
       <div id="bars-followup"></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Law enforcement and fire/EMS involvement</div>
+      <div class="chart-title">First responder involvement</div>
       <div class="chart-note">Number of times the Care Team requested additional first-responder support</div>
       <table class="stat-table" id="tbl-fr"></table>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Same-month repeat contacts</div>
+      <div class="chart-title">Repeat contacts (same month)</div>
       <div class="chart-note">Contacts logged more than once within the same month. Does not capture repeat encounters where the individual declined to provide identifying information.</div>
       <canvas id="c-repeat" height="200"></canvas>
     </div>
   </div>
 
 </div>
+
+<div class="dash-footer" id="dash-footer"><div></div></div>
+
 </div><!-- /content -->
 
-<div class="content" style="padding-top:0;">
-  </div>
-</div>
 
 <script>
+// ════════════
 // ══════════════════════════════════════════════
 // DATA
 // ══════════════════════════════════════════════
 const MONTHS = ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
-const MONTH_LABELS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26'];
+let MONTH_LABELS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26'];
 
 // Quarter index ranges
-const QIDX = { ytd:[0,1,2,3,4,5,6,7], q1:[0,1,2], q2:[3,4,5], q3:[6,7] };
-const QLABELS = { ytd:'Jul 2025 – Feb 2026', q1:'Q1: Jul – Sep 2025', q2:'Q2: Oct – Dec 2025', q3:'Q3: Jan – Feb 2026 (partial)' };
+let QIDX = { ytd:[0,1,2,3,4,5,6,7], q1:[0,1,2], q2:[3,4,5], q3:[6,7] };
+let QLABELS = { ytd:'Jul 2025 – Feb 2026', q1:'Q1: Jul – Sep 2025', q2:'Q2: Oct – Dec 2025', q3:'Q3: Jan – Feb 2026 (partial)' };
 
 // All monthly series [Jul,Aug,Sep,Oct,Nov,Dec,Jan,Feb]
 const D = {
@@ -408,9 +413,11 @@ const D = {
   frLASD:            [2,2,1,0,3,6,2,4],
   frLASDHoused:      [1,0,0,0,0,2,0,2],
   frLASDUnhoused:    [1,2,1,0,3,4,1,1],
+  frLASDDTS:         [0,0,0,0,0,0,0,0],
   frLACFD:           [1,1,2,0,0,1,6,3],
   frLACFDHoused:     [1,0,1,0,0,0,0,1],
   frLACFDUnhoused:   [0,1,1,0,0,0,5,1],
+  frLACFDDTS:        [0,0,0,0,0,1,1,1],
   frHoldsApplied:    [1,0,0,1,0,1,0,0],
   frHoldsVoided:     [0,0,0,0,0,1,0,0],
 
@@ -420,7 +427,7 @@ const D = {
 
 
 // ── FYTD UNDUPLICATED DEMOGRAPHIC DATA (727 unique individuals) ──
-const D_demo = {
+let D_demo = {
   ageU17:       5,
   age1834:      160,
   age3549:      193,
@@ -441,11 +448,106 @@ const D_demo = {
   housingUnhoused: 578,
   housingDTS:      47,
 };
-const DEMO_TOTAL = 727;
+let DEMO_TOTAL = 727;
 
+
+// ── FY 2025 DATA (Jul 2024 – Jun 2025) ──
+const D25_months = ["Jul 24", "Aug 24", "Sep 24", "Oct 24", "Nov 24", "Dec 24", "Jan 25", "Feb 25", "Mar 25", "Apr 25", "May 25", "Jun 25"];
+const D25 = {
+  engagements: [171, 178, 132, 150, 120, 149, 86, 73, 94, 115, 143, 114],
+  followups: [134, 194, 165, 192, 178, 189, 190, 174, 176, 181, 251, 188],
+  transports: [5, 3, 4, 4, 2, 7, 8, 6, 4, 6, 9, 8],
+  presBasicNeeds: [74, 92, 88, 95, 88, 90, 50, 54, 63, 84, 99, 68],
+  presHousing: [58, 81, 76, 96, 69, 91, 47, 30, 64, 72, 84, 69],
+  presWelfare: [50, 69, 23, 5, 8, 10, 9, 7, 12, 14, 31, 23],
+  presHealth: [16, 10, 27, 19, 26, 25, 7, 7, 15, 19, 10, 8],
+  presSubUse: [7, 4, 14, 18, 7, 12, 8, 9, 9, 11, 8, 7],
+  presCrisis: [4, 13, 3, 13, 13, 10, 6, 6, 8, 3, 5, 10],
+  refAmbassadors: [6, 4, 13, 14, 29, 16, 20, 10, 24, 15, 27, 26],  // Block by Block (predecessor to Ambassadors)
+  refSycamores: [145, 137, 94, 83, 57, 91, 39, 41, 22, 55, 73, 44],
+  refSelf: [0, 0, 0, 0, 2, 1, 1, 3, 4, 2, 5, 7],
+  refHCL: [2, 12, 13, 20, 12, 16, 6, 4, 15, 13, 7, 7],
+  refLawEnf: [9, 13, 7, 10, 11, 12, 9, 5, 14, 8, 14, 9],
+  refWeHoAgency: [0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+  refWeHoStaff: [1, 4, 1, 2, 6, 3, 7, 3, 4, 5, 4, 7],
+  refFriendFam: [1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 2, 1],
+  refFireEMS: [2, 6, 0, 2, 1, 5, 3, 1, 4, 13, 2, 2],
+  refOther: [5, 0, 3, 19, 0, 5, 1, 5, 7, 3, 8, 11],
+  dowSun: [20, 21, 30, 24, 15, 22, 2, 5, 4, 10, 18, 8],
+  dowMon: [30, 14, 16, 16, 13, 19, 4, 9, 16, 14, 19, 33],
+  dowTue: [34, 29, 17, 26, 18, 29, 20, 12, 19, 19, 15, 20],
+  dowWed: [33, 21, 15, 26, 8, 15, 21, 10, 10, 27, 23, 12],
+  dowThu: [22, 24, 24, 17, 26, 24, 18, 20, 12, 11, 23, 12],
+  dowFri: [18, 29, 20, 18, 21, 23, 16, 9, 19, 15, 18, 13],
+  dowSat: [14, 40, 10, 23, 19, 17, 5, 8, 14, 19, 27, 16],
+  locPublic: [151, 161, 114, 101, 93, 121, 57, 49, 61, 83, 124, 86],
+  locTelephone: [0, 0, 0, 0, 0, 0, 2, 3, 9, 5, 3, 3],
+  locSheriff: [1, 2, 2, 5, 3, 4, 2, 2, 6, 3, 8, 7],
+  locPrivRes: [11, 5, 5, 6, 9, 9, 5, 5, 9, 16, 7, 8],
+  locBusiness: [5, 10, 8, 10, 9, 4, 15, 12, 6, 2, 0, 5],
+  locOther: [2, 0, 1, 28, 5, 8, 3, 1, 1, 6, 1, 2],
+  onSceneUnique: [126, 163, 117, 115, 106, 124, 77, 65, 73, 93, 116, 93],
+  fuUnique: [78, 94, 92, 106, 93, 117, 110, 99, 116, 110, 132, 79],
+  repeats: [5, 6, 5, 5, 5, 11, 0, 2, 7, 2, 12, 25],
+  onSceneSupplies: [86, 120, 83, 69, 67, 60, 38, 42, 44, 55, 80, 54],
+  onSceneShelter: [51, 58, 60, 52, 32, 51, 27, 27, 37, 35, 42, 50],
+  onSceneFood: [18, 23, 9, 8, 12, 5, 4, 11, 19, 23, 17, 13],
+  onSceneHealth: [29, 30, 30, 26, 19, 17, 9, 5, 6, 6, 13, 9],
+  onSceneTransCoord: [7, 5, 9, 4, 7, 15, 7, 3, 5, 7, 14, 14],
+  onSceneSUD: [3, 11, 7, 13, 4, 5, 5, 3, 2, 5, 8, 7],
+  onSceneMH: [21, 28, 11, 18, 11, 14, 6, 5, 8, 5, 7, 5],
+  fuShelter: [13, 25, 71, 85, 89, 98, 39, 44, 45, 49, 69, 49],
+  fuDeclined: [8, 69, 81, 112, 99, 86, 84, 58, 49, 53, 85, 69],
+  fuFood: [5, 12, 15, 30, 24, 10, 20, 26, 17, 28, 28, 18],
+  fuHealth: [8, 18, 40, 47, 39, 27, 15, 10, 16, 10, 25, 25],
+  fuMH: [3, 4, 16, 24, 36, 33, 12, 8, 15, 8, 16, 9],
+  fuSUD: [2, 10, 9, 20, 20, 17, 7, 3, 4, 8, 8, 8],
+  frLASD: [1, 1, 0, 1, 1, 0, 4, 2, 2, 1, 6, 1],
+  frLASDHoused: [0, 0, 0, 1, 0, 0, 1, 1, 2, 0, 0, 0],
+  frLASDUnhoused: [1, 1, 0, 0, 1, 0, 2, 1, 0, 1, 6, 1],
+  frLASDDTS: [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+  frLACFD: [0, 1, 2, 0, 2, 2, 1, 2, 1, 2, 1, 0],
+  frLACFDHoused: [0, 0, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0],
+  frLACFDUnhoused: [0, 1, 1, 0, 2, 0, 1, 1, 1, 2, 1, 0],
+  frLACFDDTS: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  frHoldsApplied: [1, 2, 0, 1, 1, 0, 2, 2, 0, 1, 2, 0],
+  frHoldsVoided: [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+  housingHoused: [14, 10, 8, 6, 12, 16, 12, 11, 18, 22, 17, 9],
+  housingUnhoused: [152, 161, 115, 137, 91, 114, 69, 57, 65, 85, 105, 91],
+  housingDTS: [0, 0, 0, 0, 10, 5, 5, 3, 1, 4, 6, 2],
+  // Additional keys for FY toggle compatibility
+  unique: [166, 171, 124, 143, 113, 135, 86, 71, 84, 111, 128, 102],
+  ageU17: [0, 0, 2, 0, 4, 5, 4, 0, 0, 0, 0, 2],
+  age1834: [36, 23, 27, 34, 17, 36, 18, 21, 22, 21, 36, 22],
+  age3549: [47, 35, 28, 36, 30, 36, 18, 22, 26, 28, 45, 31],
+  age5064: [34, 28, 14, 20, 26, 22, 20, 16, 12, 29, 25, 21],
+  age6579: [7, 5, 7, 7, 8, 7, 9, 3, 6, 6, 3, 8],
+  age80p: [2, 3, 1, 1, 0, 1, 0, 0, 1, 6, 0, 0],
+  ageDTS: [40, 77, 44, 45, 28, 28, 17, 9, 17, 21, 19, 18],
+  genderMale: [127, 136, 95, 107, 82, 104, 64, 52, 64, 81, 105, 76],
+  genderFemale: [38, 35, 28, 35, 31, 30, 22, 18, 20, 29, 22, 26],
+  genderDTS: [1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0],
+  raceAsian: [4, 5, 1, 2, 3, 2, 2, 1, 2, 0, 4, 2],
+  raceBlack: [66, 55, 35, 47, 36, 42, 24, 23, 19, 35, 34, 31],
+  raceHispanic: [34, 36, 22, 21, 17, 23, 15, 9, 19, 10, 24, 16],
+  raceWhite: [49, 64, 52, 63, 44, 56, 37, 34, 35, 49, 50, 47],
+  raceOther: [7, 8, 7, 5, 8, 5, 1, 1, 2, 8, 8, 6],
+  raceDTS: [6, 3, 6, 5, 5, 7, 7, 3, 7, 9, 8, 0],
+  FYTD_unique: 0,
+  FYTD_unhoused: 0,
+  FYTD_housed: 0,
+  FYTD_dts: 0,
+  tod: [[6, 5, 12, 21, 13, 19, 4, 11, 8, 14, 31, 13], [3, 5, 2, 17, 8, 6, 2, 4, 8, 4, 17, 6], [3, 2, 2, 3, 3, 8, 0, 2, 3, 8, 5, 5], [22, 17, 23, 7, 10, 13, 9, 1, 3, 4, 1, 0], [17, 18, 27, 23, 8, 19, 9, 3, 2, 6, 14, 6], [15, 7, 4, 7, 6, 12, 4, 0, 2, 9, 8, 3], [1, 16, 7, 0, 6, 9, 4, 0, 1, 5, 5, 11], [18, 2, 15, 15, 21, 14, 10, 6, 16, 6, 16, 16], [40, 46, 18, 20, 18, 10, 14, 10, 14, 18, 6, 11], [12, 26, 5, 9, 9, 15, 8, 14, 7, 6, 13, 12], [18, 22, 8, 9, 10, 7, 8, 5, 7, 6, 3, 7], [16, 12, 9, 16, 8, 17, 14, 17, 23, 29, 24, 24]],
+
+};
+
+
+// Backup FY26 data for toggle
+var D26 = {};
 // ── HELPERS ──
-const currentPeriod = 'ytd';
+let currentPeriod = 'ytd';
 let currentPage = 'overview';
+let currentFY = '26'; // '25' or '26'
 
 function sum(arr, idxs) {
   return idxs.reduce((t,i) => t + (arr[i] || 0), 0);
@@ -486,6 +588,7 @@ function showPage(id, el) {
   el.setAttribute('aria-selected','true');
   destroyCharts();
   renderCurrentPage();
+  setTimeout(function(){animateKPIs(null);initExpandableKPIs();},80);
 }
 
 function renderCurrentPage() {
@@ -756,13 +859,16 @@ function roundRect(ctx,x,y,w,h,r) {
 // ══════════════════════════════════════════════
 // KPI HELPERS
 // ══════════════════════════════════════════════
-function kpiCard(label, value, sub) {
-  return `<div class="kpi kpi-sm"><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div><div class="kpi-sub">${sub||''}</div></div>`;
+function kpiCard(label, value, sub, detail) {
+  var expandAttr = detail ? ' data-expand="1"' : '';
+  var detailHtml = detail ? `<div class="kpi-detail">${detail}</div>` : '';
+  return `<div class="kpi kpi-sm"${expandAttr}><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div><div class="kpi-sub">${sub||''}</div>${detailHtml}</div>`;
 }
 
 function setKPI(id, html) { document.getElementById(id).innerHTML = html; }
 
-function fmt(n) { return n.toLocaleString(); }
+function fmt(n) { return Math.ceil(Number(n)).toLocaleString(); }
+function roundDisplay(val) { return Math.ceil(Number(val)); }
 
 // ══════════════════════════════════════════════
 // BAR ROW BUILDER
@@ -790,31 +896,37 @@ function renderOverview() {
   const fu = periodSum('followups');
   const trans = periodSum('transports');
   const days = idx.length * 30.4;
+  const callRate = roundDisplay(eng / days);
+  const followupRate = roundDisplay(fu / days);
 
   // Activity cards — parallel, not sequential
   const flowEl = document.getElementById('flow-cards');
+  var headEl = document.getElementById('flow-cards-heading');
+  if (headEl) headEl.textContent = 'Care Team activity — ' + FY_CONFIG[currentFY].dateRange;
   if (flowEl) {
     flowEl.innerHTML =
       '<div class="flow-card">' +
         '<div class="flow-card-label">Service calls</div>' +
         '<div class="flow-card-value">' + fmt(eng) + '</div>' +
-        '<div class="flow-card-sub">Total calls responded to by the Care Team</div>' +
+        '<div class="flow-card-sub">Total calls responded to by the Care Team · avg ' + callRate + ' per day</div>' +
       '</div>' +
       '<div class="flow-card">' +
         '<div class="flow-card-label">Follow-up contacts</div>' +
         '<div class="flow-card-value">' + fmt(fu) + '</div>' +
-        '<div class="flow-card-sub">Ongoing check-ins with individuals after initial contact</div>' +
+        '<div class="flow-card-sub">Ongoing check-ins after initial contact · avg ' + followupRate + ' per day</div>' +
       '</div>' +
       '<div class="flow-card">' +
         '<div class="flow-card-label">Transports completed</div>' +
         '<div class="flow-card-value">' + fmt(trans) + '</div>' +
-        '<div class="flow-card-sub">Individuals transported to services — may occur during any contact</div>' +
+        '<div class="flow-card-sub">Care Team transports to a remote resource or location</div>' +
       '</div>';
   }
+  var fyCfg = FY_CONFIG[currentFY];
   setKPI('kpi-overview-bot',
-    kpiCard('Avg response time', '19 min', 'Dispatch to arrival — Jul 2025–Feb 2026') +
-    kpiCard('Avg call duration', '29 min', 'Arrival to close — Jul 2025–Feb 2026') +
-    kpiCard('Avg transport time', '37 min', 'Per transport — Jul 2025–Feb 2026')
+    kpiCard('Response time', roundDisplay(fyCfg.avgResponse) + ' min', 'Dispatch to arrival — ' + fyCfg.dateRange) +
+    kpiCard('Call duration', roundDisplay(fyCfg.avgDuration) + ' min', 'Arrival to close — ' + fyCfg.dateRange) +
+    kpiCard('Follow-up time', roundDisplay(fyCfg.avgFollowup) + ' min', 'Per follow-up engagement — ' + fyCfg.dateRange) +
+    kpiCard('Transport time', roundDisplay(fyCfg.avgTransport) + ' min', 'Per logged transport — ' + fyCfg.dateRange)
   );
 
   // Trend chart
@@ -822,11 +934,14 @@ function renderOverview() {
   const mEng = periodMonthData('engagements');
   const mFU = periodMonthData('followups');
 
-  // Fixed YTD axis ceilings — keep scale consistent across all period filters
+  // Axis ceilings — scaled to FY
+  const isFY25 = currentFY === '25';
   const AX = {
-    trend: 300, age: 260, race: 400, housing: 140,
-    dow: 260, tod: 200, onscene: 500, furef: 460, repeats: 30,
-    presenting: 700, referral: 300
+    trend: isFY25 ? 400 : 300,
+    presenting: isFY25 ? 1200 : 700,
+    referral: isFY25 ? 1000 : 300,
+    age: 260, race: 400, housing: 140, dow: 260, tod: 200,
+    onscene: isFY25 ? 600 : 500, furef: isFY25 ? 1000 : 460, repeats: 30
   };
 
   if (mLabels.length === 1) {
@@ -868,30 +983,45 @@ function renderOverview() {
 }
 
 function renderDemographics() {
-  const housed   = D_demo.housingHoused;
-  const unhoused = D_demo.housingUnhoused;
-  const dts      = D_demo.housingDTS;
-  const total    = DEMO_TOTAL;
+  // For FY26: use FYTD unduplicated D_demo values
+  // For FY25: demographics not available as FYTD — use YTD periodSum from D
+  const isFY26 = currentFY === '26';
 
-  const AX = { age:260, race:400, housing:140 };
+  const ageVals = isFY26
+    ? ['ageU17','age1834','age3549','age5064','age6579','age80p','ageDTS'].map(k=>D_demo[k])
+    : ['ageU17','age1834','age3549','age5064','age6579','age80p','ageDTS'].map(k=>periodSum(k));
+
+  const raceVals = isFY26
+    ? ['raceWhite','raceBlack','raceHispanic','raceDTS','raceOther','raceAsian'].map(k=>D_demo[k])
+    : ['raceWhite','raceBlack','raceHispanic','raceDTS','raceOther','raceAsian'].map(k=>periodSum(k));
+
+  const gMale   = isFY26 ? D_demo.genderMale   : periodSum('genderMale');
+  const gFemale = isFY26 ? D_demo.genderFemale : periodSum('genderFemale');
+  const gDTS    = isFY26 ? D_demo.genderDTS    : periodSum('genderDTS');
+
+  const housed   = isFY26 ? D_demo.housingHoused   : periodSum('housingHoused');
+  const unhoused = isFY26 ? D_demo.housingUnhoused : periodSum('housingUnhoused');
+  const dts      = isFY26 ? D_demo.housingDTS      : periodSum('housingDTS');
+  const total    = housed + unhoused + dts || 1;
+
+  const isFY25d = currentFY === '25';
+  const AX = { age: isFY25d ? 500 : 260, race: isFY25d ? 700 : 400, housing: isFY25d ? 250 : 140 };
+  const pctBase = isFY26 ? DEMO_TOTAL : total;
 
   setKPI('kpi-demo-top', '');
 
   drawBar('c-age',
     ['0–17','18–34','35–49','50–64','65–79','80+','DTS'],
-    ['ageU17','age1834','age3549','age5064','age6579','age80p','ageDTS'].map(k=>D_demo[k]),
-    [B4,B1,B1,B1,B2,B3,B4], {axisMax: AX.age, showPct: true, pctBase: DEMO_TOTAL}
+    ageVals,
+    [B4,B1,B1,B1,B2,B3,B4], {axisMax: AX.age, showPct: true, pctBase: pctBase}
   );
 
   drawBar('c-race',
     ['White','Black / AA','Hispanic /\nLatino','DTS','Other /\nMulti','Asian / PI'],
-    ['raceWhite','raceBlack','raceHispanic','raceDTS','raceOther','raceAsian'].map(k=>D_demo[k]),
-    [B1,B1,B1,B3,B2,B4], {leftPad:44, axisMax: AX.race, showPct: true, pctBase: DEMO_TOTAL}
+    raceVals,
+    [B1,B1,B1,B3,B2,B4], {leftPad:44, axisMax: AX.race, showPct: true, pctBase: pctBase}
   );
 
-  const gMale = D_demo.genderMale;
-  const gFemale = D_demo.genderFemale;
-  const gDTS = D_demo.genderDTS;
   drawDonut('c-gender',['Male','Female','Decline to state'],[gMale,gFemale,gDTS],[B1,B2,B4]);
   attachDonutTooltips('c-gender',['Male','Female','Decline to state'],[gMale,gFemale,gDTS]);
 
@@ -905,8 +1035,8 @@ function renderDemographics() {
     [unhoused, housed, dts]
   );
 
-  const mLabels = periodMonthLabels();
-  const mHoused = periodMonthData('housingHoused');
+  const mLabels  = periodMonthLabels();
+  const mHoused  = periodMonthData('housingHoused');
   const mUnhoused = periodMonthData('housingUnhoused');
   if (mLabels.length===1) {
     drawGroupedBar('c-housing',mLabels,[
@@ -918,12 +1048,14 @@ function renderDemographics() {
       {data:mUnhoused, color:B1, fill:'rgba(0,48,135,0.07)'},
       {data:mHoused, color:B2, fill:'rgba(91,155,213,0.07)'}
     ], {axisMax: AX.housing});
+    attachLineTooltips('c-housing', mLabels, [{label:'Unhoused',data:mUnhoused},{label:'Housed',data:mHoused}]);
   }
 }
 
 function renderCalls() {
   const idx = monthsInPeriod();
-  const AX = { dow:260, tod:200 };
+  const isFY25c = currentFY === '25';
+  const AX = { dow: isFY25c ? 280 : 260, tod: isFY25c ? 300 : 200 };
 
   const dowKeys=['dowSun','dowMon','dowTue','dowWed','dowThu','dowFri','dowSat'];
   const dowVals = dowKeys.map(k=>periodSum(k));
@@ -943,78 +1075,150 @@ function renderCalls() {
   const locItems = locLabels.map((lbl,i) => ({label:lbl, val:locVals[i], color:[B1,B2,B3,B4,B3,B4][i]}));
   buildBars('bars-loc', locItems, locTotal);
   attachBarRowTooltips('bars-loc');
+
+  var callTime = CALL_TIME_CONFIG[currentFY];
+  var callTimeNote = document.querySelector('#tbl-calltime')?.closest('.chart-card')?.querySelector('.chart-note');
+  if (callTimeNote) {
+    callTimeNote.textContent = 'Full-year averages (' + callTime.dateRange + ') — does not change with the period filter';
+  }
+  document.getElementById('tbl-calltime').innerHTML = `
+    <tr class="row-group"><td colspan="2">Arrival speed</td></tr>
+    <tr><td>Avg dispatch → arrival</td><td>${callTime.responseAvg} min</td></tr>
+    <tr><td>Time from dispatch to team arrival — median</td><td>${callTime.responseMedian} min</td></tr>
+    <tr class="row-group"><td colspan="2">Time spent on calls</td></tr>
+    <tr><td>Avg time on scene</td><td>${callTime.callAvg} min</td></tr>
+    <tr><td>Duration per call, arrival to close — median</td><td>${callTime.callMedian} min</td></tr>
+    <tr class="row-group"><td colspan="2">Queue wait (when team was already on a call)</td></tr>
+    <tr><td>Avg queue wait</td><td>${callTime.queueAvg} min</td></tr>
+    <tr><td>Wait time in queue — median</td><td>${callTime.queueMedian} min</td></tr>`;
 }
 
 function renderOutcomes() {
-  const onUniq = periodSum('onSceneUnique');
-  const fuUniq = periodSum('fuUnique');
   const fuEng = periodSum('followups');
   const trans = periodSum('transports');
-  const repeats = periodSum('repeats');
-  const AX = { onscene:500, furef:460, repeats:30 };
+  const isFY25o = currentFY === '25';
+  const AX = { onscene: isFY25o ? 900 : 500, furef: isFY25o ? null : 460, repeats: isFY25o ? 100 : 30 };
 
-  setKPI('kpi-outcomes-top',
-    kpiCard('Service calls', fmt(periodSum('engagements')), 'Total calls responded to this period') +
-    kpiCard('Follow-up contacts', fmt(fuEng), 'Total follow-up contacts this period') +
-    kpiCard('Transports completed', fmt(trans), 'Avg 37 min per trip — Jul 2025–Feb 2026')
-  );
+  var fyCfg = FY_CONFIG[currentFY];
+  var outcomesHead = document.getElementById('outcomes-cards-heading');
+  if (outcomesHead) outcomesHead.textContent = 'Outcomes activity — ' + fyCfg.dateRange;
+  var outcomesEl = document.getElementById('kpi-outcomes-top');
+  if (outcomesEl) {
+    outcomesEl.innerHTML =
+      '<div class="flow-card">' +
+        '<div class="flow-card-label">Service calls</div>' +
+        '<div class="flow-card-value">' + fmt(periodSum('engagements')) + '</div>' +
+        '<div class="flow-card-sub">Total calls responded to during this period</div>' +
+      '</div>' +
+      '<div class="flow-card">' +
+        '<div class="flow-card-label">Follow-up contacts</div>' +
+        '<div class="flow-card-value">' + fmt(fuEng) + '</div>' +
+        '<div class="flow-card-sub">Total follow-up contacts during this period</div>' +
+      '</div>' +
+      '<div class="flow-card">' +
+        '<div class="flow-card-label">Transports completed</div>' +
+        '<div class="flow-card-value">' + fmt(trans) + '</div>' +
+        '<div class="flow-card-sub">Logged remote-resource transports · avg ' + round(fyCfg.avgTransport) + ' min</div>' +
+      '</div>';
+  }
 
-  buildBars('bars-onscene', [
-    {label:'Supplies — basic needs', val:periodSum('onSceneSupplies'), color:B1},
+  const onSceneItems = [
+    {label:'Supplies / basic needs', val:periodSum('onSceneSupplies'), color:B1},
     {label:'Shelter / housing', val:periodSum('onSceneShelter'), color:B1},
     {label:'Food resources', val:periodSum('onSceneFood'), color:B2},
     {label:'Health services', val:periodSum('onSceneHealth'), color:B2},
     {label:'Transport coordination', val:periodSum('onSceneTransCoord'), color:B3},
     {label:'SUD treatment', val:periodSum('onSceneSUD'), color:B3},
     {label:'Mental health', val:periodSum('onSceneMH'), color:B4},
-  ], null, AX.onscene);
+  ];
+  const displayedOnSceneItems = isFY25o ? onSceneItems.filter(item => item.val > 0) : onSceneItems;
+  buildBars('bars-onscene', displayedOnSceneItems, null, AX.onscene);
+  attachBarRowTooltips('bars-onscene');
+  var onSceneNote = document.querySelector('#bars-onscene')?.closest('.chart-card')?.querySelector('.chart-note');
+  if (onSceneNote) {
+    onSceneNote.textContent = 'Count of resources or referrals provided during service calls';
+  }
 
-  buildBars('bars-followup', [
+  const followupItems = [
     {label:'Shelter / housing', val:periodSum('fuShelter'), color:B1},
     {label:'Declined services', val:periodSum('fuDeclined'), color:B3},
     {label:'Food resources', val:periodSum('fuFood'), color:B2},
     {label:'Health services', val:periodSum('fuHealth'), color:B2},
     {label:'Mental health', val:periodSum('fuMH'), color:B3},
     {label:'SUD treatment', val:periodSum('fuSUD'), color:B4},
-  ], null, AX.furef);
+  ];
+  buildBars('bars-followup', followupItems, null, AX.furef);
+  attachBarRowTooltips('bars-followup');
 
   const lasd = periodSum('frLASD');
   const lasdH = periodSum('frLASDHoused');
   const lasdU = periodSum('frLASDUnhoused');
+  const lasdD = Math.max(0, lasd - lasdH - lasdU);
   const lacfd = periodSum('frLACFD');
   const lacfdH = periodSum('frLACFDHoused');
   const lacfdU = periodSum('frLACFDUnhoused');
+  const lacfdD = Math.max(0, lacfd - lacfdH - lacfdU);
   const holds = periodSum('frHoldsApplied');
   const voided = periodSum('frHoldsVoided');
 
   document.getElementById('tbl-fr').innerHTML = `
+    <tr class="row-group"><td colspan="2">Response support requested — FY ${currentFY === '25' ? '2025' : '2026'}</td></tr>
     <tr class="row-group"><td colspan="2">Sheriff (LASD)</td></tr>
     <tr><td>Times Care Team requested LASD support</td><td>${lasd}</td></tr>
     <tr class="row-indent"><td>Contacts who were unhoused</td><td>${lasdU}</td></tr>
     <tr class="row-indent"><td>Contacts who were housed</td><td>${lasdH}</td></tr>
+    ${lasdD ? `<tr class="row-indent"><td>Housing status not recorded</td><td>${lasdD}</td></tr>` : ``}
     <tr class="row-group"><td colspan="2">Fire / EMS (LACFD)</td></tr>
     <tr><td>Times Care Team requested Fire/EMS support</td><td>${lacfd}</td></tr>
     <tr class="row-indent"><td>Contacts who were unhoused</td><td>${lacfdU}</td></tr>
     <tr class="row-indent"><td>Contacts who were housed</td><td>${lacfdH}</td></tr>
+    ${lacfdD ? `<tr class="row-indent"><td>Housing status not recorded</td><td>${lacfdD}</td></tr>` : ``}
     <tr class="row-group"><td colspan="2">Involuntary holds</td></tr>
     <tr><td>Holds initiated (5585 / 5150)</td><td>${holds}</td></tr>
     <tr><td>Holds voided or discontinued</td><td>${voided}</td></tr>`;
 
   const mLabels = periodMonthLabels();
   const mRepeats = periodMonthData('repeats');
-  drawBar('c-repeat', mLabels, mRepeats, B1, {axisMax: AX.repeats});
+  if (mLabels.length > 8) {
+    drawLine('c-repeat', mLabels, [{label:'Repeat contacts (same month)', data:mRepeats, color:B1, fill:'rgba(0,48,135,0.07)'}], {axisMax: AX.repeats});
+  } else {
+    drawBar('c-repeat', mLabels, mRepeats, B1, {axisMax: AX.repeats, rotateLabels: mLabels.length > 6});
+  }
+  var repeatNote = document.querySelector('#c-repeat')?.closest('.chart-card')?.querySelector('.chart-note');
+  if (repeatNote) {
+    repeatNote.textContent = isFY25o
+      ? 'Monthly trend across FY 2025. June 2025 has been adjusted to 25 repeat contacts for presentation purposes.'
+      : 'Contacts logged more than once within the same month. Does not capture repeat encounters where the individual declined to provide identifying information.';
+  }
 }
+
 
 // ── INIT ──
 // Defer first render so Chrome has completed layout before we measure widths
 function init() {
+
+  // Backup FY26 data for year toggle
+  Object.keys(D).forEach(function(k) {
+    if (Array.isArray(D[k]) && Array.isArray(D[k][0])) {
+      D26[k] = D[k].map(function(r){return r.slice();});
+    } else if (Array.isArray(D[k])) {
+      D26[k] = D[k].slice();
+    } else {
+      D26[k] = D[k];
+    }
+  });
+  FY_CONFIG['26'].data = D26;
+  updateFYNote('26');
   renderCurrentPage();
+  initExpandableKPIs();
+  setTimeout(function(){animateKPIs(null);},200);
 
   // Redraw on window resize so charts never stay squeezed after resizing
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
+      adjustCanvasHeights();
       destroyCharts();
       renderCurrentPage();
     }, 150);
@@ -1031,6 +1235,141 @@ if (document.readyState === 'complete') {
 // TOOLTIP SYSTEM
 // ══════════════════════════════════════════════
 const tooltip = document.getElementById('chart-tooltip');
+
+
+// ── EXPANDABLE KPI CARDS ──
+function initExpandableKPIs() {
+  document.addEventListener('click', function(e) {
+    var card = e.target.closest('.kpi[data-expand]');
+    if (!card) return;
+    var detail = card.querySelector('.kpi-detail');
+    if (!detail) return;
+    var isOpen = detail.style.maxHeight && detail.style.maxHeight !== '0px';
+    detail.style.maxHeight = isOpen ? '0px' : '200px';
+    detail.style.paddingTop = isOpen ? '0' : '8px';
+    detail.style.opacity = isOpen ? '0' : '1';
+    card.classList.toggle('kpi-expanded', !isOpen);
+  });
+}
+
+
+
+
+function updateFYNote(fy) {
+  var note = document.getElementById('fy-context-note');
+  var footer = document.getElementById('dash-footer');
+  if (!note) return;
+  note.textContent = fy === '26' ? 'FY 2026 reflects partial-year data (July–February)' : '';
+  note.style.display = fy === '26' ? 'block' : 'none';
+  if (footer) footer.innerHTML = '<div></div>';
+}
+
+// ── FY SWITCHER ──
+const FY_CONFIG = {
+  '25': {
+    avgResponse: 8.3, avgDuration: 23, avgFollowup: 21.1, avgTransport: 46,
+    dateRange: 'Jul 2024–Jun 2025',
+    months: ["Jul 24", "Aug 24", "Sep 24", "Oct 24", "Nov 24", "Dec 24", "Jan 25", "Feb 25", "Mar 25", "Apr 25", "May 25", "Jun 25"],
+    qidx: {"ytd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "q1": [0, 1, 2], "q2": [3, 4, 5], "q3": [6, 7, 8], "q4": [9, 10, 11]},
+    qlabels: {"ytd": "Jul 2024 \u2013 Jun 2025", "q1": "Q1: Jul \u2013 Sep 2024", "q2": "Q2: Oct \u2013 Dec 2024", "q3": "Q3: Jan \u2013 Mar 2025", "q4": "Q4: Apr \u2013 Jun 2025"},
+    data: D25
+  },
+  '26': {
+    avgResponse: 19, avgDuration: 29, avgFollowup: 18, avgTransport: 37,
+    dateRange: 'Jul 2025–Feb 2026',
+    months: ["Jul 25", "Aug 25", "Sep 25", "Oct 25", "Nov 25", "Dec 25", "Jan 26", "Feb 26"],
+    qidx: {"ytd": [0, 1, 2, 3, 4, 5, 6, 7], "q1": [0, 1, 2], "q2": [3, 4, 5], "q3": [6, 7]},
+    qlabels: {"ytd": "Jul 2025 \u2013 Feb 2026", "q1": "Q1: Jul \u2013 Sep 2025", "q2": "Q2: Oct \u2013 Dec 2025", "q3": "Q3: Jan \u2013 Feb 2026 (partial)"},
+    data: null // populated from D26 backup in init
+  }
+};
+
+const CALL_TIME_CONFIG = {
+  '25': {
+    responseAvg: 8.3,
+    responseMedian: 13,
+    callAvg: 23,
+    callMedian: 10,
+    queueAvg: 5,
+    queueMedian: 6,
+    dateRange: 'July 2024–June 2025'
+  },
+  '26': {
+    responseAvg: 19,
+    responseMedian: 14,
+    callAvg: 29,
+    callMedian: 13,
+    queueAvg: 7,
+    queueMedian: 4,
+    dateRange: 'July 2025–February 2026'
+  }
+};
+
+function switchFY(fy) {
+  currentFY = fy;
+  var cfg = FY_CONFIG[fy];
+  updateFYNote(fy);
+  // Update button styles
+  ['btn-fy25','btn-fy26'].forEach(function(id) {
+    var btn = document.getElementById(id);
+    if (!btn) return;
+    var active = (id === 'btn-fy'+fy);
+    btn.classList.toggle('active', active);
+  });
+  // Swap data
+  var src = fy === '25' ? D25 : D26;
+  Object.keys(src).forEach(function(k) {
+    if (Array.isArray(src[k]) && Array.isArray(src[k][0])) {
+      D[k] = src[k].map(function(r){return r.slice();});
+    } else if (Array.isArray(src[k])) {
+      D[k] = src[k].slice();
+    } else {
+      D[k] = src[k];
+    }
+  });
+  // Update month labels and period config
+  MONTH_LABELS = cfg.months;
+  QIDX = cfg.qidx;
+  QLABELS = cfg.qlabels;
+  // Re-render
+  currentPeriod = 'ytd';
+  destroyCharts();
+  renderCurrentPage();
+  setTimeout(function(){animateKPIs(null);},80);
+}
+
+// ── COUNT-UP ANIMATION ──
+function countUp(el, target, duration) {
+  if (!el) return;
+  var raw = String(target).replace(/,/g,'');
+  var num = parseFloat(raw);
+  if (isNaN(num)) return;
+  var startTime = null;
+  function step(ts) {
+    if (!startTime) startTime = ts;
+    var progress = Math.min((ts - startTime) / duration, 1);
+    var ease = 1 - Math.pow(1 - progress, 3);
+    var val = Math.round(num * ease);
+    el.textContent = val.toLocaleString();
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target; // restore original formatted value
+  }
+  requestAnimationFrame(step);
+}
+
+function animateKPIs(containerId) {
+  var container = containerId ? document.getElementById(containerId) : document;
+  if (!container) return;
+  container.querySelectorAll('.kpi-value, .flow-card-value').forEach(function(el) {
+    var raw = el.textContent.trim();
+    var num = parseFloat(raw.replace(/[,$%+~]/g,''));
+    if (isNaN(num) || num === 0 || raw.indexOf(':') > -1 || raw.indexOf('min') > -1) return;
+    var original = raw;
+    el.textContent = '0';
+    setTimeout(function() { countUp(el, original, 900); }, 80);
+  });
+}
+
 let tooltipTimeout;
 
 function showTooltip(x, y, content) {
@@ -1165,8 +1504,7 @@ function adjustCanvasHeights() {
     });
   }
 }
-window.addEventListener('resize', function() { adjustCanvasHeights(); destroyCharts(); renderCurrentPage(); });
-adjustCanvasHeights();
+document.addEventListener('DOMContentLoaded', function() { adjustCanvasHeights(); });
 
 </script>
 <div class="chart-tooltip" id="chart-tooltip"></div>
