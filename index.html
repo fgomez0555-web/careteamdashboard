@@ -159,7 +159,7 @@
 <div class="page active" id="page-overview">
 
   <div class="page-context">
-    Call volume increased in winter months, with most requests related to basic needs and housing support.
+    Call volume reached a new high in March 2026, with self-referrals and HCL-sourced calls driving significant growth. Housing and basic needs remain the top presenting issues.
   </div>
 
   <div class="flow-cards-wrap"><div class="flow-cards-heading" id="flow-cards-heading">Care Team activity</div><div id="flow-cards" class="flow-cards"></div><p class="flow-cards-note" id="transport-note">FY 2025 transport counts reflect logged transports to a remote resource or location. Transport counts are shown separately from follow-up contacts.</p></div>
@@ -314,142 +314,142 @@
 // ══════════════════════════════════════════════
 // DATA
 // ══════════════════════════════════════════════
-const MONTHS = ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
-let MONTH_LABELS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26'];
+const MONTHS = ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+let MONTH_LABELS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
 
 // Quarter index ranges
-let QIDX = { ytd:[0,1,2,3,4,5,6,7], q1:[0,1,2], q2:[3,4,5], q3:[6,7] };
-let QLABELS = { ytd:'Jul 2025 – Feb 2026', q1:'Q1: Jul – Sep 2025', q2:'Q2: Oct – Dec 2025', q3:'Q3: Jan – Feb 2026 (partial)' };
+let QIDX = { ytd:[0,1,2,3,4,5,6,7,8], q1:[0,1,2], q2:[3,4,5], q3:[6,7,8] };
+let QLABELS = { ytd:'Jul 2025 – Mar 2026', q1:'Q1: Jul – Sep 2025', q2:'Q2: Oct – Dec 2025', q3:'Q3: Jan – Mar 2026' };
 
 // All monthly series [Jul,Aug,Sep,Oct,Nov,Dec,Jan,Feb]
 const D = {
-  engagements:       [140,86,73,115,170,200,198,266],
-  followups:         [234,180,205,211,170,132,135,171],
-  unique:            [113,83,60,94,132,143,131,171],
+  engagements:       [140,86,73,115,170,200,198,266,325],
+  followups:         [234,180,205,211,170,132,135,171,192],
+  unique:            [113,83,60,94,132,143,131,171,168],
 
   // True unduplicated FYTD counts from Sycamores — only available for full YTD, not by quarter
-  FYTD_unique:       727,
-  FYTD_unhoused:     578,
-  FYTD_housed:       102,
-  FYTD_dts:          47,
-  repeats:           [14,5,7,15,14,20,19,26],
-  transports:        [16,20,16,15,25,9,17,23],
+  FYTD_unique:       837,
+  FYTD_unhoused:     668,
+  FYTD_housed:       119,
+  FYTD_dts:          50,
+  repeats:           [14,5,7,15,14,20,19,26,28],
+  transports:        [16,20,16,15,25,9,17,23,19],
 
-  ageU17:            [2,2,0,1,0,1,0,3],
-  age1834:           [21,15,16,19,28,25,29,43],
-  age3549:           [32,22,18,29,34,43,38,36],
-  age5064:           [26,16,13,21,30,30,25,36],
-  age6579:           [7,12,6,12,13,12,20,14],
-  age80p:            [3,0,0,1,0,0,2,3],
-  ageDTS:            [22,16,7,9,27,32,17,36],
+  ageU17:            [2,2,0,1,0,1,0,3,0],
+  age1834:           [21,15,16,19,28,25,29,43,30],
+  age3549:           [32,22,18,29,34,43,38,36,49],
+  age5064:           [26,16,13,21,30,30,25,36,36],
+  age6579:           [7,12,6,12,13,12,20,14,22],
+  age80p:            [3,0,0,1,0,0,2,3,1],
+  ageDTS:            [22,16,7,9,27,32,17,36,30],
 
-  genderMale:        [82,61,43,60,102,98,98,137],
-  genderFemale:      [30,22,17,31,29,45,31,32],
-  genderDTS:         [1,0,0,1,1,0,2,2],
+  genderMale:        [82,61,43,60,102,98,98,137,126],
+  genderFemale:      [30,22,17,31,29,45,31,32,39],
+  genderDTS:         [1,0,0,1,1,0,2,2,3],
 
-  raceAsian:         [1,3,1,1,1,5,1,5],
-  raceBlack:         [36,18,15,13,29,36,28,54],
-  raceHispanic:      [16,18,17,25,25,23,18,25],
-  raceWhite:         [47,40,21,44,59,54,60,64],
-  raceOther:         [4,1,2,3,7,13,14,10],
-  raceDTS:           [9,3,4,6,11,12,10,13],
+  raceAsian:         [1,3,1,1,1,5,1,5,5],
+  raceBlack:         [36,18,15,13,29,36,28,54,46],
+  raceHispanic:      [16,18,17,25,25,23,18,25,29],
+  raceWhite:         [47,40,21,44,59,54,60,64,63],
+  raceOther:         [4,1,2,3,7,13,14,10,13],
+  raceDTS:           [9,3,4,6,11,12,10,13,12],
 
-  housingHoused:     [10,8,7,11,13,17,29,25],
-  housingUnhoused:   [95,69,49,77,110,114,89,133],
-  housingDTS:        [8,6,4,4,9,12,13,13],
+  housingHoused:     [10,8,7,11,13,17,29,25,28],
+  housingUnhoused:   [95,69,49,77,110,114,89,133,131],
+  housingDTS:        [8,6,4,4,9,12,13,13,9],
 
-  refAmbassadors:    [33,27,14,14,53,45,30,16],
-  refSycamores:      [47,19,21,23,25,32,14,25],
-  refSelf:           [8,8,9,11,24,40,42,59],
-  refHCL:            [11,6,2,5,12,25,40,97],
-  refLawEnf:         [18,12,9,13,17,21,37,22],
-  refOther:          [18,10,14,27,14,14,13,15],
-  refWeHoAgency:     [0,1,0,11,10,12,7,10],
-  refWeHoStaff:      [3,2,1,8,7,6,5,8],
-  refFriendFam:      [0,0,0,0,5,2,4,10],
-  refFireEMS:        [2,0,3,1,1,2,4,2],
+  refAmbassadors:    [33,27,14,14,53,45,30,16,10],
+  refSycamores:      [47,19,21,23,25,32,14,25,28],
+  refSelf:           [8,8,9,11,24,40,42,59,108],
+  refHCL:            [11,6,2,5,12,25,40,97,88],
+  refLawEnf:         [18,12,9,13,17,21,37,22,19],
+  refOther:          [18,10,14,27,14,14,13,15,24],
+  refWeHoAgency:     [0,1,0,11,10,12,7,10,17],
+  refWeHoStaff:      [3,2,1,8,7,6,5,8,15],
+  refFriendFam:      [0,0,0,0,5,2,4,10,7],
+  refFireEMS:        [2,0,3,1,1,2,4,2,5],
 
-  presBasicNeeds:    [83,59,38,73,100,95,99,143],
-  presHousing:       [87,37,35,64,98,100,100,138],
-  presWelfare:       [26,19,22,24,32,46,42,61],
-  presHealth:        [11,7,8,7,21,16,21,24],
-  presSubUse:        [9,4,9,7,10,12,8,21],
-  presCrisis:        [5,4,3,4,7,10,10,16],
+  presBasicNeeds:    [83,59,38,73,100,95,99,143,170],
+  presHousing:       [87,37,35,64,98,100,100,138,182],
+  presWelfare:       [26,19,22,24,32,46,42,61,72],
+  presHealth:        [11,7,8,7,21,16,21,24,31],
+  presSubUse:        [9,4,9,7,10,12,8,21,23],
+  presCrisis:        [5,4,3,4,7,10,10,16,23],
 
-  locPublic:         [104,61,52,85,113,135,108,173],
-  locTelephone:      [6,3,7,11,33,41,33,64],
-  locSheriff:        [10,3,3,10,12,7,22,5],
-  locPrivRes:        [10,7,6,5,3,10,18,13],
-  locBusiness:       [8,11,5,3,3,1,6,5],
-  locOther:          [2,6,1,7,6,6,11,6],
+  locPublic:         [104,61,52,85,113,135,108,173,154],
+  locTelephone:      [6,3,7,11,33,41,33,64,131],
+  locSheriff:        [10,3,3,10,12,7,22,5,10],
+  locPrivRes:        [10,7,6,5,3,10,18,13,18],
+  locBusiness:       [8,11,5,3,3,1,6,5,4],
+  locOther:          [2,6,1,7,6,6,11,6,8],
 
-  dowSun: [19,13,11,6,31,27,18,25],
-  dowMon: [25,13,7,6,9,25,23,32],
-  dowTue: [21,13,14,15,16,21,13,21],
-  dowWed: [16,10,10,27,26,47,31,63],
-  dowThu: [25,13,12,30,32,33,36,57],
-  dowFri: [24,13,13,25,31,24,48,39],
-  dowSat: [11,17,7,12,25,23,29,30],
+  dowSun: [19,13,11,6,31,27,18,25,28],
+  dowMon: [25,13,7,6,9,25,23,32,28],
+  dowTue: [21,13,14,15,16,21,13,21,39],
+  dowWed: [16,10,10,27,26,47,31,63,66],
+  dowThu: [25,13,12,30,32,33,36,57,60],
+  dowFri: [24,13,13,25,31,24,48,39,75],
+  dowSat: [11,17,7,12,25,23,29,30,29],
 
-  tod: [[13,10,4,5,8,13,12,22],[6,3,2,6,9,3,17,17],[5,3,1,3,1,1,8,8],
-        [3,8,3,1,14,16,9,19],[10,7,6,9,24,35,19,27],[6,3,3,5,19,18,22,37],
-        [7,5,2,12,14,22,14,25],[32,14,13,22,22,32,29,25],[17,5,13,27,16,18,22,23],
-        [12,14,9,11,9,14,19,22],[10,11,9,11,16,11,11,10],[20,9,9,9,18,17,16,31]],
+  tod: [[13,10,4,5,8,13,12,22,15],[6,3,2,6,9,3,17,17,14],[5,3,1,3,1,1,8,8,5],
+        [3,8,3,1,14,16,9,19,22],[10,7,6,9,24,35,19,27,55],[6,3,3,5,19,18,22,37,39],
+        [7,5,2,12,14,22,14,25,49],[32,14,13,22,22,32,29,25,44],[17,5,13,27,16,18,22,23,13],
+        [12,14,9,11,9,14,19,22,26],[10,11,9,11,16,11,11,10,15],[20,9,9,9,18,17,16,31,28]],
 
-  onSceneSupplies:   [74,48,34,54,65,66,70,76],
-  onSceneShelter:    [62,19,20,47,47,46,47,66],
-  onSceneFood:       [6,5,4,13,26,12,22,30],
-  onSceneHealth:     [9,3,6,10,13,19,17,21],
-  onSceneTransCoord: [9,8,7,9,12,9,18,20],
-  onSceneSUD:        [3,0,7,7,5,6,8,17],
-  onSceneMH:         [3,1,1,4,3,3,10,9],
+  onSceneSupplies:   [74,48,34,54,65,66,70,76,80],
+  onSceneShelter:    [62,19,20,47,47,46,47,66,69],
+  onSceneFood:       [6,5,4,13,26,12,22,30,37],
+  onSceneHealth:     [9,3,6,10,13,19,17,21,13],
+  onSceneTransCoord: [9,8,7,9,12,9,18,20,16],
+  onSceneSUD:        [3,0,7,7,5,6,8,17,14],
+  onSceneMH:         [3,1,1,4,3,3,10,9,5],
 
-  fuShelter:         [63,56,64,87,54,53,25,47],
-  fuDeclined:        [69,43,39,48,36,31,35,55],
-  fuFood:            [44,41,28,22,33,11,8,19],
-  fuHealth:          [34,19,34,30,13,17,16,21],
-  fuMH:              [18,14,14,11,13,9,13,14],
-  fuSUD:             [13,11,15,8,18,7,5,11],
+  fuShelter:         [63,56,64,87,54,53,25,47,47],
+  fuDeclined:        [69,43,39,48,36,31,35,55,55],
+  fuFood:            [44,41,28,22,33,11,8,19,13],
+  fuHealth:          [34,19,34,30,13,17,16,21,14],
+  fuMH:              [18,14,14,11,13,9,13,14,22],
+  fuSUD:             [13,11,15,8,18,7,5,11,11],
 
-  frLASD:            [2,2,1,0,3,6,2,4],
-  frLASDHoused:      [1,0,0,0,0,2,0,2],
-  frLASDUnhoused:    [1,2,1,0,3,4,1,1],
-  frLASDDTS:         [0,0,0,0,0,0,0,0],
-  frLACFD:           [1,1,2,0,0,1,6,3],
-  frLACFDHoused:     [1,0,1,0,0,0,0,1],
-  frLACFDUnhoused:   [0,1,1,0,0,0,5,1],
-  frLACFDDTS:        [0,0,0,0,0,1,1,1],
-  frHoldsApplied:    [1,0,0,1,0,1,0,0],
-  frHoldsVoided:     [0,0,0,0,0,1,0,0],
+  frLASD:            [2,2,1,0,3,6,2,4,0],
+  frLASDHoused:      [1,0,0,0,0,2,0,2,0],
+  frLASDUnhoused:    [1,2,1,0,3,4,1,1,0],
+  frLASDDTS:         [0,0,0,0,0,0,0,0,0],
+  frLACFD:           [1,1,2,0,0,1,6,3,0],
+  frLACFDHoused:     [1,0,1,0,0,0,0,1,0],
+  frLACFDUnhoused:   [0,1,1,0,0,0,5,1,0],
+  frLACFDDTS:        [0,0,0,0,0,1,1,1,0],
+  frHoldsApplied:    [1,0,0,1,0,1,0,0,1],
+  frHoldsVoided:     [0,0,0,0,0,1,0,0,0],
 
-  onSceneUnique:     [98,71,55,77,102,100,107,125],
-  fuUnique:          [131,100,102,116,108,96,85,110],
+  onSceneUnique:     [98,71,55,77,102,100,107,125,118],
+  fuUnique:          [131,100,102,116,108,96,85,110,123],
 };
 
 
-// ── FYTD UNDUPLICATED DEMOGRAPHIC DATA (727 unique individuals) ──
+// ── FYTD UNDUPLICATED DEMOGRAPHIC DATA (837 unique individuals) ──
 let D_demo = {
   ageU17:       5,
-  age1834:      160,
-  age3549:      193,
-  age5064:      145,
-  age6579:      52,
+  age1834:      178,
+  age3549:      226,
+  age5064:      164,
+  age6579:      65,
   age80p:       8,
-  ageDTS:       164,
-  genderMale:   532,
-  genderFemale: 188,
-  genderDTS:    7,
-  raceAsian:    15,
-  raceBlack:    187,
-  raceHispanic: 131,
-  raceWhite:    295,
-  raceOther:    43,
-  raceDTS:      56,
-  housingHoused:   102,
-  housingUnhoused: 578,
-  housingDTS:      47,
+  ageDTS:       191,
+  genderMale:   616,
+  genderFemale: 211,
+  genderDTS:    10,
+  raceAsian:    18,
+  raceBlack:    216,
+  raceHispanic: 149,
+  raceWhite:    337,
+  raceOther:    52,
+  raceDTS:      65,
+  housingHoused:   119,
+  housingUnhoused: 668,
+  housingDTS:      50,
 };
-let DEMO_TOTAL = 727;
+let DEMO_TOTAL = 837;
 
 
 // ── FY 2025 DATA (Jul 2024 – Jun 2025) ──
@@ -1299,7 +1299,7 @@ function updateFYNote(fy) {
   var footer = document.getElementById('dash-footer');
   if (!note) return;
   if (fy === '26') {
-    note.textContent = 'FY 2026 data covers July 2025 through February 2026 — a partial fiscal year. Totals reflect 8 of 12 months.';
+    note.textContent = 'FY 2026 data covers July 2025 through March 2026 — a partial fiscal year. Totals reflect 9 of 12 months.';
     note.classList.add('visible');
   } else {
     note.textContent = '';
@@ -1319,11 +1319,11 @@ const FY_CONFIG = {
     data: D25
   },
   '26': {
-    avgResponse: 19, avgDuration: 29, avgFollowup: 18, avgTransport: 37,
-    dateRange: 'Jul 2025–Feb 2026',
-    months: ["Jul 25", "Aug 25", "Sep 25", "Oct 25", "Nov 25", "Dec 25", "Jan 26", "Feb 26"],
-    qidx: {"ytd": [0, 1, 2, 3, 4, 5, 6, 7], "q1": [0, 1, 2], "q2": [3, 4, 5], "q3": [6, 7]},
-    qlabels: {"ytd": "Jul 2025 \u2013 Feb 2026", "q1": "Q1: Jul \u2013 Sep 2025", "q2": "Q2: Oct \u2013 Dec 2025", "q3": "Q3: Jan \u2013 Feb 2026 (partial)"},
+    avgResponse: 19, avgDuration: 28, avgFollowup: 17, avgTransport: 39,
+    dateRange: 'Jul 2025–Mar 2026',
+    months: ["Jul 25", "Aug 25", "Sep 25", "Oct 25", "Nov 25", "Dec 25", "Jan 26", "Feb 26", "Mar 26"],
+    qidx: {"ytd": [0, 1, 2, 3, 4, 5, 6, 7, 8], "q1": [0, 1, 2], "q2": [3, 4, 5], "q3": [6, 7, 8]},
+    qlabels: {"ytd": "Jul 2025 \u2013 Mar 2026", "q1": "Q1: Jul \u2013 Sep 2025", "q2": "Q2: Oct \u2013 Dec 2025", "q3": "Q3: Jan \u2013 Mar 2026"},
     data: null // populated from D26 backup in init
   }
 };
@@ -1341,11 +1341,11 @@ const CALL_TIME_CONFIG = {
   '26': {
     responseAvg: 19,
     responseMedian: 14,
-    callAvg: 29,
+    callAvg: 28,
     callMedian: 13,
-    queueAvg: 7,
+    queueAvg: 8,
     queueMedian: 4,
-    dateRange: 'July 2025–February 2026'
+    dateRange: 'July 2025–March 2026'
   }
 };
 
